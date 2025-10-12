@@ -21,6 +21,7 @@ dependencies = [
   "rich",
   "pytest",
   "radon",
+  "PyYAML",
   "typer"
 ]
 
