@@ -167,7 +167,7 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
             "command": "graph lineage",
             "syntax": "aldecI graph lineage --artifact <id|path>",
         },
-        "api": {"method": "GET", "route": "/v1/graph/lineage"},
+        "api": {"method": "POST", "route": "/v1/graph/lineage"},
         "domain": [],
         "services": [
             "services.graph.graph.ProvenanceGraph.lineage",
@@ -184,7 +184,7 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
             "command": "graph kev-in-last",
             "syntax": "aldecI graph kev-in-last --releases <N>",
         },
-        "api": {"method": "GET", "route": "/v1/graph/kev-in-last"},
+        "api": {"method": "POST", "route": "/v1/graph/kev-in-last"},
         "domain": [],
         "services": [
             "services.graph.graph.ProvenanceGraph.components_with_kev",
@@ -201,7 +201,7 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
             "command": "graph anomalies",
             "syntax": "aldecI graph anomalies --type version-drift",
         },
-        "api": {"method": "GET", "route": "/v1/graph/anomalies"},
+        "api": {"method": "POST", "route": "/v1/graph/anomalies"},
         "domain": [],
         "services": [
             "services.graph.graph.ProvenanceGraph.detect_version_anomalies",

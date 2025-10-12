@@ -4,8 +4,8 @@ sequenceDiagram
     participant API
     CLI->>Local: aldecI ingest sarif
     Local->>API: POST /v1/ingest/sarif
-    participant S885689 as services.normalize.normalizers.InputNormalizer.load_sarif
-    API->>S885689: call
-    S885689-->>API: result
+    participant S752180 as services.normalize.normalizers.InputNormalizer.load_sarif
+    API->>S752180: call
+    S752180-->>API: result
     API-->>Local: response
     Local-->>CLI: materialise outputs

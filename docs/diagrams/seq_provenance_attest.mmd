@@ -4,14 +4,14 @@ sequenceDiagram
     participant API
     CLI->>Local: aldecI prov attest
     Local->>API: POST /v1/provenance/attest
-    participant S823849 as services.provenance.attestation.generate_attestation
-    API->>S823849: call
-    S823849-->>API: result
-    participant S734217 as services.provenance.attestation.write_attestation
-    API->>S734217: call
-    S734217-->>API: result
-    participant I870404 as telemetry.configure
-    API->>I870404: invoke
-    I870404-->>API: ack
+    participant S277579 as services.provenance.attestation.generate_attestation
+    API->>S277579: call
+    S277579-->>API: result
+    participant S680928 as services.provenance.attestation.write_attestation
+    API->>S680928: call
+    S680928-->>API: result
+    participant I283076 as telemetry.configure
+    API->>I283076: invoke
+    I283076-->>API: ack
     API-->>Local: response
     Local-->>CLI: materialise outputs
