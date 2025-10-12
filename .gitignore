@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.upstream/
+artifacts/*
+!artifacts/
+!artifacts/upstream_symbol_index.json
+!artifacts/upstream_sha.txt
+reports/
+.env
+.venv/
+.DS_Store
