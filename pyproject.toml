@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aldecI"
+version = "0.1.0"
+description = "AlDeci platform bootstrap"
+authors = [
+  { name = "AlDeci Maintainers" }
+]
+readme = "docs/ARCHITECTURE.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi",
+  "uvicorn[standard]",
+  "httpx",
+  "pydantic",
+  "networkx",
+  "numpy",
+  "rich",
+  "pytest",
+  "radon",
+  "typer"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "radon"
+]
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+testpaths = ["tests"]

@@ -1,0 +1,9 @@
+# Enterprise overlay configuration
+mode: enterprise
+artifacts:
+  storage: s3://aldecI-enterprise-artifacts
+policies:
+  enforcement: strict
+services:
+  provenance: enabled
+  signing: enabled
