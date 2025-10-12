@@ -25,6 +25,28 @@ dependencies = [
   "typer"
 ]
 
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = [
+  "apps*",
+  "services*",
+  "infra*",
+  "telemetry*",
+  "sdk*",
+  "cli*",
+  "domain*"
+]
+exclude = [
+  "artifacts*",
+  "samples*",
+  "tests*",
+  "docs*",
+  "scripts*",
+  "config*"
+]
+
 [project.optional-dependencies]
 dev = [
   "pytest",

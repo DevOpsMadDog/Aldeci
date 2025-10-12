@@ -8,6 +8,7 @@ artifacts/*
 !artifacts/upstream_map.json
 !artifacts/upstream_symbol_index.json
 !artifacts/upstream_sha.txt
+build/
 reports/
 .env
 .venv/
