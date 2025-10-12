@@ -1,0 +1,188 @@
+{
+  "capabilities": {
+    "epss": {
+      "artifacts": [
+        {
+          "destination": "infra/feeds/__init__.py",
+          "sha256": "018a58da5ea07c56f6c85c65ffeab9ebb5e06a2175e5bdcbdfeba5f136574889",
+          "source": "risk/feeds/__init__.py"
+        },
+        {
+          "destination": "infra/feeds/epss.py",
+          "sha256": "fe6b35ff3bbab35b87059339c60586ef257a09f3fba83afd6eaa7ad3f7d16e73",
+          "source": "risk/feeds/epss.py"
+        }
+      ],
+      "available": true
+    },
+    "evidence.bundle": {
+      "artifacts": [
+        {
+          "destination": "services/evidence/__init__.py",
+          "sha256": "1ad54e798918b1022d618951a893be992272fc5ec22416ad955a10b4a49ee2aa",
+          "source": "evidence/__init__.py"
+        },
+        {
+          "destination": "services/evidence/packager.py",
+          "sha256": "fc3703a675cf491e38719d321f3f4335b2be99e5bdfd23a69992a8794bda546c",
+          "source": "evidence/packager.py"
+        },
+        {
+          "destination": "infra/signing/sign-artifact.sh",
+          "sha256": "682a78e598df377de73346e62aa2a85522247b59aa8f745cd0864ff9edc1d7d8",
+          "source": "scripts/signing/sign-artifact.sh"
+        },
+        {
+          "destination": "infra/signing/verify-artifact.sh",
+          "sha256": "e0082d42a5a56a7e1f67dc4c36ccddf3f1cb894e19408184b19d46a9cf851c60",
+          "source": "scripts/signing/verify-artifact.sh"
+        }
+      ],
+      "available": true
+    },
+    "graph.anomalies": {
+      "alias_of": "graph.lineage",
+      "artifacts": [
+        {
+          "destination": "services/graph/__init__.py",
+          "sha256": "590e2c267a1ff06b1bd69e5970bb0f0dfa40d9b91e3bafd1f54b28beb7f88c1b",
+          "source": "services/graph/__init__.py"
+        },
+        {
+          "destination": "services/graph/graph.py",
+          "sha256": "c7a2e66f75da58dfc919c288ed763f564ec5666a4c3914cb25a3fe3a7f553ccd",
+          "source": "services/graph/graph.py"
+        }
+      ],
+      "available": true
+    },
+    "graph.kev_in_last": {
+      "alias_of": "graph.lineage",
+      "artifacts": [
+        {
+          "destination": "services/graph/__init__.py",
+          "sha256": "590e2c267a1ff06b1bd69e5970bb0f0dfa40d9b91e3bafd1f54b28beb7f88c1b",
+          "source": "services/graph/__init__.py"
+        },
+        {
+          "destination": "services/graph/graph.py",
+          "sha256": "c7a2e66f75da58dfc919c288ed763f564ec5666a4c3914cb25a3fe3a7f553ccd",
+          "source": "services/graph/graph.py"
+        }
+      ],
+      "available": true
+    },
+    "graph.lineage": {
+      "artifacts": [
+        {
+          "destination": "services/graph/__init__.py",
+          "sha256": "590e2c267a1ff06b1bd69e5970bb0f0dfa40d9b91e3bafd1f54b28beb7f88c1b",
+          "source": "services/graph/__init__.py"
+        },
+        {
+          "destination": "services/graph/graph.py",
+          "sha256": "c7a2e66f75da58dfc919c288ed763f564ec5666a4c3914cb25a3fe3a7f553ccd",
+          "source": "services/graph/graph.py"
+        }
+      ],
+      "available": true
+    },
+    "kev": {
+      "artifacts": [
+        {
+          "destination": "infra/feeds/__init__.py",
+          "sha256": "018a58da5ea07c56f6c85c65ffeab9ebb5e06a2175e5bdcbdfeba5f136574889",
+          "source": "risk/feeds/__init__.py"
+        },
+        {
+          "destination": "infra/feeds/kev.py",
+          "sha256": "f4f2f72b4da6fe3ce04d1f41010152e5a373faa61a67685540f635964b846c52",
+          "source": "risk/feeds/kev.py"
+        }
+      ],
+      "available": true
+    },
+    "provenance.attest": {
+      "artifacts": [
+        {
+          "destination": "services/provenance/attestation.py",
+          "sha256": "355ea239f87aedf441d1aa29de430d3130d97ede5eff37d1f0a33f9ad1afdd95",
+          "source": "services/provenance/attestation.py"
+        },
+        {
+          "destination": "telemetry/__init__.py",
+          "sha256": "1118373c5415b762eb4a296ca509e1b564096b48867f1a8fe1637787c5b630a4",
+          "source": "telemetry/__init__.py"
+        },
+        {
+          "destination": "telemetry/_noop.py",
+          "sha256": "ddbe03ff446244cd07fe9ef6c834d9ee15fb08905a74e8c6d02be1416c63532b",
+          "source": "telemetry/_noop.py"
+        },
+        {
+          "destination": "telemetry/fastapi_noop.py",
+          "sha256": "10e7b7e7a02f6cfb57b49823d39f3af8753b994ad4bfb572ca107401ba3a3de5",
+          "source": "telemetry/fastapi_noop.py"
+        }
+      ],
+      "available": true
+    },
+    "provenance.verify": {
+      "alias_of": "provenance.attest",
+      "artifacts": [
+        {
+          "destination": "services/provenance/attestation.py",
+          "sha256": "355ea239f87aedf441d1aa29de430d3130d97ede5eff37d1f0a33f9ad1afdd95",
+          "source": "services/provenance/attestation.py"
+        },
+        {
+          "destination": "telemetry/__init__.py",
+          "sha256": "1118373c5415b762eb4a296ca509e1b564096b48867f1a8fe1637787c5b630a4",
+          "source": "telemetry/__init__.py"
+        },
+        {
+          "destination": "telemetry/_noop.py",
+          "sha256": "ddbe03ff446244cd07fe9ef6c834d9ee15fb08905a74e8c6d02be1416c63532b",
+          "source": "telemetry/_noop.py"
+        },
+        {
+          "destination": "telemetry/fastapi_noop.py",
+          "sha256": "10e7b7e7a02f6cfb57b49823d39f3af8753b994ad4bfb572ca107401ba3a3de5",
+          "source": "telemetry/fastapi_noop.py"
+        }
+      ],
+      "available": true
+    },
+    "risk.score": {
+      "artifacts": [
+        {
+          "destination": "services/risk/scoring.py",
+          "sha256": "921a1e8cfc92a75c7cf01feb55cde22b77e8833a9603f69c97388db8bd11d8de",
+          "source": "risk/scoring.py"
+        }
+      ],
+      "available": true
+    },
+    "sarif.normalize": {
+      "artifacts": [
+        {
+          "destination": "services/normalize/normalizers.py",
+          "sha256": "fb341839a43682f638ce28a2be1c0c6a32b2e658bc6826d59a2a22bfacb74c62",
+          "source": "apps/api/normalizers.py"
+        }
+      ],
+      "available": true
+    },
+    "sbom.normalize": {
+      "artifacts": [
+        {
+          "destination": "services/sbom/normalizer.py",
+          "sha256": "17c969fcf1393dadef2b07066401214cbceaea1f7153e9a949d5bac9b211f8d6",
+          "source": "lib4sbom/normalizer.py"
+        }
+      ],
+      "available": true
+    }
+  },
+  "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+}

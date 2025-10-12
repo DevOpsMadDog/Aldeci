@@ -7,7 +7,7 @@ import json
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Sequence
+from typing import Dict, List, Mapping, MutableMapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[2]
 UPSTREAM_DIR = ROOT / ".upstream" / "Fixops"
@@ -18,20 +18,86 @@ ATTRIBUTION_TEMPLATE = "# Sourced from FixOps ({sha})"
 BANNER_WIDTH = "# ----------------------------------------"
 
 
-@dataclass
+@dataclass(frozen=True)
 class UpstreamFile:
     path: str
     language: str
     module: str | None
 
 
-@dataclass
-class ImportRequest:
-    capability: str
-    candidates: List[UpstreamFile]
+@dataclass(frozen=True)
+class Selector:
+    """Describe an upstream file to copy into the repository."""
+
+    source: str
+    destination: str
 
 
-def load_index() -> Dict[str, UpstreamFile]:
+@dataclass(frozen=True)
+class CapabilityConfig:
+    """Mapping of a logical capability to upstream files or an alias."""
+
+    selectors: Sequence[Selector] | None = None
+    alias_of: str | None = None
+
+
+CAPABILITY_MAP: Dict[str, CapabilityConfig] = {
+    "sbom.normalize": CapabilityConfig(
+        selectors=[
+            Selector("lib4sbom/normalizer.py", "services/sbom/normalizer.py"),
+        ]
+    ),
+    "sarif.normalize": CapabilityConfig(
+        selectors=[
+            Selector("apps/api/normalizers.py", "services/normalize/normalizers.py"),
+        ]
+    ),
+    "risk.score": CapabilityConfig(
+        selectors=[
+            Selector("risk/scoring.py", "services/risk/scoring.py"),
+        ]
+    ),
+    "epss": CapabilityConfig(
+        selectors=[
+            Selector("risk/feeds/__init__.py", "infra/feeds/__init__.py"),
+            Selector("risk/feeds/epss.py", "infra/feeds/epss.py"),
+        ]
+    ),
+    "kev": CapabilityConfig(
+        selectors=[
+            Selector("risk/feeds/__init__.py", "infra/feeds/__init__.py"),
+            Selector("risk/feeds/kev.py", "infra/feeds/kev.py"),
+        ]
+    ),
+    "provenance.attest": CapabilityConfig(
+        selectors=[
+            Selector("services/provenance/attestation.py", "services/provenance/attestation.py"),
+            Selector("telemetry/__init__.py", "telemetry/__init__.py"),
+            Selector("telemetry/_noop.py", "telemetry/_noop.py"),
+            Selector("telemetry/fastapi_noop.py", "telemetry/fastapi_noop.py"),
+        ]
+    ),
+    "provenance.verify": CapabilityConfig(alias_of="provenance.attest"),
+    "evidence.bundle": CapabilityConfig(
+        selectors=[
+            Selector("evidence/__init__.py", "services/evidence/__init__.py"),
+            Selector("evidence/packager.py", "services/evidence/packager.py"),
+            Selector("scripts/signing/sign-artifact.sh", "infra/signing/sign-artifact.sh"),
+            Selector("scripts/signing/verify-artifact.sh", "infra/signing/verify-artifact.sh"),
+        ]
+    ),
+    "graph.lineage": CapabilityConfig(
+        selectors=[
+            Selector("services/graph/__init__.py", "services/graph/__init__.py"),
+            Selector("services/graph/graph.py", "services/graph/graph.py"),
+        ]
+    ),
+    "graph.kev_in_last": CapabilityConfig(alias_of="graph.lineage"),
+    "graph.anomalies": CapabilityConfig(alias_of="graph.lineage"),
+}
+
+
+def load_index() -> tuple[Dict[str, UpstreamFile], Dict[str, str]]:
     if not INDEX_PATH.is_file():
         raise FileNotFoundError("Run tools/importer/index_upstream.py before selective imports.")
     payload = json.loads(INDEX_PATH.read_text(encoding="utf-8"))
@@ -43,27 +109,8 @@ def load_index() -> Dict[str, UpstreamFile]:
             module=entry.get("module"),
         )
         records[record.path] = record
-    return records
-
-
-def tokenize_capability(capability: str) -> List[str]:
-    tokens: List[str] = []
-    for segment in capability.replace("-", ".").split('.'):
-        cleaned = segment.strip().lower()
-        if cleaned:
-            tokens.append(cleaned)
-    return tokens
-
-
-def find_candidates(capability: str, records: Dict[str, UpstreamFile]) -> List[UpstreamFile]:
-    tokens = tokenize_capability(capability)
-    matches: List[UpstreamFile] = []
-    for record in records.values():
-        haystack = record.path.lower()
-        if all(token in haystack for token in tokens):
-            matches.append(record)
-    matches.sort(key=lambda item: item.path)
-    return matches
+    symbols = payload.get("symbols", {})
+    return records, symbols
 
 
 def ensure_destination(path: Path) -> None:
@@ -104,18 +151,32 @@ def calculate_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def build_import_plan(capabilities: Sequence[str], records: Dict[str, UpstreamFile]) -> List[ImportRequest]:
-    plan: List[ImportRequest] = []
-    for capability in capabilities:
-        candidates = find_candidates(capability, records)
-        plan.append(ImportRequest(capability=capability, candidates=candidates))
-    return plan
+def capability_tokens(capability: str) -> List[str]:
+    tokens: List[str] = []
+    for segment in capability.replace("-", ".").split("."):
+        cleaned = segment.strip().lower()
+        if cleaned:
+            tokens.append(cleaned)
+    return tokens
 
 
-def write_import_map(mapping: Dict[str, Dict[str, str]]) -> None:
+def write_artifacts(
+    mapping: Mapping[str, MutableMapping[str, object]],
+    *,
+    gaps: Sequence[Mapping[str, object]],
+    sha: str,
+) -> None:
     ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "upstream_sha": sha,
+        "capabilities": mapping,
+    }
     (ARTIFACTS_DIR / "upstream_map.json").write_text(
-        json.dumps(mapping, indent=2, sort_keys=True),
+        json.dumps(payload, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    (ARTIFACTS_DIR / "gaps.json").write_text(
+        json.dumps({"upstream_sha": sha, "gaps": list(gaps)}, indent=2, sort_keys=True),
         encoding="utf-8",
     )
 
@@ -126,31 +187,99 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--dest-root", default=".", help="Destination root override")
     args = parser.parse_args(argv)
 
-    records = load_index()
-    plan = build_import_plan(args.capabilities, records)
+    records, _ = load_index()
     sha = SHA_PATH.read_text(encoding="utf-8").strip() if SHA_PATH.is_file() else "unknown"
     dest_root = Path(args.dest_root).resolve()
 
-    import_map: Dict[str, Dict[str, str]] = {}
-    gaps: List[str] = []
+    results: Dict[str, MutableMapping[str, object]] = {}
+    gaps: List[Mapping[str, object]] = []
 
-    for request in plan:
-        if not request.candidates:
-            gaps.append(request.capability)
-            continue
-        selected = request.candidates[0]
-        source_path = selected.path
-        dest_path = dest_root / source_path
-        copy_file(selected, dest_path, sha)
-        import_map[source_path] = {
-            "destination": dest_path.relative_to(dest_root).as_posix(),
-            "sha256": calculate_sha256(dest_path),
+    def process(capability: str, stack: Sequence[str] | None = None) -> MutableMapping[str, object]:
+        if capability in results:
+            return results[capability]
+        stack = list(stack or [])
+        if capability in stack:
+            raise RuntimeError(f"Cyclic capability alias detected: {' -> '.join(stack + [capability])}")
+        stack.append(capability)
+
+        config = CAPABILITY_MAP.get(capability)
+        if config is None:
+            entry = {
+                "available": False,
+                "reason": "no mapping configured",
+                "suggested_search_terms": capability_tokens(capability),
+            }
+            results[capability] = entry
+            return entry
+
+        if config.alias_of:
+            alias_result = process(config.alias_of, stack)
+            entry = {
+                "available": alias_result.get("available", False),
+                "alias_of": config.alias_of,
+                "artifacts": alias_result.get("artifacts", []),
+            }
+            if not entry["available"]:
+                entry["reason"] = alias_result.get("reason", "not available")
+                entry["suggested_search_terms"] = capability_tokens(capability)
+            results[capability] = entry
+            return entry
+
+        selectors = config.selectors or []
+        artifacts: List[Mapping[str, str]] = []
+        missing_sources: List[str] = []
+        for selector in selectors:
+            record = records.get(selector.source)
+            if record is None:
+                missing_sources.append(selector.source)
+                continue
+            destination = dest_root / selector.destination
+            try:
+                copy_file(record, destination, sha)
+            except FileNotFoundError:
+                missing_sources.append(selector.source)
+                continue
+            sha256 = calculate_sha256(destination)
+            artifacts.append(
+                {
+                    "source": record.path,
+                    "destination": selector.destination,
+                    "sha256": sha256,
+                }
+            )
+        if missing_sources:
+            entry = {
+                "available": False,
+                "reason": f"missing upstream source(s): {', '.join(sorted(missing_sources))}",
+                "suggested_search_terms": capability_tokens(capability),
+            }
+            results[capability] = entry
+            return entry
+
+        entry = {
+            "available": True,
+            "artifacts": artifacts,
         }
+        results[capability] = entry
+        return entry
 
-    write_import_map(import_map)
+    for capability in args.capabilities:
+        outcome = process(capability)
+        if not outcome.get("available"):
+            gaps.append(
+                {
+                    "capability": capability,
+                    "reason": outcome.get("reason", "not found"),
+                    "upstream_sha": sha,
+                    "suggested_search_terms": outcome.get("suggested_search_terms", capability_tokens(capability)),
+                }
+            )
+
+    write_artifacts(results, gaps=gaps, sha=sha)
 
     if gaps:
-        raise SystemExit(f"GAP: missing upstream capabilities: {', '.join(gaps)}")
+        missing = ", ".join(entry["capability"] for entry in gaps)
+        raise SystemExit(f"GAP: missing upstream capabilities: {missing}")
     return 0
 
 

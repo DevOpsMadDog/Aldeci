@@ -4,6 +4,8 @@ __pycache__/
 .upstream/
 artifacts/*
 !artifacts/
+!artifacts/gaps.json
+!artifacts/upstream_map.json
 !artifacts/upstream_symbol_index.json
 !artifacts/upstream_sha.txt
 reports/

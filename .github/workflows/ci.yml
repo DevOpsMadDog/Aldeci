@@ -55,6 +55,7 @@ jobs:
           python-version: '3.11'
       - run: pip install .
       - run: python tools/docgen/api_cli_map.py
+      - run: git diff --exit-code docs/API_CLI_MAP.md docs/INTERACTIONS.md
 
   reuse-check:
     runs-on: ubuntu-latest
