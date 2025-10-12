@@ -72,7 +72,7 @@ def load_module_map(files: Iterable[Path]) -> Dict[str, str]:
     module_map: Dict[str, str] = {}
     for path in files:
         rel = path.relative_to(UPSTREAM_DIR).as_posix()
-        module_map[rel[:-3].replace("/", ".")] = rel
+        module_map[rel] = rel[:-3].replace("/", ".")
     return module_map
 
 
@@ -95,7 +95,7 @@ def collect_symbol_records(target_dirs: Sequence[str]) -> List[SymbolRecord]:
     records: List[SymbolRecord] = []
     for path in files:
         rel = path.relative_to(UPSTREAM_DIR).as_posix()
-        module = module_map.get(rel[:-3].replace("/", "."))
+        module = module_map.get(rel)
         source = path.read_text(encoding="utf-8")
         tree = ast.parse(source, filename=str(path))
         classes, functions = extract_top_level_symbols(tree)
