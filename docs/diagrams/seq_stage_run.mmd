@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant CLI
+    participant Local
+    participant API
+    CLI->>Local: aldecI stage run
+    Local-->>CLI: exit 12
+    CLI->>API: POST /v1/stage/run
+    API-->>CLI: 501 GAP
+    Note over CLI,API: Upstream stage runner not available in reuse bundle.

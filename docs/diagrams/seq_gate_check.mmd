@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant CLI
+    participant Local
+    participant API
+    CLI->>Local: aldecI gate
+    Local-->>CLI: exit 12
+    CLI->>API: POST /v1/gate/check
+    API-->>CLI: 501 GAP
+    Note over CLI,API: Policy gate evaluation not included in reuse artefacts.
