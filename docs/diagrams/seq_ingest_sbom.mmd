@@ -4,8 +4,8 @@ sequenceDiagram
     participant API
     CLI->>Local: aldecI ingest sbom
     Local->>API: POST /v1/ingest/sbom
-    participant S570723 as services.normalize.normalizers.InputNormalizer.load_sbom
-    API->>S570723: call
-    S570723-->>API: result
+    participant S937330 as services.normalize.normalizers.InputNormalizer.load_sbom
+    API->>S937330: call
+    S937330-->>API: result
     API-->>Local: response
     Local-->>CLI: materialise outputs

@@ -52,19 +52,16 @@ def sample_environment(tmp_path: Path) -> dict[str, Path]:
 
     sbom_path = tmp_path / "sample_sbom.json"
     sbom_payload = {
-        "detectedManifests": {
-            "package-lock.json": {
-                "resolved": {
-                    "demo@1.0.0": {
-                        "name": "demo",
-                        "version": "1.0.0",
-                        "packageUrl": "pkg:pypi/demo@1.0.0",
-                        "licenses": ["MIT"],
-                        "source": {"name": "demo-publisher"},
-                    }
-                }
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.4",
+        "components": [
+            {
+                "name": "demo",
+                "version": "1.0.0",
+                "purl": "pkg:pypi/demo@1.0.0",
+                "licenses": ["MIT"],
             }
-        }
+        ],
     }
     sbom_path.write_text(json.dumps(sbom_payload), encoding="utf-8")
 

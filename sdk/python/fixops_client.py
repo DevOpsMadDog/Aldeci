@@ -124,14 +124,12 @@ class FixopsClient:
     def graph_lineage(
         self, request: schemas.GraphLineageRequest
     ) -> schemas.GraphLineageResponse:
-        response = self._request(
-            "POST", "/v1/graph/lineage", json_payload=self._dump(request)
-        )
+        response = self._request("GET", "/v1/graph/lineage", json_payload=self._dump(request))
         return self._load(schemas.GraphLineageResponse, response)
 
     def graph_kev(self, request: schemas.GraphKevRequest) -> schemas.GraphKevResponse:
         response = self._request(
-            "POST", "/v1/graph/kev-in-last", json_payload=self._dump(request)
+            "GET", "/v1/graph/kev-in-last", json_payload=self._dump(request)
         )
         return self._load(schemas.GraphKevResponse, response)
 
@@ -139,7 +137,7 @@ class FixopsClient:
         self, request: schemas.GraphAnomaliesRequest
     ) -> schemas.GraphAnomaliesResponse:
         response = self._request(
-            "POST", "/v1/graph/anomalies", json_payload=self._dump(request)
+            "GET", "/v1/graph/anomalies", json_payload=self._dump(request)
         )
         return self._load(schemas.GraphAnomaliesResponse, response)
 

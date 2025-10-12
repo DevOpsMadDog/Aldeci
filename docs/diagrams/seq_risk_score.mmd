@@ -4,17 +4,17 @@ sequenceDiagram
     participant API
     CLI->>Local: aldecI risk score
     Local->>API: POST /v1/risk/score
-    participant S595268 as services.risk.scoring.compute_risk_profile
-    API->>S595268: call
-    S595268-->>API: result
-    participant S772533 as services.risk.scoring.write_risk_report
-    API->>S772533: call
-    S772533-->>API: result
-    participant I547621 as infra.feeds.epss.load_epss_scores
-    API->>I547621: invoke
-    I547621-->>API: ack
-    participant I409907 as infra.feeds.kev.load_kev_catalog
-    API->>I409907: invoke
-    I409907-->>API: ack
+    participant S930457 as services.risk.scoring.compute_risk_profile
+    API->>S930457: call
+    S930457-->>API: result
+    participant S271007 as services.risk.scoring.write_risk_report
+    API->>S271007: call
+    S271007-->>API: result
+    participant I590352 as infra.feeds.epss.load_epss_scores
+    API->>I590352: invoke
+    I590352-->>API: ack
+    participant I228435 as infra.feeds.kev.load_kev_catalog
+    API->>I228435: invoke
+    I228435-->>API: ack
     API-->>Local: response
     Local-->>CLI: materialise outputs

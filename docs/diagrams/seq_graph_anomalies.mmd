@@ -3,15 +3,15 @@ sequenceDiagram
     participant Local
     participant API
     CLI->>Local: aldecI graph anomalies
-    Local->>API: POST /v1/graph/anomalies
-    participant S605255 as services.graph.graph.ProvenanceGraph.detect_version_anomalies
-    API->>S605255: call
-    S605255-->>API: result
-    participant S518151 as services.graph.graph.build_graph_from_sources
-    API->>S518151: call
-    S518151-->>API: result
-    participant I283076 as telemetry.configure
-    API->>I283076: invoke
-    I283076-->>API: ack
+    Local->>API: GET /v1/graph/anomalies
+    participant S990766 as services.graph.graph.ProvenanceGraph.detect_version_anomalies
+    API->>S990766: call
+    S990766-->>API: result
+    participant S206271 as services.graph.graph.build_graph_from_sources
+    API->>S206271: call
+    S206271-->>API: result
+    participant I870404 as telemetry.configure
+    API->>I870404: invoke
+    I870404-->>API: ack
     API-->>Local: response
     Local-->>CLI: materialise outputs

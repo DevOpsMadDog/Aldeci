@@ -1,7 +1,7 @@
 """Graph analysis endpoints."""
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Body
 
 from apps.api.errors import capability_unavailable, runtime_error
 from apps.api.schemas import (
@@ -18,8 +18,8 @@ from apps.runtime.exceptions import CapabilityUnavailable
 router = APIRouter(prefix="/v1/graph", tags=["graph"])
 
 
-@router.post("/lineage", response_model=GraphLineageResponse)
-def lineage(request: GraphLineageRequest) -> GraphLineageResponse:
+@router.get("/lineage", response_model=GraphLineageResponse)
+def lineage(request: GraphLineageRequest = Body(...)) -> GraphLineageResponse:
     try:
         return local_handlers.handle_graph_lineage(request)
     except CapabilityUnavailable as exc:
@@ -28,8 +28,8 @@ def lineage(request: GraphLineageRequest) -> GraphLineageResponse:
         raise runtime_error(exc)
 
 
-@router.post("/kev-in-last", response_model=GraphKevResponse)
-def kev_in_last(request: GraphKevRequest) -> GraphKevResponse:
+@router.get("/kev-in-last", response_model=GraphKevResponse)
+def kev_in_last(request: GraphKevRequest = Body(...)) -> GraphKevResponse:
     try:
         return local_handlers.handle_graph_kev(request)
     except CapabilityUnavailable as exc:
@@ -38,8 +38,8 @@ def kev_in_last(request: GraphKevRequest) -> GraphKevResponse:
         raise runtime_error(exc)
 
 
-@router.post("/anomalies", response_model=GraphAnomaliesResponse)
-def anomalies(request: GraphAnomaliesRequest) -> GraphAnomaliesResponse:
+@router.get("/anomalies", response_model=GraphAnomaliesResponse)
+def anomalies(request: GraphAnomaliesRequest = Body(...)) -> GraphAnomaliesResponse:
     try:
         return local_handlers.handle_graph_anomalies(request)
     except CapabilityUnavailable as exc:
