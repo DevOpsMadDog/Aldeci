@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant CLI
+    participant Local
+    participant API
+    CLI->>Local: aldecI evidence bundle
+    Local->>API: POST /v1/evidence/bundle
+    participant S709067 as services.evidence.packager.load_policy
+    API->>S709067: call
+    S709067-->>API: result
+    participant S704000 as services.evidence.packager.evaluate_policy
+    API->>S704000: call
+    S704000-->>API: result
+    participant S840662 as services.evidence.packager.create_bundle
+    API->>S840662: call
+    S840662-->>API: result
+    participant I454933 as infra.signing.sign-artifact.sh
+    API->>I454933: invoke
+    I454933-->>API: ack
+    API-->>Local: response
+    Local-->>CLI: materialise outputs

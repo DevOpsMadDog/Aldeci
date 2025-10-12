@@ -1,5 +1,4 @@
 """Execution registry bridging CLI commands, API routes, and reused services."""
-
 from __future__ import annotations
 
 import json
@@ -17,7 +16,9 @@ if not UPSTREAM_MAP_PATH.is_file():
     )
 
 UPSTREAM_PAYLOAD = json.loads(UPSTREAM_MAP_PATH.read_text(encoding="utf-8"))
-GAPS_PAYLOAD = json.loads(GAPS_PATH.read_text(encoding="utf-8")) if GAPS_PATH.is_file() else {"gaps": []}
+GAPS_PAYLOAD = (
+    json.loads(GAPS_PATH.read_text(encoding="utf-8")) if GAPS_PATH.is_file() else {"gaps": []}
+)
 GAP_INDEX: Dict[str, Dict[str, Any]] = {
     entry["capability"]: entry for entry in GAPS_PAYLOAD.get("gaps", [])
 }
@@ -41,44 +42,77 @@ def _availability(capability: str) -> Dict[str, Any]:
     }
 
 
+def _availability_entry(
+    capability: str,
+    *,
+    alias_of: str | None = None,
+    default_reason: str | None = None,
+) -> Dict[str, Any]:
+    """Return availability metadata with optional alias and fallback reason."""
+
+    payload = _availability(capability)
+    if alias_of:
+        payload["alias_of"] = alias_of
+    if default_reason and not payload.get("reason"):
+        payload["reason"] = default_reason
+    return payload
+
+
 EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
-    "sbom.normalize": {
-        **_availability("sbom.normalize"),
+    "stage.run": {
+        **_availability_entry(
+            "stage.run",
+            default_reason="Upstream stage runner not available in reuse bundle.",
+        ),
         "cli": {
-            "command": "sbom normalize",
-            "syntax": "aldecI sbom normalize --input <sbom.json> [--sbom-type auto]",
+            "command": "stage run",
+            "syntax": "aldecI stage run --stage <requirements|design|build|test|deploy|operate|decision>",
         },
-        "api": {"method": "POST", "route": "/v1/sbom/normalize"},
+        "api": {"method": "POST", "route": "/v1/stage/run"},
+        "domain": [],
+        "services": [],
+        "infra": [],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/stage/<stage>.json"],
+        "description": "Execute a FixOps SDLC stage runbook.",
+    },
+    "ingest.sbom": {
+        **_availability_entry("sbom.normalize", alias_of="sbom.normalize"),
+        "cli": {
+            "command": "ingest sbom",
+            "syntax": "aldecI ingest sbom --in <sbom.json> --out artifacts/sbom/normalized.json",
+        },
+        "api": {"method": "POST", "route": "/v1/ingest/sbom"},
         "domain": ["domain.sbom.normalize_sbom"],
         "services": [
             "services.normalize.normalizers.InputNormalizer.load_sbom",
         ],
         "infra": [],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["normalized_sbom.json"],
+        "outputs": ["artifacts/sbom/normalized.json"],
         "description": "Normalise CycloneDX/SPDX SBOM payloads to a canonical structure.",
     },
-    "sarif.normalize": {
-        **_availability("sarif.normalize"),
+    "ingest.sarif": {
+        **_availability_entry("sarif.normalize", alias_of="sarif.normalize"),
         "cli": {
-            "command": "sarif normalize",
-            "syntax": "aldecI sarif normalize --input <sarif.json>",
+            "command": "ingest sarif",
+            "syntax": "aldecI ingest sarif --in <sarif.json> --out artifacts/sarif/normalized.json",
         },
-        "api": {"method": "POST", "route": "/v1/sarif/normalize"},
+        "api": {"method": "POST", "route": "/v1/ingest/sarif"},
         "domain": ["domain.sarif.normalize_sarif"],
         "services": [
             "services.normalize.normalizers.InputNormalizer.load_sarif",
         ],
         "infra": [],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["normalized_sarif.json"],
+        "outputs": ["artifacts/sarif/normalized.json"],
         "description": "Parse SARIF logs, harmonise severities, and summarise findings.",
     },
     "risk.score": {
-        **_availability("risk.score"),
+        **_availability_entry("risk.score"),
         "cli": {
             "command": "risk score",
-            "syntax": "aldecI risk score --sbom <normalized.json> --epss <epss.csv> --kev <kev.json>",
+            "syntax": "aldecI risk score --sbom artifacts/sbom/normalized.json --epss feeds/epss.csv --kev feeds/kev.json --out artifacts/risk.json",
         },
         "api": {"method": "POST", "route": "/v1/risk/score"},
         "domain": [],
@@ -91,48 +125,14 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
             "infra.feeds.kev.load_kev_catalog",
         ],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["risk_report.json", "risk_report.html"],
+        "outputs": ["artifacts/risk.json"],
         "description": "Fuse EPSS, KEV, exposure, and version lag data into risk scores.",
     },
-    "epss": {
-        **_availability("epss"),
-        "cli": {
-            "command": "feeds epss",
-            "syntax": "aldecI feeds epss --out data/feeds/epss.csv",
-        },
-        "api": {"method": "POST", "route": "/v1/feeds/epss"},
-        "domain": [],
-        "services": [],
-        "infra": [
-            "infra.feeds.epss.update_epss_feed",
-            "infra.feeds.epss.load_epss_scores",
-        ],
-        "overlays": ["demo", "enterprise"],
-        "outputs": ["data/feeds/epss.csv"],
-        "description": "Download and cache the latest EPSS probability scores.",
-    },
-    "kev": {
-        **_availability("kev"),
-        "cli": {
-            "command": "feeds kev",
-            "syntax": "aldecI feeds kev --out data/feeds/kev.json",
-        },
-        "api": {"method": "POST", "route": "/v1/feeds/kev"},
-        "domain": [],
-        "services": [],
-        "infra": [
-            "infra.feeds.kev.update_kev_feed",
-            "infra.feeds.kev.load_kev_catalog",
-        ],
-        "overlays": ["demo", "enterprise"],
-        "outputs": ["data/feeds/kev.json"],
-        "description": "Fetch and normalise the CISA Known Exploited Vulnerabilities catalogue.",
-    },
     "provenance.attest": {
-        **_availability("provenance.attest"),
+        **_availability_entry("provenance.attest"),
         "cli": {
-            "command": "provenance attest",
-            "syntax": "aldecI provenance attest --artifact <path> --builder <id> --source <uri> --out <attestation.json>",
+            "command": "prov attest",
+            "syntax": "aldecI prov attest --artifact <path> --out artifacts/attestations/<id>.json",
         },
         "api": {"method": "POST", "route": "/v1/provenance/attest"},
         "domain": ["domain.provenance.generate_attestation"],
@@ -142,14 +142,14 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         ],
         "infra": ["telemetry.configure"],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["attestations/<artifact>.json"],
+        "outputs": ["artifacts/attestations/<id>.json"],
         "description": "Create SLSA v1 DSSE attestations for build artefacts.",
     },
     "provenance.verify": {
-        **_availability("provenance.verify"),
+        **_availability_entry("provenance.verify"),
         "cli": {
-            "command": "provenance verify",
-            "syntax": "aldecI provenance verify --artifact <path> --attestation <attestation.json>",
+            "command": "prov verify",
+            "syntax": "aldecI prov verify --artifact <path> --attestation <attestation.json>",
         },
         "api": {"method": "POST", "route": "/v1/provenance/verify"},
         "domain": ["domain.provenance.verify_attestation"],
@@ -158,14 +158,65 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         ],
         "infra": ["telemetry.configure"],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["verification_report.json"],
+        "outputs": ["artifacts/attestations/verification.json"],
         "description": "Validate attestations against artefact digests, builders, and metadata.",
     },
+    "graph.lineage": {
+        **_availability_entry("graph.lineage"),
+        "cli": {
+            "command": "graph lineage",
+            "syntax": "aldecI graph lineage --artifact <id|path>",
+        },
+        "api": {"method": "GET", "route": "/v1/graph/lineage"},
+        "domain": [],
+        "services": [
+            "services.graph.graph.ProvenanceGraph.lineage",
+            "services.graph.graph.build_graph_from_sources",
+        ],
+        "infra": ["telemetry.configure"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/graph/lineage.json"],
+        "description": "Construct provenance graphs and return artefact lineage traversals.",
+    },
+    "graph.kev_in_last": {
+        **_availability_entry("graph.kev_in_last"),
+        "cli": {
+            "command": "graph kev-in-last",
+            "syntax": "aldecI graph kev-in-last --releases <N>",
+        },
+        "api": {"method": "GET", "route": "/v1/graph/kev-in-last"},
+        "domain": [],
+        "services": [
+            "services.graph.graph.ProvenanceGraph.components_with_kev",
+            "services.graph.graph.build_graph_from_sources",
+        ],
+        "infra": ["telemetry.configure"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/graph/kev_components.json"],
+        "description": "Identify components linked to KEV CVEs in the most recent releases.",
+    },
+    "graph.anomalies": {
+        **_availability_entry("graph.anomalies"),
+        "cli": {
+            "command": "graph anomalies",
+            "syntax": "aldecI graph anomalies --type version-drift",
+        },
+        "api": {"method": "GET", "route": "/v1/graph/anomalies"},
+        "domain": [],
+        "services": [
+            "services.graph.graph.ProvenanceGraph.detect_version_anomalies",
+            "services.graph.graph.build_graph_from_sources",
+        ],
+        "infra": ["telemetry.configure"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/graph/anomalies.json"],
+        "description": "Detect release timeline anomalies across the provenance graph.",
+    },
     "evidence.bundle": {
-        **_availability("evidence.bundle"),
+        **_availability_entry("evidence.bundle"),
         "cli": {
             "command": "evidence bundle",
-            "syntax": "aldecI evidence bundle --config <bundle.yml> --out-dir evidence/",
+            "syntax": "aldecI evidence bundle --release <id> --out artifacts/evidence/<id>.zip",
         },
         "api": {"method": "POST", "route": "/v1/evidence/bundle"},
         "domain": [],
@@ -176,59 +227,42 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         ],
         "infra": ["infra.signing.sign-artifact.sh"],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["evidence/bundles/<tag>.zip", "evidence/bundles/MANIFEST.yaml"],
+        "outputs": ["artifacts/evidence/<id>.zip", "artifacts/evidence/<id>.yaml"],
         "description": "Assemble signed evidence bundles with policy evaluation results.",
     },
-    "graph.lineage": {
-        **_availability("graph.lineage"),
+    "gate.check": {
+        **_availability_entry(
+            "gate.check",
+            default_reason="Policy gate evaluation not included in reuse artefacts.",
+        ),
         "cli": {
-            "command": "graph lineage",
-            "syntax": "aldecI graph lineage --repo <path> --artifact <name>",
+            "command": "gate",
+            "syntax": "aldecI gate --policy config/policy.yml",
         },
-        "api": {"method": "POST", "route": "/v1/graph/lineage"},
+        "api": {"method": "POST", "route": "/v1/gate/check"},
         "domain": [],
-        "services": [
-            "services.graph.graph.build_graph_from_sources",
-            "services.graph.graph.ProvenanceGraph.lineage",
-        ],
-        "infra": ["telemetry.configure"],
+        "services": [],
+        "infra": [],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["graph/lineage.json"],
-        "description": "Construct provenance graphs and return artefact lineage traversals.",
+        "outputs": ["artifacts/gate/report.json"],
+        "description": "Evaluate policy gates against collected evidence.",
     },
-    "graph.kev_in_last": {
-        **_availability("graph.kev_in_last"),
+    "persona.explain": {
+        **_availability_entry(
+            "persona.explain",
+            default_reason="Persona explanation models are not part of the reuse snapshot.",
+        ),
         "cli": {
-            "command": "graph kev-in-last",
-            "syntax": "aldecI graph kev-in-last --repo <path> --releases <n>",
+            "command": "persona explain",
+            "syntax": "aldecI persona explain --role <role> --risk artifacts/risk.json",
         },
-        "api": {"method": "POST", "route": "/v1/graph/kev-in-last"},
+        "api": {"method": "POST", "route": "/v1/persona/explain"},
         "domain": [],
-        "services": [
-            "services.graph.graph.build_graph_from_sources",
-            "services.graph.graph.ProvenanceGraph.components_with_kev",
-        ],
-        "infra": ["telemetry.configure"],
+        "services": [],
+        "infra": [],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["graph/kev_components.json"],
-        "description": "Identify components linked to KEV CVEs in the most recent releases.",
-    },
-    "graph.anomalies": {
-        **_availability("graph.anomalies"),
-        "cli": {
-            "command": "graph anomalies",
-            "syntax": "aldecI graph anomalies --repo <path>",
-        },
-        "api": {"method": "POST", "route": "/v1/graph/anomalies"},
-        "domain": [],
-        "services": [
-            "services.graph.graph.build_graph_from_sources",
-            "services.graph.graph.ProvenanceGraph.detect_version_anomalies",
-        ],
-        "infra": ["telemetry.configure"],
-        "overlays": ["demo", "enterprise"],
-        "outputs": ["graph/anomalies.json"],
-        "description": "Detect release timeline anomalies across the provenance graph.",
+        "outputs": ["artifacts/persona/<role>.md"],
+        "description": "Generate risk narratives tailored for specific personas.",
     },
 }
 

@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant CLI
+    participant Local
+    participant API
+    CLI->>Local: aldecI graph lineage
+    Local->>API: GET /v1/graph/lineage
+    participant S172213 as services.graph.graph.ProvenanceGraph.lineage
+    API->>S172213: call
+    S172213-->>API: result
+    participant S206271 as services.graph.graph.build_graph_from_sources
+    API->>S206271: call
+    S206271-->>API: result
+    participant I870404 as telemetry.configure
+    API->>I870404: invoke
+    I870404-->>API: ack
+    API-->>Local: response
+    Local-->>CLI: materialise outputs
