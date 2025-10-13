@@ -689,11 +689,13 @@ class InputNormalizer:
             return None
 
         components_payload = document.get("components")
-        if not isinstance(components_payload, list):
-            return None
+        if isinstance(components_payload, list):
+            component_entries: Iterable[Any] = components_payload
+        else:
+            component_entries = []
 
         components: list[SBOMComponent] = []
-        for entry in components_payload:
+        for entry in component_entries:
             if not isinstance(entry, dict):
                 continue
 
@@ -764,9 +766,6 @@ class InputNormalizer:
                     raw=entry,
                 )
             )
-
-        if not components:
-            return None
 
         metadata = {
             "component_count": len(components),
