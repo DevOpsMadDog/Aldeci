@@ -1,6 +1,7 @@
 """Generate documentation for API/CLI interactions directly from runtime objects."""
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import sys
@@ -283,9 +284,16 @@ def generate_interactions() -> str:
 
 
 def _sanitize_participant(name: str, prefix: str) -> str:
-    safe = name.replace(".", "_").replace("/", "_").replace("-", "_")
-    safe = safe.replace("<", "_").replace(">", "_")
-    return f"{prefix}{abs(hash(name)) % (10 ** 6)}"
+    safe = (
+        name.replace(".", "_")
+        .replace("/", "_")
+        .replace("-", "_")
+        .replace("<", "_")
+        .replace(">", "_")
+        .replace(" ", "_")
+    )
+    digest = hashlib.sha1(name.encode("utf-8")).hexdigest()[:6]
+    return f"{prefix}{digest}_{safe}"
 
 
 def _write_sequence_diagram(capability: str, meta: Dict[str, Any], _route_info: Dict[str, Any]) -> None:

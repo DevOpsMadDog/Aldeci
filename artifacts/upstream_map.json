@@ -82,6 +82,14 @@
       ],
       "available": true
     },
+    "graph.ingest": {
+      "available": false,
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "graph",
+        "ingest"
+      ]
+    },
     "graph.kev_in_last": {
       "alias_of": "graph.lineage",
       "artifacts": [
@@ -127,6 +135,14 @@
         }
       ],
       "available": true
+    },
+    "normalize.noise": {
+      "available": false,
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "normalize",
+        "noise"
+      ]
     },
     "persona.explain": {
       "artifacts": [
@@ -189,6 +205,14 @@
       ],
       "available": true
     },
+    "risk.join_feeds": {
+      "available": false,
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "risk",
+        "join_feeds"
+      ]
+    },
     "risk.score": {
       "artifacts": [
         {
@@ -218,6 +242,22 @@
         }
       ],
       "available": true
+    },
+    "signing.cosign_sign": {
+      "available": false,
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "signing",
+        "cosign_sign"
+      ]
+    },
+    "signing.cosign_verify": {
+      "available": false,
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "signing",
+        "cosign_verify"
+      ]
     },
     "stage.run": {
       "artifacts": [

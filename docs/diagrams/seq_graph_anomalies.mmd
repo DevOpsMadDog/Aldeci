@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L970138 as apps.runtime.local_handlers.handle_graph_anomalies
-    participant S753713 as services.graph.graph.ProvenanceGraph.detect_version_anomalies
-    participant S858265 as services.graph.graph.build_graph_from_sources
-    participant I828115 as telemetry.configure
+    participant Lf7cb2c_apps_runtime_local_handlers_handle_graph_anomalies as apps.runtime.local_handlers.handle_graph_anomalies
+    participant Sd47a66_services_graph_graph_ProvenanceGraph_detect_version_anomalies as services.graph.graph.ProvenanceGraph.detect_version_anomalies
+    participant Seaab22_services_graph_graph_build_graph_from_sources as services.graph.graph.build_graph_from_sources
+    participant I17e7be_telemetry_configure as telemetry.configure
     CLI->>Local: aldecI graph anomalies --type version-drift
-    Local->>L970138: execute
-    L970138-->>Local: results
-    Local->>S753713: call
-    S753713-->>Local: result
-    Local->>S858265: call
-    S858265-->>Local: result
-    Local->>I828115: invoke
-    I828115-->>Local: ack
+    Local->>Lf7cb2c_apps_runtime_local_handlers_handle_graph_anomalies: execute
+    Lf7cb2c_apps_runtime_local_handlers_handle_graph_anomalies-->>Local: results
+    Local->>Sd47a66_services_graph_graph_ProvenanceGraph_detect_version_anomalies: call
+    Sd47a66_services_graph_graph_ProvenanceGraph_detect_version_anomalies-->>Local: result
+    Local->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>Local: result
+    Local->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_anomalies
     SDK->>API: GET /v1/graph/anomalies
-    API->>S753713: call
-    S753713-->>API: result
-    API->>S858265: call
-    S858265-->>API: result
-    API->>I828115: invoke
-    I828115-->>API: ack
+    API->>Sd47a66_services_graph_graph_ProvenanceGraph_detect_version_anomalies: call
+    Sd47a66_services_graph_graph_ProvenanceGraph_detect_version_anomalies-->>API: result
+    API->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>API: result
+    API->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

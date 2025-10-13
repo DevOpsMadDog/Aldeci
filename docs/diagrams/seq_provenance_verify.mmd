@@ -3,22 +3,22 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L425284 as apps.runtime.local_handlers.handle_provenance_verify
-    participant S890103 as services.provenance.attestation.verify_attestation
-    participant I828115 as telemetry.configure
+    participant La65c50_apps_runtime_local_handlers_handle_provenance_verify as apps.runtime.local_handlers.handle_provenance_verify
+    participant S119a56_services_provenance_attestation_verify_attestation as services.provenance.attestation.verify_attestation
+    participant I17e7be_telemetry_configure as telemetry.configure
     CLI->>Local: aldecI prov verify --artifact <path> --attestation <attestation.json>
-    Local->>L425284: execute
-    L425284-->>Local: results
-    Local->>S890103: call
-    S890103-->>Local: result
-    Local->>I828115: invoke
-    I828115-->>Local: ack
+    Local->>La65c50_apps_runtime_local_handlers_handle_provenance_verify: execute
+    La65c50_apps_runtime_local_handlers_handle_provenance_verify-->>Local: results
+    Local->>S119a56_services_provenance_attestation_verify_attestation: call
+    S119a56_services_provenance_attestation_verify_attestation-->>Local: result
+    Local->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.provenance_verify
     SDK->>API: POST /v1/provenance/verify
-    API->>S890103: call
-    S890103-->>API: result
-    API->>I828115: invoke
-    I828115-->>API: ack
+    API->>S119a56_services_provenance_attestation_verify_attestation: call
+    S119a56_services_provenance_attestation_verify_attestation-->>API: result
+    API->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

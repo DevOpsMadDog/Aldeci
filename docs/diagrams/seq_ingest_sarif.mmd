@@ -3,17 +3,17 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L866006 as apps.runtime.local_handlers.handle_ingest_sarif
-    participant S604400 as services.normalize.normalizers.InputNormalizer.load_sarif
+    participant L4a6001_apps_runtime_local_handlers_handle_ingest_sarif as apps.runtime.local_handlers.handle_ingest_sarif
+    participant S8ad43b_services_normalize_normalizers_InputNormalizer_load_sarif as services.normalize.normalizers.InputNormalizer.load_sarif
     CLI->>Local: aldecI ingest sarif --in <sarif.json> --out artifacts/sarif/normalized.json
-    Local->>L866006: execute
-    L866006-->>Local: results
-    Local->>S604400: call
-    S604400-->>Local: result
+    Local->>L4a6001_apps_runtime_local_handlers_handle_ingest_sarif: execute
+    L4a6001_apps_runtime_local_handlers_handle_ingest_sarif-->>Local: results
+    Local->>S8ad43b_services_normalize_normalizers_InputNormalizer_load_sarif: call
+    S8ad43b_services_normalize_normalizers_InputNormalizer_load_sarif-->>Local: result
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.ingest_sarif
     SDK->>API: POST /v1/ingest/sarif
-    API->>S604400: call
-    S604400-->>API: result
+    API->>S8ad43b_services_normalize_normalizers_InputNormalizer_load_sarif: call
+    S8ad43b_services_normalize_normalizers_InputNormalizer_load_sarif-->>API: result
     API-->>SDK: response
     SDK-->>CLI: parsed response

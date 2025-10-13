@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L598778 as apps.runtime.local_handlers.handle_provenance_attest
-    participant S349972 as services.provenance.attestation.generate_attestation
-    participant S398702 as services.provenance.attestation.write_attestation
-    participant I828115 as telemetry.configure
+    participant L027a14_apps_runtime_local_handlers_handle_provenance_attest as apps.runtime.local_handlers.handle_provenance_attest
+    participant S04b20b_services_provenance_attestation_generate_attestation as services.provenance.attestation.generate_attestation
+    participant S38eb28_services_provenance_attestation_write_attestation as services.provenance.attestation.write_attestation
+    participant I17e7be_telemetry_configure as telemetry.configure
     CLI->>Local: aldecI prov attest --artifact <path> --out artifacts/attestations/<id>.json
-    Local->>L598778: execute
-    L598778-->>Local: results
-    Local->>S349972: call
-    S349972-->>Local: result
-    Local->>S398702: call
-    S398702-->>Local: result
-    Local->>I828115: invoke
-    I828115-->>Local: ack
+    Local->>L027a14_apps_runtime_local_handlers_handle_provenance_attest: execute
+    L027a14_apps_runtime_local_handlers_handle_provenance_attest-->>Local: results
+    Local->>S04b20b_services_provenance_attestation_generate_attestation: call
+    S04b20b_services_provenance_attestation_generate_attestation-->>Local: result
+    Local->>S38eb28_services_provenance_attestation_write_attestation: call
+    S38eb28_services_provenance_attestation_write_attestation-->>Local: result
+    Local->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.provenance_attest
     SDK->>API: POST /v1/provenance/attest
-    API->>S349972: call
-    S349972-->>API: result
-    API->>S398702: call
-    S398702-->>API: result
-    API->>I828115: invoke
-    I828115-->>API: ack
+    API->>S04b20b_services_provenance_attestation_generate_attestation: call
+    S04b20b_services_provenance_attestation_generate_attestation-->>API: result
+    API->>S38eb28_services_provenance_attestation_write_attestation: call
+    S38eb28_services_provenance_attestation_write_attestation-->>API: result
+    API->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

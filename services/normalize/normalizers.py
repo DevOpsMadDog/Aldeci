@@ -274,6 +274,7 @@ class SBOMComponent:
     licenses: List[str] = field(default_factory=list)
     supplier: Optional[str] = None
     raw: dict[str, Any] = field(default_factory=dict)
+    vulnerabilities: List[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -614,6 +615,8 @@ class InputNormalizer:
         packages = parser.get_packages() or []
         components = []
         append_component = components.append
+        component_by_ref: dict[str, SBOMComponent] = {}
+
         for package in packages:
             licenses: Iterable[Any] = package.get("licenses", [])
             license_values = [
@@ -626,20 +629,63 @@ class InputNormalizer:
             else:
                 supplier_name = supplier
 
-            append_component(
-                SBOMComponent(
-                    name=package.get("name", "unknown"),
-                    version=package.get("version"),
-                    purl=package.get("package_url") or package.get("purl"),
-                    licenses=license_values,
-                    supplier=supplier_name,
-                    raw=package,
-                )
+            purl_value = package.get("package_url") or package.get("purl")
+            if not purl_value:
+                external_refs = package.get("externalreference")
+                if isinstance(external_refs, Mapping):
+                    external_refs_iter: Iterable[Any] = external_refs.values()
+                else:
+                    external_refs_iter = external_refs or []
+                for reference in external_refs_iter:
+                    if isinstance(reference, Mapping):
+                        ref_type = str(reference.get("type") or reference.get("name") or "")
+                        if ref_type.lower() == "purl":
+                            purl_value = reference.get("url") or reference.get("locator")
+                            break
+                        category = str(reference.get("category") or "")
+                        if category.lower() == "package_manager" and str(reference.get("referenceType", reference.get("type", ""))).lower() == "purl":
+                            purl_value = reference.get("referenceLocator") or reference.get("locator")
+                            break
+                    elif isinstance(reference, (list, tuple)) and len(reference) >= 3:
+                        category = str(reference[0]).lower()
+                        ref_type = str(reference[1]).lower()
+                        if category == "package_manager" and ref_type == "purl":
+                            purl_value = reference[2]
+                            break
+
+            component = SBOMComponent(
+                name=package.get("name", "unknown"),
+                version=package.get("version"),
+                purl=purl_value,
+                licenses=license_values,
+                supplier=supplier_name,
+                raw=package,
             )
+            append_component(component)
+
+            for ref_key in ("bom-ref", "bom_ref", "bomRef", "id", "reference"):
+                ref_value = package.get(ref_key)
+                if isinstance(ref_value, str) and ref_value.strip():
+                    component_by_ref.setdefault(ref_value, component)
+                    break
 
         relationships = parser.get_relationships() or []
         services = parser.get_services() or []
         vulnerabilities = parser.get_vulnerabilities() or []
+
+        for vulnerability in vulnerabilities:
+            ref_candidates: Iterable[Any] = []
+            if isinstance(vulnerability, Mapping):
+                ref_candidates = (
+                    vulnerability.get("bom_link"),
+                    vulnerability.get("component"),
+                    vulnerability.get("ref"),
+                    vulnerability.get("target_ref"),
+                )
+            for ref in ref_candidates:
+                if isinstance(ref, str) and ref in component_by_ref:
+                    component_by_ref[ref].vulnerabilities.append(vulnerability)
+                    break
 
         metadata = {
             "component_count": len(components),
@@ -842,6 +888,13 @@ class InputNormalizer:
                 elif supplier_info:
                     supplier = str(supplier_info)
 
+                vulnerabilities = entry.get("vulnerabilities")
+                component_vulns = (
+                    [v for v in vulnerabilities if isinstance(v, dict)]
+                    if isinstance(vulnerabilities, list)
+                    else []
+                )
+
                 components.append(
                     SBOMComponent(
                         name=str(name),
@@ -850,6 +903,7 @@ class InputNormalizer:
                         licenses=list(licenses),
                         supplier=supplier,
                         raw=entry,
+                        vulnerabilities=component_vulns,
                     )
                 )
 
@@ -907,6 +961,13 @@ class InputNormalizer:
             if isinstance(supplier, dict):
                 supplier = supplier.get("name")
 
+            vulnerabilities = artifact.get("vulnerabilities")
+            component_vulns = (
+                [v for v in vulnerabilities if isinstance(v, dict)]
+                if isinstance(vulnerabilities, list)
+                else []
+            )
+
             components.append(
                 SBOMComponent(
                     name=str(name),
@@ -915,6 +976,7 @@ class InputNormalizer:
                     licenses=licenses,
                     supplier=str(supplier) if supplier else None,
                     raw=artifact,
+                    vulnerabilities=component_vulns,
                 )
             )
 

@@ -54,12 +54,45 @@ def sample_environment(tmp_path: Path) -> dict[str, Path]:
     sbom_payload = {
         "bomFormat": "CycloneDX",
         "specVersion": "1.4",
+        "version": 1,
+        "metadata": {
+            "timestamp": "2024-01-01T00:00:00Z",
+            "component": {
+                "type": "application",
+                "name": "demo-app",
+                "version": "1.0.0",
+                "bom-ref": "app",
+            },
+            "tools": [{"vendor": "Anchore", "name": "Syft", "version": "1.0.0"}],
+        },
         "components": [
             {
+                "type": "library",
+                "bom-ref": "pkg:pypi/demo@1.0.0",
                 "name": "demo",
                 "version": "1.0.0",
                 "purl": "pkg:pypi/demo@1.0.0",
-                "licenses": ["MIT"],
+                "licenses": [{"license": {"id": "MIT"}}],
+                "supplier": {"name": "Demo Supplier"},
+            }
+        ],
+        "vulnerabilities": [
+            {
+                "id": "CVE-2023-0001",
+                "source": {"name": "NVD"},
+                "ratings": [
+                    {
+                        "method": "CVSSv3.1",
+                        "score": 9.8,
+                        "severity": "critical",
+                    }
+                ],
+                "affects": [
+                    {
+                        "ref": "pkg:pypi/demo@1.0.0",
+                        "versions": [{"version": "1.0.0"}],
+                    }
+                ],
             }
         ],
     }
@@ -83,29 +116,6 @@ def sample_environment(tmp_path: Path) -> dict[str, Path]:
         ],
     }
     sarif_path.write_text(json.dumps(sarif_payload), encoding="utf-8")
-
-    normalized_sbom = tmp_path / "normalized_sbom.json"
-    normalized_sbom.write_text(
-        json.dumps(
-            {
-                "components": [
-                    {
-                        "name": "demo",
-                        "slug": "demo",
-                        "version": "1.0.0",
-                        "vulnerabilities": [
-                            {
-                                "cve": "CVE-2023-0001",
-                                "fix_version": "1.0.1",
-                            }
-                        ],
-                        "exposure": "internet",
-                    }
-                ]
-            }
-        ),
-        encoding="utf-8",
-    )
 
     epss_path = tmp_path / "epss.csv"
     epss_path.write_text("cve,epss\nCVE-2023-0001,0.9\n", encoding="utf-8")
@@ -156,7 +166,6 @@ def sample_environment(tmp_path: Path) -> dict[str, Path]:
     return {
         "sbom": sbom_path,
         "sarif": sarif_path,
-        "normalized_sbom": normalized_sbom,
         "epss": epss_path,
         "kev": kev_path,
         "artifact": artifact_path,
@@ -222,6 +231,8 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
         assert result.returncode == 0, result.stderr
         assert sbom_out.is_file()
 
+        normalized_sbom_path = sbom_out
+
         # ingest sarif
         sarif_out = sample_environment["artifacts_dir"] / "sarif" / "normalized.json"
         result = _run_cli(
@@ -248,7 +259,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
                 "risk",
                 "score",
                 "--sbom",
-                str(sample_environment["normalized_sbom"]),
+                str(normalized_sbom_path),
                 "--epss",
                 str(sample_environment["epss"]),
                 "--kev",
@@ -314,7 +325,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
                 "--attestations-dir",
                 str(attestation_dir),
                 "--normalized-sbom",
-                str(sample_environment["normalized_sbom"]),
+                str(normalized_sbom_path),
                 "--risk-report",
                 str(risk_out),
                 "--releases",
@@ -340,7 +351,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
                 "--attestations-dir",
                 str(attestation_dir),
                 "--normalized-sbom",
-                str(sample_environment["normalized_sbom"]),
+                str(normalized_sbom_path),
                 "--risk-report",
                 str(risk_out),
                 "--releases",
@@ -364,7 +375,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
                 "--attestations-dir",
                 str(attestation_dir),
                 "--normalized-sbom",
-                str(sample_environment["normalized_sbom"]),
+                str(normalized_sbom_path),
                 "--risk-report",
                 str(risk_out),
                 "--releases",
@@ -388,7 +399,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
                 "--release",
                 "v1.0.0",
                 "--normalized-sbom",
-                str(sample_environment["normalized_sbom"]),
+                str(normalized_sbom_path),
                 "--sbom-quality-json",
                 str(sample_environment["sbom_quality_json"]),
                 "--sbom-quality-html",

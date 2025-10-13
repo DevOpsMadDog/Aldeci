@@ -3,42 +3,42 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L368468 as apps.runtime.local_handlers.handle_stage_run
-    participant S464453 as core.stage_runner.StageRunner.run_stage
-    participant S92334 as services.run_registry.RunRegistry.ensure_run
-    participant S226562 as services.id_allocator.ensure_ids
-    participant S563919 as services.signing.sign_manifest
-    participant S868356 as services.signing.verify_manifest
-    participant I20527 as config/settings.py
+    participant Lfd0ae9_apps_runtime_local_handlers_handle_stage_run as apps.runtime.local_handlers.handle_stage_run
+    participant S0fe1bf_core_stage_runner_StageRunner_run_stage as core.stage_runner.StageRunner.run_stage
+    participant S9dacd3_services_run_registry_RunRegistry_ensure_run as services.run_registry.RunRegistry.ensure_run
+    participant S07326c_services_id_allocator_ensure_ids as services.id_allocator.ensure_ids
+    participant S55f0a5_services_signing_sign_manifest as services.signing.sign_manifest
+    participant Seb417d_services_signing_verify_manifest as services.signing.verify_manifest
+    participant I769aa6_config_settings_py as config/settings.py
     CLI->>Local: aldecI stage run --stage <requirements|design|build|test|deploy|operate|decision>
-    Local->>L368468: execute
-    L368468-->>Local: results
-    Local->>S464453: call
-    S464453-->>Local: result
-    Local->>S92334: call
-    S92334-->>Local: result
-    Local->>S226562: call
-    S226562-->>Local: result
-    Local->>S563919: call
-    S563919-->>Local: result
-    Local->>S868356: call
-    S868356-->>Local: result
-    Local->>I20527: invoke
-    I20527-->>Local: ack
+    Local->>Lfd0ae9_apps_runtime_local_handlers_handle_stage_run: execute
+    Lfd0ae9_apps_runtime_local_handlers_handle_stage_run-->>Local: results
+    Local->>S0fe1bf_core_stage_runner_StageRunner_run_stage: call
+    S0fe1bf_core_stage_runner_StageRunner_run_stage-->>Local: result
+    Local->>S9dacd3_services_run_registry_RunRegistry_ensure_run: call
+    S9dacd3_services_run_registry_RunRegistry_ensure_run-->>Local: result
+    Local->>S07326c_services_id_allocator_ensure_ids: call
+    S07326c_services_id_allocator_ensure_ids-->>Local: result
+    Local->>S55f0a5_services_signing_sign_manifest: call
+    S55f0a5_services_signing_sign_manifest-->>Local: result
+    Local->>Seb417d_services_signing_verify_manifest: call
+    Seb417d_services_signing_verify_manifest-->>Local: result
+    Local->>I769aa6_config_settings_py: invoke
+    I769aa6_config_settings_py-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.stage_run
     SDK->>API: POST /v1/stage/run
-    API->>S464453: call
-    S464453-->>API: result
-    API->>S92334: call
-    S92334-->>API: result
-    API->>S226562: call
-    S226562-->>API: result
-    API->>S563919: call
-    S563919-->>API: result
-    API->>S868356: call
-    S868356-->>API: result
-    API->>I20527: invoke
-    I20527-->>API: ack
+    API->>S0fe1bf_core_stage_runner_StageRunner_run_stage: call
+    S0fe1bf_core_stage_runner_StageRunner_run_stage-->>API: result
+    API->>S9dacd3_services_run_registry_RunRegistry_ensure_run: call
+    S9dacd3_services_run_registry_RunRegistry_ensure_run-->>API: result
+    API->>S07326c_services_id_allocator_ensure_ids: call
+    S07326c_services_id_allocator_ensure_ids-->>API: result
+    API->>S55f0a5_services_signing_sign_manifest: call
+    S55f0a5_services_signing_sign_manifest-->>API: result
+    API->>Seb417d_services_signing_verify_manifest: call
+    Seb417d_services_signing_verify_manifest-->>API: result
+    API->>I769aa6_config_settings_py: invoke
+    I769aa6_config_settings_py-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response
