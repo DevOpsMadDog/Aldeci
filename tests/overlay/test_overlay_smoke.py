@@ -412,7 +412,7 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
         manifest_path = bundle_path.with_suffix(".manifest.json")
         assert manifest_path.is_file()
 
-        # unavailable stage run
+        # stage run
         result = _run_cli(
             [
                 "stage",
@@ -425,23 +425,37 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
             base_url=base_url,
             cwd=repo_root,
         )
-        assert result.returncode == 12
+        assert result.returncode == 0, result.stderr
+        lines = [line for line in result.stdout.splitlines() if line.strip()]
+        assert lines, "stage run should emit output"
+        summary = json.loads(lines[-1])
+        assert summary["stage"] == "requirements"
+        stage_output = Path(summary["output_file"]) if "output_file" in summary else None
+        if stage_output:
+            assert stage_output.exists()
 
-        # unavailable gate
+        # gate
         result = _run_cli(
             [
                 "gate",
                 "--policy",
                 str(sample_environment["policy"]),
+                "--risk-report",
+                str(risk_out),
+                "--provenance-dir",
+                str(attestation_dir),
+                "--repro-attestation",
+                str(sample_environment["repro_attestation"]),
             ],
             backend=backend,
             overlay=overlay,
             base_url=base_url,
             cwd=repo_root,
         )
-        assert result.returncode == 12
+        assert result.returncode == 0, result.stderr
+        assert "Gate evaluation" in result.stdout
 
-        # unavailable persona explain
+        # persona explain
         result = _run_cli(
             [
                 "persona",
@@ -456,7 +470,8 @@ def test_overlay_smoke(sample_environment: dict[str, Path], overlay: str, backen
             base_url=base_url,
             cwd=repo_root,
         )
-        assert result.returncode == 12
+        assert result.returncode == 0, result.stderr
+        assert "[ciso]" in result.stdout
     finally:
         if server is not None:
             server.stop()

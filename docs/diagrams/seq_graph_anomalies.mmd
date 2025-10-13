@@ -1,17 +1,29 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI graph anomalies
-    Local->>API: GET /v1/graph/anomalies
-    participant S990766 as services.graph.graph.ProvenanceGraph.detect_version_anomalies
-    API->>S990766: call
-    S990766-->>API: result
-    participant S206271 as services.graph.graph.build_graph_from_sources
-    API->>S206271: call
-    S206271-->>API: result
-    participant I870404 as telemetry.configure
-    API->>I870404: invoke
-    I870404-->>API: ack
-    API-->>Local: response
-    Local-->>CLI: materialise outputs
+    participant L970138 as apps.runtime.local_handlers.handle_graph_anomalies
+    participant S753713 as services.graph.graph.ProvenanceGraph.detect_version_anomalies
+    participant S858265 as services.graph.graph.build_graph_from_sources
+    participant I828115 as telemetry.configure
+    CLI->>Local: aldecI graph anomalies --type version-drift
+    Local->>L970138: execute
+    L970138-->>Local: results
+    Local->>S753713: call
+    S753713-->>Local: result
+    Local->>S858265: call
+    S858265-->>Local: result
+    Local->>I828115: invoke
+    I828115-->>Local: ack
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_anomalies
+    SDK->>API: GET /v1/graph/anomalies
+    API->>S753713: call
+    S753713-->>API: result
+    API->>S858265: call
+    S858265-->>API: result
+    API->>I828115: invoke
+    I828115-->>API: ack
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

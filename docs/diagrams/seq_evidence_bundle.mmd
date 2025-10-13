@@ -1,20 +1,34 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI evidence bundle
-    Local->>API: POST /v1/evidence/bundle
-    participant S709067 as services.evidence.packager.load_policy
-    API->>S709067: call
-    S709067-->>API: result
-    participant S704000 as services.evidence.packager.evaluate_policy
-    API->>S704000: call
-    S704000-->>API: result
-    participant S840662 as services.evidence.packager.create_bundle
-    API->>S840662: call
-    S840662-->>API: result
-    participant I454933 as infra.signing.sign-artifact.sh
-    API->>I454933: invoke
-    I454933-->>API: ack
-    API-->>Local: response
-    Local-->>CLI: materialise outputs
+    participant L894070 as apps.runtime.local_handlers.handle_evidence_bundle
+    participant S340232 as services.evidence.packager.load_policy
+    participant S716599 as services.evidence.packager.evaluate_policy
+    participant S701964 as services.evidence.packager.create_bundle
+    participant I63347 as infra.signing.sign-artifact.sh
+    CLI->>Local: aldecI evidence bundle --release <id> --out artifacts/evidence/<id>.zip
+    Local->>L894070: execute
+    L894070-->>Local: results
+    Local->>S340232: call
+    S340232-->>Local: result
+    Local->>S716599: call
+    S716599-->>Local: result
+    Local->>S701964: call
+    S701964-->>Local: result
+    Local->>I63347: invoke
+    I63347-->>Local: ack
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.evidence_bundle
+    SDK->>API: POST /v1/evidence/bundle
+    API->>S340232: call
+    S340232-->>API: result
+    API->>S716599: call
+    S716599-->>API: result
+    API->>S701964: call
+    S701964-->>API: result
+    API->>I63347: invoke
+    I63347-->>API: ack
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

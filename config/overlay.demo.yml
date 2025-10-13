@@ -1,8 +1,6 @@
 # Demo overlay configuration
 mode: demo
-artifacts:
-  storage: ./artifacts
-policies:
-  enforcement: relaxed
-services:
+metadata:
+  artifacts_storage: ./artifacts
+  policy_enforcement: relaxed
   provenance: disabled

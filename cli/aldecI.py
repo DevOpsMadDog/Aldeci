@@ -116,7 +116,11 @@ def _collect_files(path: Optional[Path]) -> List[Path]:
 
 
 def _echo_json(payload: Any) -> None:
-    typer.echo(json.dumps(payload, indent=2, sort_keys=True))
+    if hasattr(payload, 'model_dump'):
+        payload = payload.model_dump()
+    elif hasattr(payload, 'dict'):
+        payload = payload.dict()
+    typer.echo(json.dumps(payload, sort_keys=True))
 
 
 def _print_unavailable(capability: str, reason: str | None) -> None:
@@ -174,17 +178,57 @@ def main(
 
 @stage_app.command("run")
 def stage_run(
-    typer_ctx: typer.Context, stage: Stage = typer.Option(..., help="Stage to execute")
+    typer_ctx: typer.Context,
+    stage: Stage = typer.Option(..., help="Stage to execute"),
+    input_path: Path | None = typer.Option(
+        None,
+        "--input",
+        help="Optional input artefact for the selected stage.",
+    ),
+    output_path: Path | None = typer.Option(
+        None,
+        "--output",
+        help="Optional destination for the canonical stage output.",
+    ),
+    app_id: str | None = typer.Option(None, help="Override the application identifier."),
+    app_name: str | None = typer.Option(None, help="Override the application display name."),
+    sign: bool = typer.Option(False, help="Request manifest signing for this run."),
+    verify: bool = typer.Option(
+        False, help="Verify signatures when signing is requested."
+    ),
+    verbose: bool = typer.Option(False, help="Enable verbose stage runner output."),
 ) -> None:
     ctx = cast(CLIContext, typer_ctx.obj)
-    request = StageRunRequest(stage=stage.value, overlay=ctx.overlay.value)
-    _dispatch(
+    parameters: dict[str, Any] = {}
+    if input_path is not None:
+        parameters["input"] = str(input_path)
+    if output_path is not None:
+        parameters["output"] = str(output_path)
+    if app_id:
+        parameters["app_id"] = app_id
+    if app_name:
+        parameters["app_name"] = app_name
+    if sign:
+        parameters["sign"] = True
+    if verify:
+        parameters["verify"] = True
+    if verbose:
+        parameters["verbose"] = True
+
+    request = StageRunRequest(
+        stage=stage.value,
+        overlay=ctx.overlay.value,
+        parameters=parameters or None,
+    )
+    response = _dispatch(
         ctx,
         "stage.run",
         request,
         local_handlers.handle_stage_run,
         lambda client, payload: client.stage_run(payload),
     )
+    typer.echo(response.message)
+    _echo_json(response)
 
 
 @ingest_app.command("sbom")
@@ -379,6 +423,40 @@ def _graph_request_base(
     return payload
 
 
+def _build_gate_metrics(
+    metrics_path: Path | None,
+    risk_report: Path | None,
+    provenance_dir: Path | None,
+    repro_attestation: Path | None,
+) -> dict[str, Any]:
+    metrics: dict[str, Any] = {}
+    if metrics_path is not None and metrics_path.exists():
+        loaded = _read_json(metrics_path)
+        if isinstance(loaded, dict):
+            metrics.update(loaded)
+    if risk_report is not None and risk_report.exists():
+        risk_payload = _read_json(risk_report) or {}
+        summary = risk_payload.get("summary") if isinstance(risk_payload, dict) else {}
+        if isinstance(summary, dict):
+            risk_metrics: dict[str, Any] = {}
+            for key in ("component_count", "cve_count", "max_risk_score"):
+                value = summary.get(key)
+                if isinstance(value, (int, float)):
+                    risk_metrics[key] = float(value)
+            if risk_metrics:
+                metrics.setdefault("risk", {}).update(risk_metrics)
+    if provenance_dir is not None and provenance_dir.exists():
+        provenance_files = _collect_files(provenance_dir)
+        metrics.setdefault("provenance", {})["count"] = len(provenance_files)
+    if repro_attestation is not None and repro_attestation.exists():
+        repro_payload = _read_json(repro_attestation)
+        if isinstance(repro_payload, dict):
+            match = repro_payload.get("match")
+            if isinstance(match, bool):
+                metrics.setdefault("repro", {})["match"] = match
+    return metrics
+
+
 @graph_app.command("lineage")
 def graph_lineage(
     typer_ctx: typer.Context,
@@ -425,7 +503,7 @@ def graph_lineage(
         local_handlers.handle_graph_lineage,
         lambda client, req: client.graph_lineage(req),
     )
-    _echo_json(response.dict())
+    _echo_json(response)
 
 
 @graph_app.command("kev-in-last")
@@ -475,7 +553,7 @@ def graph_kev_in_last(
         local_handlers.handle_graph_kev,
         lambda client, req: client.graph_kev(req),
     )
-    _echo_json(response.dict())
+    _echo_json(response)
 
 
 @graph_app.command("anomalies")
@@ -523,7 +601,7 @@ def graph_anomalies(
         local_handlers.handle_graph_anomalies,
         lambda client, req: client.graph_anomalies(req),
     )
-    _echo_json(response.dict())
+    _echo_json(response)
 
 
 @evidence_app.command("bundle")
@@ -617,17 +695,53 @@ def gate_check(
     typer_ctx: typer.Context,
     policy: Path = typer.Option(
         ..., help="Policy configuration", exists=True, dir_okay=False
-    )
+    ),
+    metrics_path: Path | None = typer.Option(
+        None,
+        "--metrics",
+        help="Optional JSON document containing pre-computed gate metrics.",
+        dir_okay=False,
+        exists=True,
+    ),
+    risk_report: Path | None = typer.Option(
+        None,
+        "--risk-report",
+        help="Optional risk report JSON used to derive policy metrics.",
+        dir_okay=False,
+        exists=True,
+    ),
+    provenance_dir: Path | None = typer.Option(
+        None,
+        "--provenance-dir",
+        help="Directory of provenance artefacts to count for gate metrics.",
+        file_okay=False,
+        exists=True,
+    ),
+    repro_attestation: Path | None = typer.Option(
+        None,
+        "--repro-attestation",
+        help="Reproducibility attestation JSON used to derive metrics.",
+        dir_okay=False,
+        exists=True,
+    ),
 ) -> None:
     ctx = cast(CLIContext, typer_ctx.obj)
-    request = GateCheckRequest(policy=_read_json(policy), overlay=ctx.overlay.value)
-    _dispatch(
+    policy_payload = _read_json(policy)
+    metrics = _build_gate_metrics(metrics_path, risk_report, provenance_dir, repro_attestation)
+    request = GateCheckRequest(
+        policy=policy_payload,
+        metrics=metrics or None,
+        overlay=ctx.overlay.value,
+    )
+    response = _dispatch(
         ctx,
         "gate.check",
         request,
         local_handlers.handle_gate_check,
         lambda client, req: client.gate_check(req),
     )
+    typer.echo(response.message)
+    _echo_json(response)
 
 
 @persona_app.command("explain")
@@ -642,12 +756,22 @@ def persona_explain(
         risk_report=_read_json(risk),
         overlay=ctx.overlay.value,
     )
-    _dispatch(
+    response = _dispatch(
         ctx,
         "persona.explain",
         request,
         local_handlers.handle_persona_explain,
         lambda client, req: client.persona_explain(req),
+    )
+    typer.echo(f"[{response.persona}] {response.narrative}")
+    if response.highlights:
+        for item in response.highlights:
+            typer.echo(f"- {item}")
+    _echo_json(
+        {
+            "contributions": response.contributions,
+            "context": response.context,
+        }
     )
 
 

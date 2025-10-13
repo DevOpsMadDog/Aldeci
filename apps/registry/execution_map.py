@@ -62,19 +62,24 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "stage.run": {
         **_availability_entry(
             "stage.run",
-            default_reason="Upstream stage runner not available in reuse bundle.",
         ),
         "cli": {
             "command": "stage run",
             "syntax": "aldecI stage run --stage <requirements|design|build|test|deploy|operate|decision>",
         },
         "api": {"method": "POST", "route": "/v1/stage/run"},
-        "domain": [],
-        "services": [],
-        "infra": [],
+        "domain": ["core.stage_runner.StageRunner"],
+        "services": [
+            "core.stage_runner.StageRunner.run_stage",
+            "services.run_registry.RunRegistry.ensure_run",
+            "services.id_allocator.ensure_ids",
+            "services.signing.sign_manifest",
+            "services.signing.verify_manifest",
+        ],
+        "infra": ["config/settings.py"],
         "overlays": ["demo", "enterprise"],
-        "outputs": ["artifacts/stage/<stage>.json"],
-        "description": "Execute a FixOps SDLC stage runbook.",
+        "outputs": ["artefacts/<app>/<run>/outputs/<stage>.json"],
+        "description": "Execute the upstream FixOps stage runner with overlay-aware storage.",
     },
     "ingest.sbom": {
         **_availability_entry("sbom.normalize", alias_of="sbom.normalize"),
@@ -233,7 +238,6 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "gate.check": {
         **_availability_entry(
             "gate.check",
-            default_reason="Policy gate evaluation not included in reuse artefacts.",
         ),
         "cli": {
             "command": "gate",
@@ -241,7 +245,7 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         },
         "api": {"method": "POST", "route": "/v1/gate/check"},
         "domain": [],
-        "services": [],
+        "services": ["services.evidence.packager.evaluate_policy"],
         "infra": [],
         "overlays": ["demo", "enterprise"],
         "outputs": ["artifacts/gate/report.json"],
@@ -250,15 +254,18 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
     "persona.explain": {
         **_availability_entry(
             "persona.explain",
-            default_reason="Persona explanation models are not part of the reuse snapshot.",
         ),
         "cli": {
             "command": "persona explain",
             "syntax": "aldecI persona explain --role <role> --risk artifacts/risk.json",
         },
         "api": {"method": "POST", "route": "/v1/persona/explain"},
-        "domain": [],
-        "services": [],
+        "domain": ["services.explainability.ExplainabilityService"],
+        "services": [
+            "services.explainability.ExplainabilityService.prime_baseline",
+            "services.explainability.ExplainabilityService.explain",
+            "services.explainability.ExplainabilityService.generate_narrative",
+        ],
         "infra": [],
         "overlays": ["demo", "enterprise"],
         "outputs": ["artifacts/persona/<role>.md"],

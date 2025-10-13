@@ -17,6 +17,15 @@ class StageRunRequest(BaseModel):
 
 class StageRunResponse(BaseModel):
     message: str
+    stage: str
+    app_id: str
+    run_id: str
+    output_file: str
+    outputs_dir: str
+    signatures: List[str] = Field(default_factory=list)
+    transparency_index: str | None = None
+    bundle: str | None = None
+    verified: bool | None = None
 
 
 class SbomIngestRequest(BaseModel):
@@ -165,10 +174,14 @@ class EvidenceBundleResponse(BaseModel):
 
 class GateCheckRequest(BaseModel):
     policy: Mapping[str, Any]
+    metrics: Mapping[str, Any] | None = None
     overlay: str
 
 
 class GateCheckResponse(BaseModel):
+    overall: str
+    checks: Dict[str, Any]
+    metrics: Dict[str, Any]
     message: str
 
 
@@ -179,7 +192,11 @@ class PersonaExplainRequest(BaseModel):
 
 
 class PersonaExplainResponse(BaseModel):
-    message: str
+    persona: str
+    narrative: str
+    highlights: List[str]
+    contributions: Dict[str, float]
+    context: Dict[str, Any]
 
 
 __all__ = [

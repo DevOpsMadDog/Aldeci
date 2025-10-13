@@ -128,6 +128,38 @@ def _format_list(values: Iterable[str]) -> str:
     return "<br>".join(items) if items else "—"
 
 
+def _cli_syntax(meta: Dict[str, Any]) -> str:
+    cli_spec = meta.get("cli", {})
+    syntax = cli_spec.get("syntax") if isinstance(cli_spec, dict) else None
+    if syntax:
+        return syntax
+    command = cli_spec.get("command") if isinstance(cli_spec, dict) else None
+    if command:
+        return f"aldecI {command}"
+    return "—"
+
+
+def _sample_cli(meta: Dict[str, Any]) -> str:
+    syntax = _cli_syntax(meta)
+    if syntax == "—":
+        return "—"
+    overlays = meta.get("overlays", []) or []
+    overlay = overlays[0] if overlays else "demo"
+    return f"{syntax} --backend local --overlay {overlay}"
+
+
+def _sample_curl(meta: Dict[str, Any], method: str, route: str) -> str:
+    if not method or not route:
+        return "—"
+    method = method.upper()
+    payload_hint = meta.get("api_payload", "@payload.json")
+    return (
+        "curl -sS -X "
+        + method
+        + f" http://127.0.0.1:8000{route} -H 'Content-Type: application/json' -d {payload_hint}"
+    )
+
+
 def generate_api_cli_map() -> str:
     lines: List[str] = []
     lines.append("# API to CLI Mapping")
@@ -136,26 +168,37 @@ def generate_api_cli_map() -> str:
     lines.append(f"> {ANCHOR_DETAIL}")
     lines.append("")
     lines.append(
-        "| Capability | Availability | CLI Command | CLI Options | API Route | Handler | Outputs |"
+        "| Capability | Availability | CLI Syntax | API Route | FastAPI Handler | Service Calls | Overlays | Outputs | Sample CLI | Sample cURL |"
     )
-    lines.append("| --- | --- | --- | --- | --- | --- | --- |")
+    lines.append("| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |")
 
     for capability in sorted(EXECUTION_REGISTRY):
         meta = EXECUTION_REGISTRY[capability]
-        cli_spec = meta.get("cli", {})
-        cli_command = cli_spec.get("command", "")
-        cli_details = _describe_cli(cli_command)
-        cli_usage = cli_details.get("usage") or f"aldecI {cli_command}" if cli_command else "—"
-        cli_options = _format_list(cli_details.get("options", []))
+        cli_usage = _cli_syntax(meta)
         api_spec = meta.get("api", {})
         method = api_spec.get("method", "").upper()
         route = api_spec.get("route", "")
-        handler = "—"
-        if method and route:
-            handler = ROUTE_INDEX.get((method, route), {}).get("endpoint", "—")
+        route_info = ROUTE_INDEX.get((method, route), {})
+        handler = route_info.get("endpoint", "—")
+        services = _format_list(meta.get("services", []))
+        overlays = _format_list(meta.get("overlays", []))
         outputs = _format_list(meta.get("outputs", []))
+        sample_cli = _sample_cli(meta)
+        sample_curl = _sample_curl(meta, method, route)
         lines.append(
-            f"| {capability} | {_availability_badge(meta)} | `{cli_usage}` | {cli_options} | {method} {route} | {handler} | {outputs} |"
+            "| {capability} | {availability} | `{cli_usage}` | {method} {route} | {handler} | {services} | {overlays} | {outputs} | `{sample_cli}` | `{sample_curl}` |".format(
+                capability=capability,
+                availability=_availability_badge(meta),
+                cli_usage=cli_usage,
+                method=method,
+                route=route,
+                handler=handler,
+                services=services,
+                overlays=overlays,
+                outputs=outputs,
+                sample_cli=sample_cli,
+                sample_curl=sample_curl,
+            )
         )
 
     return "\n".join(lines) + "\n"
@@ -194,33 +237,46 @@ def generate_interactions() -> str:
         description = meta.get("description") or "Description not provided."
         lines.append(f"## {capability}")
         lines.append("")
+        lines.append(f"**Availability:** {_availability_badge(meta)}")
+        lines.append("")
         lines.append(f"**What it does:** {description}")
         lines.append("")
-        if not meta.get("available"):
-            reason = meta.get("reason") or "Capability unavailable upstream."
-            lines.append(f"> GAP: {reason}")
-            lines.append("")
-            continue
-        cli_path = meta.get("cli", {}).get("command", "—")
+        overlays = ", ".join(meta.get("overlays", []) or []) or "—"
+        outputs = ", ".join(meta.get("outputs", []) or []) or "—"
+        lines.append(f"**Overlays:** {overlays}")
+        lines.append(f"**Outputs:** {outputs}")
+        sample_cli = _sample_cli(meta)
+        if sample_cli != "—":
+            lines.append(f"**CLI Sample:** `{sample_cli}`")
         api_spec = meta.get("api", {})
         method = api_spec.get("method", "").upper()
         route = api_spec.get("route", "")
+        if method and route:
+            sample_curl = _sample_curl(meta, method, route)
+            if sample_curl != "—":
+                lines.append(f"**HTTP Sample:** `{sample_curl}`")
+        lines.append("")
+        if not meta.get("available"):
+            reason = meta.get("reason") or "Capability unavailable upstream."
+            lines.append(f"**GAP:** {reason}")
+            lines.append("")
+            continue
         route_info = ROUTE_INDEX.get((method, route), {})
-        segments = [
-            f"CLI `aldecI {cli_path}`",
+        chain = [
+            f"CLI `{_cli_syntax(meta)}`",
             f"Local backend `{_local_handler_name(capability)}`",
-            f"HTTP client `{_client_method_name(capability)}`",
-            f"API `{route_info.get('endpoint', '—')}`",
+            f"SDK `{_client_method_name(capability)}`",
+            f"FastAPI `{route_info.get('endpoint', '—')}`",
         ]
         services = meta.get("services", []) or []
         if services:
-            segments.extend(f"Service `{service}`" for service in services)
+            chain.extend(f"Service `{service}`" for service in services)
         infra = meta.get("infra", []) or []
         if infra:
-            segments.extend(f"Infra `{item}`" for item in infra)
+            chain.extend(f"Infra `{item}`" for item in infra)
         lines.append("**Function call chain:**")
         lines.append("")
-        lines.append(" -> ".join(segments))
+        lines.append(" -> ".join(chain))
         lines.append("")
 
     return "\n".join(lines)
@@ -232,39 +288,69 @@ def _sanitize_participant(name: str, prefix: str) -> str:
     return f"{prefix}{abs(hash(name)) % (10 ** 6)}"
 
 
-def _write_sequence_diagram(capability: str, meta: Dict[str, Any], route_info: Dict[str, Any]) -> None:
-    lines: List[str] = ["sequenceDiagram", "    participant CLI", "    participant Local", "    participant API"]
-    cli_path = meta.get("cli", {}).get("command", "")
+def _write_sequence_diagram(capability: str, meta: Dict[str, Any], _route_info: Dict[str, Any]) -> None:
+    lines: List[str] = [
+        "sequenceDiagram",
+        "    participant CLI",
+        "    participant Local",
+        "    participant SDK",
+        "    participant API",
+    ]
     api_spec = meta.get("api", {})
     method = api_spec.get("method", "").upper()
     route = api_spec.get("route", "")
+    cli_label = _cli_syntax(meta)
+    local_handler = _local_handler_name(capability)
+    client_method = _client_method_name(capability)
+    participants: List[Tuple[str, str]] = []
+    if local_handler != "—":
+        participants.append((_sanitize_participant(local_handler, "L"), local_handler))
+    services = meta.get("services", []) or []
+    service_aliases = [
+        (_sanitize_participant(service, "S"), service) for service in services
+    ]
+    participants.extend(service_aliases)
+    infra = meta.get("infra", []) or []
+    infra_aliases = [(_sanitize_participant(item, "I"), item) for item in infra]
+    participants.extend(infra_aliases)
+    for alias, name in participants:
+        lines.append(f"    participant {alias} as {name}")
+
     if not meta.get("available"):
         reason = meta.get("reason") or "Unavailable"
-        lines.append(f"    CLI->>Local: aldecI {cli_path}")
+        lines.append(f"    CLI->>Local: {cli_label}")
         lines.append("    Local-->>CLI: exit 12")
         if method and route:
-            lines.append(f"    CLI->>API: {method} {route}")
-            lines.append("    API-->>CLI: 501 GAP")
+            lines.append(f"    CLI->>SDK: {client_method}")
+            lines.append(f"    SDK->>API: {method} {route}")
+            lines.append("    API-->>SDK: 501 GAP")
+            lines.append("    SDK-->>CLI: propagate GAP")
         lines.append(f"    Note over CLI,API: {reason}")
     else:
-        lines.append(f"    CLI->>Local: aldecI {cli_path}")
-        lines.append(f"    Local->>API: {method} {route}")
-        services = meta.get("services", []) or []
-        infra = meta.get("infra", []) or []
-        counter = 1
-        for service in services:
-            alias = _sanitize_participant(service, "S")
-            lines.append(f"    participant {alias} as {service}")
-            lines.append(f"    API->>{alias}: call")
-            lines.append(f"    {alias}-->>API: result")
-            counter += 1
-        for item in infra:
-            alias = _sanitize_participant(item, "I")
-            lines.append(f"    participant {alias} as {item}")
-            lines.append(f"    API->>{alias}: invoke")
-            lines.append(f"    {alias}-->>API: ack")
-        lines.append("    API-->>Local: response")
-        lines.append("    Local-->>CLI: materialise outputs")
+        lines.append(f"    CLI->>Local: {cli_label}")
+        if local_handler != "—":
+            local_alias = _sanitize_participant(local_handler, "L")
+            lines.append(f"    Local->>{local_alias}: execute")
+            lines.append(f"    {local_alias}-->>Local: results")
+        for alias, _ in service_aliases:
+            lines.append(f"    Local->>{alias}: call")
+            lines.append(f"    {alias}-->>Local: result")
+        for alias, _ in infra_aliases:
+            lines.append(f"    Local->>{alias}: invoke")
+            lines.append(f"    {alias}-->>Local: ack")
+        lines.append("    Local-->>CLI: outputs")
+        if method and route:
+            lines.append(f"    CLI->>SDK: {client_method}")
+            lines.append(f"    SDK->>API: {method} {route}")
+            for alias, _ in service_aliases:
+                lines.append(f"    API->>{alias}: call")
+                lines.append(f"    {alias}-->>API: result")
+            for alias, _ in infra_aliases:
+                lines.append(f"    API->>{alias}: invoke")
+                lines.append(f"    {alias}-->>API: ack")
+            lines.append("    API-->>SDK: response")
+            lines.append("    SDK-->>CLI: parsed response")
+
     diagram_path = DIAGRAM_DIR / f"seq_{capability.replace('.', '_')}.mmd"
     diagram_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
