@@ -13,7 +13,13 @@ from typing import Dict, Iterable, List, Sequence, Tuple
 try:  # Python >= 3.11
     import tomllib  # type: ignore[attr-defined]
 except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
-    import tomli as tomllib  # type: ignore[no-redef]
+    try:
+        import tomli as tomllib  # type: ignore[no-redef]
+    except ModuleNotFoundError:  # pragma: no cover - bootstrap tomli
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", "tomli==2.0.1"]
+        )
+        import tomli as tomllib  # type: ignore[no-redef]
 
 try:
     from packaging.specifiers import SpecifierSet
