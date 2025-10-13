@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L153873 as apps.runtime.local_handlers.handle_persona_explain
-    participant S818439 as services.explainability.ExplainabilityService.prime_baseline
-    participant S546294 as services.explainability.ExplainabilityService.explain
-    participant S351573 as services.explainability.ExplainabilityService.generate_narrative
+    participant L533527 as apps.runtime.local_handlers.handle_persona_explain
+    participant S849714 as services.explainability.ExplainabilityService.prime_baseline
+    participant S124697 as services.explainability.ExplainabilityService.explain
+    participant S994880 as services.explainability.ExplainabilityService.generate_narrative
     CLI->>Local: aldecI persona explain --role <role> --risk artifacts/risk.json
-    Local->>L153873: execute
-    L153873-->>Local: results
-    Local->>S818439: call
-    S818439-->>Local: result
-    Local->>S546294: call
-    S546294-->>Local: result
-    Local->>S351573: call
-    S351573-->>Local: result
+    Local->>L533527: execute
+    L533527-->>Local: results
+    Local->>S849714: call
+    S849714-->>Local: result
+    Local->>S124697: call
+    S124697-->>Local: result
+    Local->>S994880: call
+    S994880-->>Local: result
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.persona_explain
     SDK->>API: POST /v1/persona/explain
-    API->>S818439: call
-    S818439-->>API: result
-    API->>S546294: call
-    S546294-->>API: result
-    API->>S351573: call
-    S351573-->>API: result
+    API->>S849714: call
+    S849714-->>API: result
+    API->>S124697: call
+    S124697-->>API: result
+    API->>S994880: call
+    S994880-->>API: result
     API-->>SDK: response
     SDK-->>CLI: parsed response

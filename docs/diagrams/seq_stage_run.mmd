@@ -3,42 +3,42 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L368468 as apps.runtime.local_handlers.handle_stage_run
-    participant S464453 as core.stage_runner.StageRunner.run_stage
-    participant S92334 as services.run_registry.RunRegistry.ensure_run
-    participant S226562 as services.id_allocator.ensure_ids
-    participant S563919 as services.signing.sign_manifest
-    participant S868356 as services.signing.verify_manifest
-    participant I20527 as config/settings.py
+    participant L623268 as apps.runtime.local_handlers.handle_stage_run
+    participant S536933 as core.stage_runner.StageRunner.run_stage
+    participant S680694 as services.run_registry.RunRegistry.ensure_run
+    participant S513502 as services.id_allocator.ensure_ids
+    participant S393279 as services.signing.sign_manifest
+    participant S874553 as services.signing.verify_manifest
+    participant I220167 as config/settings.py
     CLI->>Local: aldecI stage run --stage <requirements|design|build|test|deploy|operate|decision>
-    Local->>L368468: execute
-    L368468-->>Local: results
-    Local->>S464453: call
-    S464453-->>Local: result
-    Local->>S92334: call
-    S92334-->>Local: result
-    Local->>S226562: call
-    S226562-->>Local: result
-    Local->>S563919: call
-    S563919-->>Local: result
-    Local->>S868356: call
-    S868356-->>Local: result
-    Local->>I20527: invoke
-    I20527-->>Local: ack
+    Local->>L623268: execute
+    L623268-->>Local: results
+    Local->>S536933: call
+    S536933-->>Local: result
+    Local->>S680694: call
+    S680694-->>Local: result
+    Local->>S513502: call
+    S513502-->>Local: result
+    Local->>S393279: call
+    S393279-->>Local: result
+    Local->>S874553: call
+    S874553-->>Local: result
+    Local->>I220167: invoke
+    I220167-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.stage_run
     SDK->>API: POST /v1/stage/run
-    API->>S464453: call
-    S464453-->>API: result
-    API->>S92334: call
-    S92334-->>API: result
-    API->>S226562: call
-    S226562-->>API: result
-    API->>S563919: call
-    S563919-->>API: result
-    API->>S868356: call
-    S868356-->>API: result
-    API->>I20527: invoke
-    I20527-->>API: ack
+    API->>S536933: call
+    S536933-->>API: result
+    API->>S680694: call
+    S680694-->>API: result
+    API->>S513502: call
+    S513502-->>API: result
+    API->>S393279: call
+    S393279-->>API: result
+    API->>S874553: call
+    S874553-->>API: result
+    API->>I220167: invoke
+    I220167-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

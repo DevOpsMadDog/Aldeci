@@ -765,12 +765,11 @@ class InputNormalizer:
                     supplier = str(supplier_info)
 
                 vulnerabilities = entry.get("vulnerabilities")
-                if isinstance(vulnerabilities, list):
-                    component_vulns = [
-                        v for v in vulnerabilities if isinstance(v, dict)
-                    ]
-                else:
-                    component_vulns = []
+                component_vulns = (
+                    [v for v in vulnerabilities if isinstance(v, dict)]
+                    if isinstance(vulnerabilities, list)
+                    else []
+                )
 
                 components.append(
                     SBOMComponent(
@@ -839,12 +838,11 @@ class InputNormalizer:
                 supplier = supplier.get("name")
 
             vulnerabilities = artifact.get("vulnerabilities")
-            if isinstance(vulnerabilities, list):
-                component_vulns = [
-                    v for v in vulnerabilities if isinstance(v, dict)
-                ]
-            else:
-                component_vulns = []
+            component_vulns = (
+                [v for v in vulnerabilities if isinstance(v, dict)]
+                if isinstance(vulnerabilities, list)
+                else []
+            )
 
             components.append(
                 SBOMComponent(

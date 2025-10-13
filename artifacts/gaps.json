@@ -10,6 +10,24 @@
       "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
     },
     {
+      "capability": "signing.cosign_sign",
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "signing",
+        "cosign_sign"
+      ],
+      "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+    },
+    {
+      "capability": "signing.cosign_verify",
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "signing",
+        "cosign_verify"
+      ],
+      "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+    },
+    {
       "capability": "graph.ingest",
       "reason": "no mapping configured",
       "suggested_search_terms": [

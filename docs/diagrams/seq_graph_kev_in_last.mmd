@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L68858 as apps.runtime.local_handlers.handle_graph_kev
-    participant S224234 as services.graph.graph.ProvenanceGraph.components_with_kev
-    participant S858265 as services.graph.graph.build_graph_from_sources
-    participant I828115 as telemetry.configure
+    participant L192831 as apps.runtime.local_handlers.handle_graph_kev
+    participant S412403 as services.graph.graph.ProvenanceGraph.components_with_kev
+    participant S993826 as services.graph.graph.build_graph_from_sources
+    participant I780520 as telemetry.configure
     CLI->>Local: aldecI graph kev-in-last --releases <N>
-    Local->>L68858: execute
-    L68858-->>Local: results
-    Local->>S224234: call
-    S224234-->>Local: result
-    Local->>S858265: call
-    S858265-->>Local: result
-    Local->>I828115: invoke
-    I828115-->>Local: ack
+    Local->>L192831: execute
+    L192831-->>Local: results
+    Local->>S412403: call
+    S412403-->>Local: result
+    Local->>S993826: call
+    S993826-->>Local: result
+    Local->>I780520: invoke
+    I780520-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_kev
     SDK->>API: GET /v1/graph/kev-in-last
-    API->>S224234: call
-    S224234-->>API: result
-    API->>S858265: call
-    S858265-->>API: result
-    API->>I828115: invoke
-    I828115-->>API: ack
+    API->>S412403: call
+    S412403-->>API: result
+    API->>S993826: call
+    S993826-->>API: result
+    API->>I780520: invoke
+    I780520-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

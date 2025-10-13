@@ -3,17 +3,17 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L853897 as apps.runtime.local_handlers.handle_gate_check
-    participant S716599 as services.evidence.packager.evaluate_policy
+    participant L13964 as apps.runtime.local_handlers.handle_gate_check
+    participant S908511 as services.evidence.packager.evaluate_policy
     CLI->>Local: aldecI gate --policy config/policy.yml
-    Local->>L853897: execute
-    L853897-->>Local: results
-    Local->>S716599: call
-    S716599-->>Local: result
+    Local->>L13964: execute
+    L13964-->>Local: results
+    Local->>S908511: call
+    S908511-->>Local: result
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.gate_check
     SDK->>API: POST /v1/gate/check
-    API->>S716599: call
-    S716599-->>API: result
+    API->>S908511: call
+    S908511-->>API: result
     API-->>SDK: response
     SDK-->>CLI: parsed response

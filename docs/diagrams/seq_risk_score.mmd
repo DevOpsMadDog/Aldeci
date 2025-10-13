@@ -3,32 +3,32 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L325676 as apps.runtime.local_handlers.handle_risk_score
-    participant S26865 as services.risk.scoring.compute_risk_profile
-    participant S163243 as services.risk.scoring.write_risk_report
-    participant I401752 as infra.feeds.epss.load_epss_scores
-    participant I75762 as infra.feeds.kev.load_kev_catalog
+    participant L228257 as apps.runtime.local_handlers.handle_risk_score
+    participant S751975 as services.risk.scoring.compute_risk_profile
+    participant S502054 as services.risk.scoring.write_risk_report
+    participant I784070 as infra.feeds.epss.load_epss_scores
+    participant I888749 as infra.feeds.kev.load_kev_catalog
     CLI->>Local: aldecI risk score --sbom artifacts/sbom/normalized.json --epss feeds/epss.csv --kev feeds/kev.json --out artifacts/risk.json
-    Local->>L325676: execute
-    L325676-->>Local: results
-    Local->>S26865: call
-    S26865-->>Local: result
-    Local->>S163243: call
-    S163243-->>Local: result
-    Local->>I401752: invoke
-    I401752-->>Local: ack
-    Local->>I75762: invoke
-    I75762-->>Local: ack
+    Local->>L228257: execute
+    L228257-->>Local: results
+    Local->>S751975: call
+    S751975-->>Local: result
+    Local->>S502054: call
+    S502054-->>Local: result
+    Local->>I784070: invoke
+    I784070-->>Local: ack
+    Local->>I888749: invoke
+    I888749-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.risk_score
     SDK->>API: POST /v1/risk/score
-    API->>S26865: call
-    S26865-->>API: result
-    API->>S163243: call
-    S163243-->>API: result
-    API->>I401752: invoke
-    I401752-->>API: ack
-    API->>I75762: invoke
-    I75762-->>API: ack
+    API->>S751975: call
+    S751975-->>API: result
+    API->>S502054: call
+    S502054-->>API: result
+    API->>I784070: invoke
+    I784070-->>API: ack
+    API->>I888749: invoke
+    I888749-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

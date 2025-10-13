@@ -3,17 +3,17 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L290151 as apps.runtime.local_handlers.handle_ingest_sbom
-    participant S357773 as services.normalize.normalizers.InputNormalizer.load_sbom
+    participant L351483 as apps.runtime.local_handlers.handle_ingest_sbom
+    participant S442759 as services.normalize.normalizers.InputNormalizer.load_sbom
     CLI->>Local: aldecI ingest sbom --in <sbom.json> --out artifacts/sbom/normalized.json
-    Local->>L290151: execute
-    L290151-->>Local: results
-    Local->>S357773: call
-    S357773-->>Local: result
+    Local->>L351483: execute
+    L351483-->>Local: results
+    Local->>S442759: call
+    S442759-->>Local: result
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.ingest_sbom
     SDK->>API: POST /v1/ingest/sbom
-    API->>S357773: call
-    S357773-->>API: result
+    API->>S442759: call
+    S442759-->>API: result
     API-->>SDK: response
     SDK-->>CLI: parsed response

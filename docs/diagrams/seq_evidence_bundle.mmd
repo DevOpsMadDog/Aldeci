@@ -3,32 +3,32 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L894070 as apps.runtime.local_handlers.handle_evidence_bundle
-    participant S340232 as services.evidence.packager.load_policy
-    participant S716599 as services.evidence.packager.evaluate_policy
-    participant S701964 as services.evidence.packager.create_bundle
-    participant I63347 as infra.signing.sign-artifact.sh
+    participant L418962 as apps.runtime.local_handlers.handle_evidence_bundle
+    participant S963928 as services.evidence.packager.load_policy
+    participant S908511 as services.evidence.packager.evaluate_policy
+    participant S526111 as services.evidence.packager.create_bundle
+    participant I772242 as infra.signing.sign-artifact.sh
     CLI->>Local: aldecI evidence bundle --release <id> --out artifacts/evidence/<id>.zip
-    Local->>L894070: execute
-    L894070-->>Local: results
-    Local->>S340232: call
-    S340232-->>Local: result
-    Local->>S716599: call
-    S716599-->>Local: result
-    Local->>S701964: call
-    S701964-->>Local: result
-    Local->>I63347: invoke
-    I63347-->>Local: ack
+    Local->>L418962: execute
+    L418962-->>Local: results
+    Local->>S963928: call
+    S963928-->>Local: result
+    Local->>S908511: call
+    S908511-->>Local: result
+    Local->>S526111: call
+    S526111-->>Local: result
+    Local->>I772242: invoke
+    I772242-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.evidence_bundle
     SDK->>API: POST /v1/evidence/bundle
-    API->>S340232: call
-    S340232-->>API: result
-    API->>S716599: call
-    S716599-->>API: result
-    API->>S701964: call
-    S701964-->>API: result
-    API->>I63347: invoke
-    I63347-->>API: ack
+    API->>S963928: call
+    S963928-->>API: result
+    API->>S908511: call
+    S908511-->>API: result
+    API->>S526111: call
+    S526111-->>API: result
+    API->>I772242: invoke
+    I772242-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response
