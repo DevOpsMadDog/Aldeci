@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -211,6 +212,22 @@ def _install_test(requirements_path: Path) -> CommandResult:
         return CommandResult(command, process.returncode, process.stdout, process.stderr)
 
 
+PROGRESS_LINE = re.compile(r"^\s*[\u2500-\u259F]+\s+\S+/\S+\s+MB.*$")
+
+
+def _normalize_log(text: str) -> str:
+    if not text:
+        return ""
+    lines: List[str] = []
+    for raw_line in text.splitlines():
+        line = re.sub(r"\b(?:Downloading|Using cached)\b", "Fetching", raw_line)
+        if PROGRESS_LINE.match(line):
+            indent = len(line) - len(line.lstrip())
+            line = " " * indent + "<progress elided>"
+        lines.append(line)
+    return "\n".join(lines)
+
+
 def _render_section(title: str, content: str) -> List[str]:
     lines = [f"## {title}", ""]
     lines.append("```text")
@@ -276,17 +293,29 @@ def generate() -> Dict[str, object]:
     for version, entry in compile_logs:
         report_lines.extend(
             _render_section(
-                f"Constraints for Python {version}", entry.stdout or "(no output)"
+                f"Constraints for Python {version}",
+                _normalize_log(entry.stdout or "(no output)"),
             )
         )
     report_lines.extend(
-        _render_section("requirements.txt", base_compile.stdout or "(no output)")
+        _render_section(
+            "requirements.txt", _normalize_log(base_compile.stdout or "(no output)")
+        )
     )
     report_lines.extend(
-        _render_section("requirements-dev.txt", dev_compile.stdout or "(no output)")
+        _render_section(
+            "requirements-dev.txt",
+            _normalize_log(dev_compile.stdout or "(no output)"),
+        )
     )
-    report_lines.extend(_render_section("Wheel Build", wheel_log.stdout or "(no output)"))
-    report_lines.extend(_render_section("Install Test", install_log.stdout or "(no output)"))
+    report_lines.extend(
+        _render_section("Wheel Build", _normalize_log(wheel_log.stdout or "(no output)"))
+    )
+    report_lines.extend(
+        _render_section(
+            "Install Test", _normalize_log(install_log.stdout or "(no output)")
+        )
+    )
 
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
     ENV_HEALTH_REPORT.write_text("\n".join(report_lines), encoding="utf-8")
