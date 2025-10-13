@@ -52,16 +52,23 @@ def sample_environment(tmp_path: Path) -> dict[str, Path]:
 
     sbom_path = tmp_path / "sample_sbom.json"
     sbom_payload = {
-        "bomFormat": "CycloneDX",
-        "specVersion": "1.4",
-        "components": [
+        "artifacts": [
             {
                 "name": "demo",
                 "version": "1.0.0",
                 "purl": "pkg:pypi/demo@1.0.0",
-                "licenses": ["MIT"],
+                "licenses": [
+                    {
+                        "spdx-id": "MIT",
+                    }
+                ],
+                "supplier": {"name": "Demo Supplier"},
             }
         ],
+        "descriptor": {
+            "name": "syft",
+            "version": "1.0.0",
+        },
     }
     sbom_path.write_text(json.dumps(sbom_payload), encoding="utf-8")
 

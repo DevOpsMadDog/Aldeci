@@ -30,6 +30,15 @@
     "graph.lineage": {
       "available": true
     },
+    "gate.check": {
+      "available": true
+    },
+    "persona.explain": {
+      "available": true
+    },
+    "stage.run": {
+      "available": true
+    },
     "normalize.noise": {
       "available": false,
       "reason": "no mapping configured",
