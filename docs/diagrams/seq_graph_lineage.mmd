@@ -1,17 +1,29 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI graph lineage
-    Local->>API: GET /v1/graph/lineage
-    participant S172213 as services.graph.graph.ProvenanceGraph.lineage
-    API->>S172213: call
-    S172213-->>API: result
-    participant S206271 as services.graph.graph.build_graph_from_sources
-    API->>S206271: call
-    S206271-->>API: result
-    participant I870404 as telemetry.configure
-    API->>I870404: invoke
-    I870404-->>API: ack
-    API-->>Local: response
-    Local-->>CLI: materialise outputs
+    participant L932997 as apps.runtime.local_handlers.handle_graph_lineage
+    participant S182653 as services.graph.graph.ProvenanceGraph.lineage
+    participant S858265 as services.graph.graph.build_graph_from_sources
+    participant I828115 as telemetry.configure
+    CLI->>Local: aldecI graph lineage --artifact <id|path>
+    Local->>L932997: execute
+    L932997-->>Local: results
+    Local->>S182653: call
+    S182653-->>Local: result
+    Local->>S858265: call
+    S858265-->>Local: result
+    Local->>I828115: invoke
+    I828115-->>Local: ack
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_lineage
+    SDK->>API: GET /v1/graph/lineage
+    API->>S182653: call
+    S182653-->>API: result
+    API->>S858265: call
+    S858265-->>API: result
+    API->>I828115: invoke
+    I828115-->>API: ack
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

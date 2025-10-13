@@ -1,14 +1,24 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI prov verify
-    Local->>API: POST /v1/provenance/verify
-    participant S189696 as services.provenance.attestation.verify_attestation
-    API->>S189696: call
-    S189696-->>API: result
-    participant I870404 as telemetry.configure
-    API->>I870404: invoke
-    I870404-->>API: ack
-    API-->>Local: response
-    Local-->>CLI: materialise outputs
+    participant L425284 as apps.runtime.local_handlers.handle_provenance_verify
+    participant S890103 as services.provenance.attestation.verify_attestation
+    participant I828115 as telemetry.configure
+    CLI->>Local: aldecI prov verify --artifact <path> --attestation <attestation.json>
+    Local->>L425284: execute
+    L425284-->>Local: results
+    Local->>S890103: call
+    S890103-->>Local: result
+    Local->>I828115: invoke
+    I828115-->>Local: ack
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.provenance_verify
+    SDK->>API: POST /v1/provenance/verify
+    API->>S890103: call
+    S890103-->>API: result
+    API->>I828115: invoke
+    I828115-->>API: ack
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

@@ -5,8 +5,10 @@ import base64
 import json
 import tempfile
 from contextlib import contextmanager
+from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
-from typing import List, Mapping
+from typing import Any, Dict, Iterable, List, Mapping
 
 import yaml
 
@@ -38,8 +40,12 @@ from apps.api.schemas import (
 )
 from apps.registry.execution_map import EXECUTION_REGISTRY
 from apps.runtime.exceptions import CapabilityUnavailable
-from services.evidence.packager import BundleInputs, create_bundle
+from core.configuration import load_overlay
+from core.stage_runner import StageRunner
+from services.evidence.packager import BundleInputs, create_bundle, evaluate_policy
+from services.explainability import ExplainabilityService
 from services.graph.graph import ProvenanceGraph
+from services.id_allocator import ensure_ids
 from services.provenance.attestation import (
     ProvenanceAttestation,
     generate_attestation,
@@ -47,7 +53,9 @@ from services.provenance.attestation import (
     verify_attestation,
 )
 from services.risk.scoring import compute_risk_profile
-from services.normalize.normalizers import InputNormalizer
+from services.run_registry import RunRegistry
+from services.signing import sign_manifest, verify_manifest
+from apps.api.normalizers import InputNormalizer
 from infra.feeds.epss import load_epss_scores
 from infra.feeds.kev import load_kev_catalog
 
@@ -64,9 +72,114 @@ def _decode_base64(payload: str) -> bytes:
     return base64.b64decode(payload.encode("utf-8"))
 
 
+@dataclass(frozen=True)
+class _StageRuntime:
+    mode: str
+    runner: StageRunner
+
+
+class _AllocatorAdapter:
+    def ensure_ids(self, payload: Mapping[str, Any]) -> Dict[str, Any]:
+        return ensure_ids(payload)
+
+
+class _SignerAdapter:
+    def sign_manifest(self, manifest: Mapping[str, Any]) -> Mapping[str, Any]:
+        return sign_manifest(manifest)
+
+    def verify_manifest(
+        self, manifest: Mapping[str, Any], envelope: Mapping[str, Any] | str | None
+    ) -> bool:
+        return verify_manifest(manifest, envelope)
+
+
+@lru_cache(maxsize=8)
+def _stage_runtime(overlay: str) -> _StageRuntime:
+    overlay_file = Path("config") / f"overlay.{overlay}.yml"
+    if not overlay_file.is_file():
+        raise CapabilityUnavailable("stage.run", f"Overlay '{overlay}' not found")
+    try:
+        overlay_config = load_overlay(overlay_file, mode_override=overlay)
+    except Exception as exc:  # pragma: no cover - validation guard
+        raise CapabilityUnavailable("stage.run", f"Overlay load failed: {exc}") from exc
+
+    storage_root = Path("artifacts") / "stage" / overlay
+    storage_root.mkdir(parents=True, exist_ok=True)
+    registry = RunRegistry(root=storage_root)
+    runner = StageRunner(
+        registry,
+        _AllocatorAdapter(),
+        _SignerAdapter(),
+        normalizer=InputNormalizer(),
+    )
+    return _StageRuntime(mode=overlay_config.mode, runner=runner)
+
+
+def _resolve_optional_path(value: Any) -> Path | None:
+    if value is None:
+        return None
+    candidate = Path(str(value)).expanduser()
+    return candidate
+
+
+def _normalise_mapping(payload: Mapping[str, Any] | None) -> Dict[str, Any]:
+    if not isinstance(payload, Mapping):
+        return {}
+    normalised: Dict[str, Any] = {}
+    for key, value in payload.items():
+        key_str = str(key)
+        if isinstance(value, Mapping):
+            normalised[key_str] = _normalise_mapping(value)
+        elif isinstance(value, list):
+            normalised[key_str] = [
+                _normalise_mapping(item) if isinstance(item, Mapping) else item
+                for item in value
+            ]
+        else:
+            normalised[key_str] = value
+    return normalised
+
+
 def handle_stage_run(request: StageRunRequest) -> StageRunResponse:
     _require_available("stage.run")
-    return StageRunResponse(message=f"Stage {request.stage} executed")
+    runtime = _stage_runtime(request.overlay)
+    parameters = request.parameters or {}
+    input_path = _resolve_optional_path(parameters.get("input"))
+    if input_path is not None and not input_path.exists():
+        raise CapabilityUnavailable(
+            "stage.run", f"Input path '{input_path}' does not exist"
+        )
+    output_path = _resolve_optional_path(parameters.get("output"))
+    if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    summary = runtime.runner.run_stage(
+        request.stage,
+        input_path,
+        app_name=parameters.get("app_name"),
+        app_id=parameters.get("app_id"),
+        output_path=output_path,
+        mode=runtime.mode,
+        sign=bool(parameters.get("sign")),
+        verify=bool(parameters.get("verify")),
+        verbose=bool(parameters.get("verbose")),
+    )
+
+    response = StageRunResponse(
+        message=f"Stage '{summary.stage}' completed for {summary.app_id}/{summary.run_id}",
+        stage=summary.stage,
+        app_id=summary.app_id,
+        run_id=summary.run_id,
+        output_file=str(summary.output_file),
+        outputs_dir=str(summary.outputs_dir),
+        signatures=[str(path) for path in summary.signatures],
+        transparency_index=str(summary.transparency_index)
+        if summary.transparency_index
+        else None,
+        bundle=str(summary.bundle) if summary.bundle else None,
+        verified=summary.verified,
+    )
+    return response
 
 
 def handle_ingest_sbom(request: SbomIngestRequest) -> SbomIngestResponse:
@@ -283,14 +396,109 @@ def handle_evidence_bundle(
     )
 
 
-def handle_gate_check(_: GateCheckRequest) -> GateCheckResponse:
+def handle_gate_check(request: GateCheckRequest) -> GateCheckResponse:
     _require_available("gate.check")
-    return GateCheckResponse(message="Gate evaluation completed")
+    policy = _normalise_mapping(request.policy)
+    metrics = _normalise_mapping(request.metrics)
+    evaluations = evaluate_policy(policy, metrics=metrics)
+    checks = _normalise_mapping(evaluations.get("checks"))
+    overall = str(evaluations.get("overall") or "unknown")
+    message = f"Gate evaluation {overall}" if overall else "Gate evaluation completed"
+    return GateCheckResponse(
+        overall=overall,
+        checks=checks,
+        metrics=metrics,
+        message=message,
+    )
 
 
-def handle_persona_explain(_: PersonaExplainRequest) -> PersonaExplainResponse:
+def _prime_explainability(service: ExplainabilityService, risk_report: Mapping[str, Any]) -> None:
+    components = risk_report.get("components")
+    if not isinstance(components, Iterable):
+        return
+    training_examples: list[Dict[str, float]] = []
+    for component in components:
+        if not isinstance(component, Mapping):
+            continue
+        entry: Dict[str, float] = {}
+        risk_value = component.get("component_risk")
+        if isinstance(risk_value, (int, float)):
+            entry["component_risk"] = float(risk_value)
+        vulnerabilities = component.get("vulnerabilities")
+        if isinstance(vulnerabilities, Iterable):
+            entry["vulnerability_count"] = float(len(list(vulnerabilities)))
+        if entry:
+            training_examples.append(entry)
+    if training_examples:
+        service.prime_baseline(training_examples)
+
+
+def _persona_feature_vector(risk_report: Mapping[str, Any]) -> Dict[str, float]:
+    summary = risk_report.get("summary") if isinstance(risk_report, Mapping) else {}
+    if not isinstance(summary, Mapping):
+        summary = {}
+    feature_vector: Dict[str, float] = {}
+    component_count = summary.get("component_count")
+    cve_count = summary.get("cve_count")
+    max_risk = summary.get("max_risk_score")
+    if isinstance(component_count, (int, float)):
+        feature_vector["component_count"] = float(component_count)
+    if isinstance(cve_count, (int, float)):
+        feature_vector["cve_count"] = float(cve_count)
+    if isinstance(max_risk, (int, float)):
+        feature_vector["max_risk_score"] = float(max_risk)
+    return feature_vector
+
+
+def _persona_highlights(
+    role: str, contributions: Mapping[str, float], feature_vector: Mapping[str, float]
+) -> List[str]:
+    persona = role.lower()
+    ordered = sorted(
+        contributions.items(), key=lambda item: abs(item[1]), reverse=True
+    )
+    insights: List[str] = []
+    if persona in {"ciso", "executive"}:
+        count = int(feature_vector.get("component_count", 0))
+        insights.append(f"Portfolio covers {count} components under active monitoring.")
+    elif persona in {"developer", "engineer"}:
+        insights.append(
+            "Prioritise fixes for the components contributing the highest risk deltas."
+        )
+    else:
+        cves = int(feature_vector.get("cve_count", 0))
+        insights.append(f"Tracking {cves} CVEs across the service portfolio.")
+
+    for feature, delta in ordered[:3]:
+        direction = "increases" if delta > 0 else "reduces"
+        insights.append(
+            f"{feature.replace('_', ' ').title()} {direction} relative risk by {abs(delta):.2f}."
+        )
+    return insights[:3]
+
+
+def handle_persona_explain(request: PersonaExplainRequest) -> PersonaExplainResponse:
     _require_available("persona.explain")
-    return PersonaExplainResponse(message="Persona explanation generated")
+    risk_report = _normalise_mapping(request.risk_report)
+    advisor = ExplainabilityService()
+    _prime_explainability(advisor, risk_report)
+    feature_vector = _persona_feature_vector(risk_report)
+    contributions = advisor.explain(feature_vector)
+    narrative = advisor.generate_narrative(feature_vector, contributions)
+    highlights = _persona_highlights(request.role, contributions, feature_vector)
+    context = {
+        "summary": risk_report.get("summary", {}),
+        "highest_risk_component": risk_report.get("summary", {}).get(
+            "highest_risk_component"
+        ),
+    }
+    return PersonaExplainResponse(
+        persona=request.role.lower(),
+        narrative=narrative,
+        highlights=highlights,
+        contributions=contributions,
+        context=_normalise_mapping(context),
+    )
 
 
 __all__ = [
