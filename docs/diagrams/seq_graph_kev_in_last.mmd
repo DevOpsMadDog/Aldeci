@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L192831 as apps.runtime.local_handlers.handle_graph_kev
-    participant S412403 as services.graph.graph.ProvenanceGraph.components_with_kev
-    participant S993826 as services.graph.graph.build_graph_from_sources
-    participant I780520 as telemetry.configure
+    participant L6c39c7_apps_runtime_local_handlers_handle_graph_kev as apps.runtime.local_handlers.handle_graph_kev
+    participant Se53fee_services_graph_graph_ProvenanceGraph_components_with_kev as services.graph.graph.ProvenanceGraph.components_with_kev
+    participant Seaab22_services_graph_graph_build_graph_from_sources as services.graph.graph.build_graph_from_sources
+    participant I17e7be_telemetry_configure as telemetry.configure
     CLI->>Local: aldecI graph kev-in-last --releases <N>
-    Local->>L192831: execute
-    L192831-->>Local: results
-    Local->>S412403: call
-    S412403-->>Local: result
-    Local->>S993826: call
-    S993826-->>Local: result
-    Local->>I780520: invoke
-    I780520-->>Local: ack
+    Local->>L6c39c7_apps_runtime_local_handlers_handle_graph_kev: execute
+    L6c39c7_apps_runtime_local_handlers_handle_graph_kev-->>Local: results
+    Local->>Se53fee_services_graph_graph_ProvenanceGraph_components_with_kev: call
+    Se53fee_services_graph_graph_ProvenanceGraph_components_with_kev-->>Local: result
+    Local->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>Local: result
+    Local->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_kev
     SDK->>API: GET /v1/graph/kev-in-last
-    API->>S412403: call
-    S412403-->>API: result
-    API->>S993826: call
-    S993826-->>API: result
-    API->>I780520: invoke
-    I780520-->>API: ack
+    API->>Se53fee_services_graph_graph_ProvenanceGraph_components_with_kev: call
+    Se53fee_services_graph_graph_ProvenanceGraph_components_with_kev-->>API: result
+    API->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>API: result
+    API->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

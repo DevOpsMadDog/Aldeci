@@ -3,32 +3,32 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L418962 as apps.runtime.local_handlers.handle_evidence_bundle
-    participant S963928 as services.evidence.packager.load_policy
-    participant S908511 as services.evidence.packager.evaluate_policy
-    participant S526111 as services.evidence.packager.create_bundle
-    participant I772242 as infra.signing.sign-artifact.sh
+    participant L3843ae_apps_runtime_local_handlers_handle_evidence_bundle as apps.runtime.local_handlers.handle_evidence_bundle
+    participant S7fc4d4_services_evidence_packager_load_policy as services.evidence.packager.load_policy
+    participant Sd040e9_services_evidence_packager_evaluate_policy as services.evidence.packager.evaluate_policy
+    participant Sd21800_services_evidence_packager_create_bundle as services.evidence.packager.create_bundle
+    participant I0817dc_infra_signing_sign_artifact_sh as infra.signing.sign-artifact.sh
     CLI->>Local: aldecI evidence bundle --release <id> --out artifacts/evidence/<id>.zip
-    Local->>L418962: execute
-    L418962-->>Local: results
-    Local->>S963928: call
-    S963928-->>Local: result
-    Local->>S908511: call
-    S908511-->>Local: result
-    Local->>S526111: call
-    S526111-->>Local: result
-    Local->>I772242: invoke
-    I772242-->>Local: ack
+    Local->>L3843ae_apps_runtime_local_handlers_handle_evidence_bundle: execute
+    L3843ae_apps_runtime_local_handlers_handle_evidence_bundle-->>Local: results
+    Local->>S7fc4d4_services_evidence_packager_load_policy: call
+    S7fc4d4_services_evidence_packager_load_policy-->>Local: result
+    Local->>Sd040e9_services_evidence_packager_evaluate_policy: call
+    Sd040e9_services_evidence_packager_evaluate_policy-->>Local: result
+    Local->>Sd21800_services_evidence_packager_create_bundle: call
+    Sd21800_services_evidence_packager_create_bundle-->>Local: result
+    Local->>I0817dc_infra_signing_sign_artifact_sh: invoke
+    I0817dc_infra_signing_sign_artifact_sh-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.evidence_bundle
     SDK->>API: POST /v1/evidence/bundle
-    API->>S963928: call
-    S963928-->>API: result
-    API->>S908511: call
-    S908511-->>API: result
-    API->>S526111: call
-    S526111-->>API: result
-    API->>I772242: invoke
-    I772242-->>API: ack
+    API->>S7fc4d4_services_evidence_packager_load_policy: call
+    S7fc4d4_services_evidence_packager_load_policy-->>API: result
+    API->>Sd040e9_services_evidence_packager_evaluate_policy: call
+    Sd040e9_services_evidence_packager_evaluate_policy-->>API: result
+    API->>Sd21800_services_evidence_packager_create_bundle: call
+    Sd21800_services_evidence_packager_create_bundle-->>API: result
+    API->>I0817dc_infra_signing_sign_artifact_sh: invoke
+    I0817dc_infra_signing_sign_artifact_sh-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

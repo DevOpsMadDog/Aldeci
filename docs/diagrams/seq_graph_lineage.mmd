@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L412996 as apps.runtime.local_handlers.handle_graph_lineage
-    participant S25988 as services.graph.graph.ProvenanceGraph.lineage
-    participant S993826 as services.graph.graph.build_graph_from_sources
-    participant I780520 as telemetry.configure
+    participant Lad0822_apps_runtime_local_handlers_handle_graph_lineage as apps.runtime.local_handlers.handle_graph_lineage
+    participant S22a67c_services_graph_graph_ProvenanceGraph_lineage as services.graph.graph.ProvenanceGraph.lineage
+    participant Seaab22_services_graph_graph_build_graph_from_sources as services.graph.graph.build_graph_from_sources
+    participant I17e7be_telemetry_configure as telemetry.configure
     CLI->>Local: aldecI graph lineage --artifact <id|path>
-    Local->>L412996: execute
-    L412996-->>Local: results
-    Local->>S25988: call
-    S25988-->>Local: result
-    Local->>S993826: call
-    S993826-->>Local: result
-    Local->>I780520: invoke
-    I780520-->>Local: ack
+    Local->>Lad0822_apps_runtime_local_handlers_handle_graph_lineage: execute
+    Lad0822_apps_runtime_local_handlers_handle_graph_lineage-->>Local: results
+    Local->>S22a67c_services_graph_graph_ProvenanceGraph_lineage: call
+    S22a67c_services_graph_graph_ProvenanceGraph_lineage-->>Local: result
+    Local->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>Local: result
+    Local->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.graph_lineage
     SDK->>API: GET /v1/graph/lineage
-    API->>S25988: call
-    S25988-->>API: result
-    API->>S993826: call
-    S993826-->>API: result
-    API->>I780520: invoke
-    I780520-->>API: ack
+    API->>S22a67c_services_graph_graph_ProvenanceGraph_lineage: call
+    S22a67c_services_graph_graph_ProvenanceGraph_lineage-->>API: result
+    API->>Seaab22_services_graph_graph_build_graph_from_sources: call
+    Seaab22_services_graph_graph_build_graph_from_sources-->>API: result
+    API->>I17e7be_telemetry_configure: invoke
+    I17e7be_telemetry_configure-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

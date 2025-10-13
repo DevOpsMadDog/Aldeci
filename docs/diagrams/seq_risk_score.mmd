@@ -3,32 +3,32 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L228257 as apps.runtime.local_handlers.handle_risk_score
-    participant S751975 as services.risk.scoring.compute_risk_profile
-    participant S502054 as services.risk.scoring.write_risk_report
-    participant I784070 as infra.feeds.epss.load_epss_scores
-    participant I888749 as infra.feeds.kev.load_kev_catalog
+    participant L07b63c_apps_runtime_local_handlers_handle_risk_score as apps.runtime.local_handlers.handle_risk_score
+    participant S44b7dd_services_risk_scoring_compute_risk_profile as services.risk.scoring.compute_risk_profile
+    participant S1489dc_services_risk_scoring_write_risk_report as services.risk.scoring.write_risk_report
+    participant I44b804_infra_feeds_epss_load_epss_scores as infra.feeds.epss.load_epss_scores
+    participant I38aa31_infra_feeds_kev_load_kev_catalog as infra.feeds.kev.load_kev_catalog
     CLI->>Local: aldecI risk score --sbom artifacts/sbom/normalized.json --epss feeds/epss.csv --kev feeds/kev.json --out artifacts/risk.json
-    Local->>L228257: execute
-    L228257-->>Local: results
-    Local->>S751975: call
-    S751975-->>Local: result
-    Local->>S502054: call
-    S502054-->>Local: result
-    Local->>I784070: invoke
-    I784070-->>Local: ack
-    Local->>I888749: invoke
-    I888749-->>Local: ack
+    Local->>L07b63c_apps_runtime_local_handlers_handle_risk_score: execute
+    L07b63c_apps_runtime_local_handlers_handle_risk_score-->>Local: results
+    Local->>S44b7dd_services_risk_scoring_compute_risk_profile: call
+    S44b7dd_services_risk_scoring_compute_risk_profile-->>Local: result
+    Local->>S1489dc_services_risk_scoring_write_risk_report: call
+    S1489dc_services_risk_scoring_write_risk_report-->>Local: result
+    Local->>I44b804_infra_feeds_epss_load_epss_scores: invoke
+    I44b804_infra_feeds_epss_load_epss_scores-->>Local: ack
+    Local->>I38aa31_infra_feeds_kev_load_kev_catalog: invoke
+    I38aa31_infra_feeds_kev_load_kev_catalog-->>Local: ack
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.risk_score
     SDK->>API: POST /v1/risk/score
-    API->>S751975: call
-    S751975-->>API: result
-    API->>S502054: call
-    S502054-->>API: result
-    API->>I784070: invoke
-    I784070-->>API: ack
-    API->>I888749: invoke
-    I888749-->>API: ack
+    API->>S44b7dd_services_risk_scoring_compute_risk_profile: call
+    S44b7dd_services_risk_scoring_compute_risk_profile-->>API: result
+    API->>S1489dc_services_risk_scoring_write_risk_report: call
+    S1489dc_services_risk_scoring_write_risk_report-->>API: result
+    API->>I44b804_infra_feeds_epss_load_epss_scores: invoke
+    I44b804_infra_feeds_epss_load_epss_scores-->>API: ack
+    API->>I38aa31_infra_feeds_kev_load_kev_catalog: invoke
+    I38aa31_infra_feeds_kev_load_kev_catalog-->>API: ack
     API-->>SDK: response
     SDK-->>CLI: parsed response

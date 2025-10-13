@@ -3,27 +3,27 @@ sequenceDiagram
     participant Local
     participant SDK
     participant API
-    participant L533527 as apps.runtime.local_handlers.handle_persona_explain
-    participant S849714 as services.explainability.ExplainabilityService.prime_baseline
-    participant S124697 as services.explainability.ExplainabilityService.explain
-    participant S994880 as services.explainability.ExplainabilityService.generate_narrative
+    participant L78ed64_apps_runtime_local_handlers_handle_persona_explain as apps.runtime.local_handlers.handle_persona_explain
+    participant Sa06a3b_services_explainability_ExplainabilityService_prime_baseline as services.explainability.ExplainabilityService.prime_baseline
+    participant S7cbbb2_services_explainability_ExplainabilityService_explain as services.explainability.ExplainabilityService.explain
+    participant S5565f4_services_explainability_ExplainabilityService_generate_narrative as services.explainability.ExplainabilityService.generate_narrative
     CLI->>Local: aldecI persona explain --role <role> --risk artifacts/risk.json
-    Local->>L533527: execute
-    L533527-->>Local: results
-    Local->>S849714: call
-    S849714-->>Local: result
-    Local->>S124697: call
-    S124697-->>Local: result
-    Local->>S994880: call
-    S994880-->>Local: result
+    Local->>L78ed64_apps_runtime_local_handlers_handle_persona_explain: execute
+    L78ed64_apps_runtime_local_handlers_handle_persona_explain-->>Local: results
+    Local->>Sa06a3b_services_explainability_ExplainabilityService_prime_baseline: call
+    Sa06a3b_services_explainability_ExplainabilityService_prime_baseline-->>Local: result
+    Local->>S7cbbb2_services_explainability_ExplainabilityService_explain: call
+    S7cbbb2_services_explainability_ExplainabilityService_explain-->>Local: result
+    Local->>S5565f4_services_explainability_ExplainabilityService_generate_narrative: call
+    S5565f4_services_explainability_ExplainabilityService_generate_narrative-->>Local: result
     Local-->>CLI: outputs
     CLI->>SDK: sdk.python.fixops_client.FixopsClient.persona_explain
     SDK->>API: POST /v1/persona/explain
-    API->>S849714: call
-    S849714-->>API: result
-    API->>S124697: call
-    S124697-->>API: result
-    API->>S994880: call
-    S994880-->>API: result
+    API->>Sa06a3b_services_explainability_ExplainabilityService_prime_baseline: call
+    Sa06a3b_services_explainability_ExplainabilityService_prime_baseline-->>API: result
+    API->>S7cbbb2_services_explainability_ExplainabilityService_explain: call
+    S7cbbb2_services_explainability_ExplainabilityService_explain-->>API: result
+    API->>S5565f4_services_explainability_ExplainabilityService_generate_narrative: call
+    S5565f4_services_explainability_ExplainabilityService_generate_narrative-->>API: result
     API-->>SDK: response
     SDK-->>CLI: parsed response
