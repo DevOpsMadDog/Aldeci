@@ -16,7 +16,7 @@ dependencies = [
   "uvicorn[standard]",
   "httpx",
   "pydantic",
-  "networkx",
+  "networkx==3.4.2",
   "numpy",
   "rich",
   "pytest",

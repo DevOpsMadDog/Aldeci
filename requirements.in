@@ -3,7 +3,7 @@ cryptography
 fastapi
 httpx
 lib4sbom
-networkx
+networkx==3.4.2
 numpy
 pydantic
 pytest

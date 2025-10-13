@@ -52,7 +52,7 @@ Collecting attrs==25.4.0 (from -r /workspace/Aldeci/requirements.txt (line 14))
 Collecting certifi==2025.10.5 (from -r /workspace/Aldeci/requirements.txt (line 18))
   Using cached certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
 Collecting cffi==2.0.0 (from -r /workspace/Aldeci/requirements.txt (line 23))
-  Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+  Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
 Collecting charset-normalizer==3.4.3 (from -r /workspace/Aldeci/requirements.txt (line 25))
   Using cached charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB)
 Collecting click==8.3.0 (from -r /workspace/Aldeci/requirements.txt (line 27))
@@ -60,7 +60,7 @@ Collecting click==8.3.0 (from -r /workspace/Aldeci/requirements.txt (line 27))
 Collecting colorama==0.4.6 (from -r /workspace/Aldeci/requirements.txt (line 31))
   Using cached colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
 Collecting cryptography==46.0.2 (from -r /workspace/Aldeci/requirements.txt (line 33))
-  Downloading cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+  Using cached cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
 Collecting defusedxml==0.7.1 (from -r /workspace/Aldeci/requirements.txt (line 35))
   Using cached defusedxml-0.7.1-py2.py3-none-any.whl.metadata (32 kB)
 Collecting elementpath==5.0.4 (from -r /workspace/Aldeci/requirements.txt (line 37))
@@ -77,8 +77,8 @@ Collecting httptools==0.7.1 (from -r /workspace/Aldeci/requirements.txt (line 49
   Using cached httptools-0.7.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
 Collecting httpx==0.28.1 (from -r /workspace/Aldeci/requirements.txt (line 51))
   Using cached httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
-Collecting idna==3.10 (from -r /workspace/Aldeci/requirements.txt (line 53))
-  Using cached idna-3.10-py3-none-any.whl.metadata (10 kB)
+Collecting idna==3.11 (from -r /workspace/Aldeci/requirements.txt (line 53))
+  Using cached idna-3.11-py3-none-any.whl.metadata (8.4 kB)
 Collecting iniconfig==2.1.0 (from -r /workspace/Aldeci/requirements.txt (line 58))
   Using cached iniconfig-2.1.0-py3-none-any.whl.metadata (2.7 kB)
 Collecting jsonschema==4.25.1 (from -r /workspace/Aldeci/requirements.txt (line 60))
@@ -93,8 +93,8 @@ Collecting markdown-it-py==4.0.0 (from -r /workspace/Aldeci/requirements.txt (li
   Using cached markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
 Collecting mdurl==0.1.2 (from -r /workspace/Aldeci/requirements.txt (line 70))
   Using cached mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
-Collecting networkx==3.5 (from -r /workspace/Aldeci/requirements.txt (line 72))
-  Using cached networkx-3.5-py3-none-any.whl.metadata (6.3 kB)
+Collecting networkx==3.4.2 (from -r /workspace/Aldeci/requirements.txt (line 72))
+  Downloading networkx-3.4.2-py3-none-any.whl.metadata (6.3 kB)
 Collecting numpy==2.3.3 (from -r /workspace/Aldeci/requirements.txt (line 74))
   Using cached numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
 Collecting packaging==25.0 (from -r /workspace/Aldeci/requirements.txt (line 76))
@@ -102,7 +102,7 @@ Collecting packaging==25.0 (from -r /workspace/Aldeci/requirements.txt (line 76)
 Collecting pluggy==1.6.0 (from -r /workspace/Aldeci/requirements.txt (line 78))
   Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
 Collecting pycparser==2.23 (from -r /workspace/Aldeci/requirements.txt (line 80))
-  Downloading pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+  Using cached pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
 Collecting pydantic==2.12.0 (from -r /workspace/Aldeci/requirements.txt (line 82))
   Using cached pydantic-2.12.0-py3-none-any.whl.metadata (83 kB)
 Collecting pydantic-core==2.41.1 (from -r /workspace/Aldeci/requirements.txt (line 86))
@@ -159,12 +159,11 @@ Using cached annotated_types-0.7.0-py3-none-any.whl (13 kB)
 Using cached anyio-4.11.0-py3-none-any.whl (109 kB)
 Using cached attrs-25.4.0-py3-none-any.whl (67 kB)
 Using cached certifi-2025.10.5-py3-none-any.whl (163 kB)
-Downloading cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)
+Using cached cffi-2.0.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (219 kB)
 Using cached charset_normalizer-3.4.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (151 kB)
 Using cached click-8.3.0-py3-none-any.whl (107 kB)
 Using cached colorama-0.4.6-py2.py3-none-any.whl (25 kB)
-Downloading cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 34.5 MB/s  0:00:00
+Using cached cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
 Using cached defusedxml-0.7.1-py2.py3-none-any.whl (25 kB)
 Using cached elementpath-5.0.4-py3-none-any.whl (245 kB)
 Using cached fastapi-0.119.0-py3-none-any.whl (107 kB)
@@ -175,7 +174,7 @@ Using cached h11-0.16.0-py3-none-any.whl (37 kB)
 Using cached httpcore-1.0.9-py3-none-any.whl (78 kB)
 Using cached httptools-0.7.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (517 kB)
 Using cached httpx-0.28.1-py3-none-any.whl (73 kB)
-Using cached idna-3.10-py3-none-any.whl (70 kB)
+Using cached idna-3.11-py3-none-any.whl (71 kB)
 Using cached iniconfig-2.1.0-py3-none-any.whl (6.0 kB)
 Using cached jsonschema-4.25.1-py3-none-any.whl (90 kB)
 Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
@@ -183,11 +182,12 @@ Using cached lib4sbom-0.8.8-py2.py3-none-any.whl (2.6 MB)
 Using cached mando-0.7.1-py2.py3-none-any.whl (28 kB)
 Using cached markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
 Using cached mdurl-0.1.2-py3-none-any.whl (10.0 kB)
-Using cached networkx-3.5-py3-none-any.whl (2.0 MB)
+Downloading networkx-3.4.2-py3-none-any.whl (1.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 13.8 MB/s  0:00:00
 Using cached numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.6 MB)
 Using cached packaging-25.0-py3-none-any.whl (66 kB)
 Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
-Downloading pycparser-2.23-py3-none-any.whl (118 kB)
+Using cached pycparser-2.23-py3-none-any.whl (118 kB)
 Using cached pydantic_core-2.41.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
 Using cached pygments-2.19.2-py3-none-any.whl (1.2 MB)
 Using cached pytest-8.4.2-py3-none-any.whl (365 kB)
@@ -231,7 +231,7 @@ Saved ./wheels/h11-0.16.0-py3-none-any.whl
 Saved ./wheels/httpcore-1.0.9-py3-none-any.whl
 Saved ./wheels/httptools-0.7.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
 Saved ./wheels/httpx-0.28.1-py3-none-any.whl
-Saved ./wheels/idna-3.10-py3-none-any.whl
+Saved ./wheels/idna-3.11-py3-none-any.whl
 Saved ./wheels/iniconfig-2.1.0-py3-none-any.whl
 Saved ./wheels/jsonschema-4.25.1-py3-none-any.whl
 Saved ./wheels/jsonschema_specifications-2025.9.1-py3-none-any.whl
@@ -239,7 +239,7 @@ Saved ./wheels/lib4sbom-0.8.8-py2.py3-none-any.whl
 Saved ./wheels/mando-0.7.1-py2.py3-none-any.whl
 Saved ./wheels/markdown_it_py-4.0.0-py3-none-any.whl
 Saved ./wheels/mdurl-0.1.2-py3-none-any.whl
-Saved ./wheels/networkx-3.5-py3-none-any.whl
+Saved ./wheels/networkx-3.4.2-py3-none-any.whl
 Saved ./wheels/numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl
 Saved ./wheels/packaging-25.0-py3-none-any.whl
 Saved ./wheels/pluggy-1.6.0-py3-none-any.whl
@@ -291,7 +291,7 @@ Processing ./wheels/h11-0.16.0-py3-none-any.whl (from -r /workspace/Aldeci/requi
 Processing ./wheels/httpcore-1.0.9-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 47))
 Processing ./wheels/httptools-0.7.1-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (from -r /workspace/Aldeci/requirements.txt (line 49))
 Processing ./wheels/httpx-0.28.1-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 51))
-Processing ./wheels/idna-3.10-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 53))
+Processing ./wheels/idna-3.11-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 53))
 Processing ./wheels/iniconfig-2.1.0-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 58))
 Processing ./wheels/jsonschema-4.25.1-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 60))
 Processing ./wheels/jsonschema_specifications-2025.9.1-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 62))
@@ -299,7 +299,7 @@ Processing ./wheels/lib4sbom-0.8.8-py2.py3-none-any.whl (from -r /workspace/Alde
 Processing ./wheels/mando-0.7.1-py2.py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 66))
 Processing ./wheels/markdown_it_py-4.0.0-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 68))
 Processing ./wheels/mdurl-0.1.2-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 70))
-Processing ./wheels/networkx-3.5-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 72))
+Processing ./wheels/networkx-3.4.2-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 72))
 Processing ./wheels/numpy-2.3.3-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (from -r /workspace/Aldeci/requirements.txt (line 74))
 Processing ./wheels/packaging-25.0-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 76))
 Processing ./wheels/pluggy-1.6.0-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 78))
@@ -331,5 +331,5 @@ Processing ./wheels/watchfiles-1.1.0-cp312-cp312-manylinux_2_17_x86_64.manylinux
 Processing ./wheels/websockets-15.0.1-cp312-cp312-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from -r /workspace/Aldeci/requirements.txt (line 151))
 Processing ./wheels/xmlschema-4.1.0-py3-none-any.whl (from -r /workspace/Aldeci/requirements.txt (line 153))
 Installing collected packages: fastjsonschema, websockets, uvloop, urllib3, typing-extensions, structlog, sniffio, six, shellingham, semantic-version, rpds-py, pyyaml, python-dotenv, pygments, pycparser, pluggy, packaging, numpy, networkx, mdurl, iniconfig, idna, httptools, h11, elementpath, defusedxml, colorama, click, charset-normalizer, certifi, attrs, annotated-types, xmlschema, uvicorn, typing-inspection, requests, referencing, pytest, pydantic-core, markdown-it-py, mando, httpcore, cffi, anyio, watchfiles, starlette, rich, radon, pydantic, jsonschema-specifications, httpx, cryptography, typer, jsonschema, fastapi, lib4sbom
-Successfully installed annotated-types-0.7.0 anyio-4.11.0 attrs-25.4.0 certifi-2025.10.5 cffi-2.0.0 charset-normalizer-3.4.3 click-8.3.0 colorama-0.4.6 cryptography-46.0.2 defusedxml-0.7.1 elementpath-5.0.4 fastapi-0.119.0 fastjsonschema-2.21.2 h11-0.16.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.28.1 idna-3.10 iniconfig-2.1.0 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 lib4sbom-0.8.8 mando-0.7.1 markdown-it-py-4.0.0 mdurl-0.1.2 networkx-3.5 numpy-2.3.3 packaging-25.0 pluggy-1.6.0 pycparser-2.23 pydantic-2.12.0 pydantic-core-2.41.1 pygments-2.19.2 pytest-8.4.2 python-dotenv-1.1.1 pyyaml-6.0.3 radon-6.0.1 referencing-0.36.2 requests-2.32.5 rich-14.2.0 rpds-py-0.27.1 semantic-version-2.10.0 shellingham-1.5.4 six-1.17.0 sniffio-1.3.1 starlette-0.48.0 structlog-25.4.0 typer-0.19.2 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.5.0 uvicorn-0.37.0 uvloop-0.21.0 watchfiles-1.1.0 websockets-15.0.1 xmlschema-4.1.0
+Successfully installed annotated-types-0.7.0 anyio-4.11.0 attrs-25.4.0 certifi-2025.10.5 cffi-2.0.0 charset-normalizer-3.4.3 click-8.3.0 colorama-0.4.6 cryptography-46.0.2 defusedxml-0.7.1 elementpath-5.0.4 fastapi-0.119.0 fastjsonschema-2.21.2 h11-0.16.0 httpcore-1.0.9 httptools-0.7.1 httpx-0.28.1 idna-3.11 iniconfig-2.1.0 jsonschema-4.25.1 jsonschema-specifications-2025.9.1 lib4sbom-0.8.8 mando-0.7.1 markdown-it-py-4.0.0 mdurl-0.1.2 networkx-3.4.2 numpy-2.3.3 packaging-25.0 pluggy-1.6.0 pycparser-2.23 pydantic-2.12.0 pydantic-core-2.41.1 pygments-2.19.2 pytest-8.4.2 python-dotenv-1.1.1 pyyaml-6.0.3 radon-6.0.1 referencing-0.36.2 requests-2.32.5 rich-14.2.0 rpds-py-0.27.1 semantic-version-2.10.0 shellingham-1.5.4 six-1.17.0 sniffio-1.3.1 starlette-0.48.0 structlog-25.4.0 typer-0.19.2 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.5.0 uvicorn-0.37.0 uvloop-0.21.0 watchfiles-1.1.0 websockets-15.0.1 xmlschema-4.1.0
 ```
