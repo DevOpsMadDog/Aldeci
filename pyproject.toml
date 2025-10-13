@@ -17,7 +17,7 @@ dependencies = [
   "httpx",
   "pydantic",
   "networkx==3.4.2",
-  "numpy",
+  "numpy==2.2.6",
   "rich",
   "pytest",
   "radon",

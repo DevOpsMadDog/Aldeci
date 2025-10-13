@@ -4,7 +4,7 @@ fastapi
 httpx
 lib4sbom
 networkx==3.4.2
-numpy
+numpy==2.2.6
 pydantic
 pytest
 radon

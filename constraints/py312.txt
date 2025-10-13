@@ -71,7 +71,7 @@ mdurl==0.1.2
     # via markdown-it-py
 networkx==3.4.2
     # via -r /workspace/Aldeci/requirements.in
-numpy==2.3.3
+numpy==2.2.6
     # via -r /workspace/Aldeci/requirements.in
 packaging==25.0
     # via pytest
