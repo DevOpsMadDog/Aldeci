@@ -40,6 +40,32 @@
       ],
       "available": true
     },
+    "gate.check": {
+      "alias_of": "evidence.bundle",
+      "artifacts": [
+        {
+          "destination": "services/evidence/__init__.py",
+          "sha256": "1ad54e798918b1022d618951a893be992272fc5ec22416ad955a10b4a49ee2aa",
+          "source": "evidence/__init__.py"
+        },
+        {
+          "destination": "services/evidence/packager.py",
+          "sha256": "fc3703a675cf491e38719d321f3f4335b2be99e5bdfd23a69992a8794bda546c",
+          "source": "evidence/packager.py"
+        },
+        {
+          "destination": "infra/signing/sign-artifact.sh",
+          "sha256": "682a78e598df377de73346e62aa2a85522247b59aa8f745cd0864ff9edc1d7d8",
+          "source": "scripts/signing/sign-artifact.sh"
+        },
+        {
+          "destination": "infra/signing/verify-artifact.sh",
+          "sha256": "e0082d42a5a56a7e1f67dc4c36ccddf3f1cb894e19408184b19d46a9cf851c60",
+          "source": "scripts/signing/verify-artifact.sh"
+        }
+      ],
+      "available": true
+    },
     "graph.anomalies": {
       "alias_of": "graph.lineage",
       "artifacts": [
@@ -98,6 +124,16 @@
           "destination": "infra/feeds/kev.py",
           "sha256": "f4f2f72b4da6fe3ce04d1f41010152e5a373faa61a67685540f635964b846c52",
           "source": "risk/feeds/kev.py"
+        }
+      ],
+      "available": true
+    },
+    "persona.explain": {
+      "artifacts": [
+        {
+          "destination": "services/explainability.py",
+          "sha256": "3272b443b217ec1c4756017b233f8bd4a39604f3ce0fe680bd67cc01d12a2810",
+          "source": "WIP/code/enterprise_legacy/src/services/explainability.py"
         }
       ],
       "available": true
@@ -179,6 +215,41 @@
           "destination": "services/sbom/normalizer.py",
           "sha256": "17c969fcf1393dadef2b07066401214cbceaea1f7153e9a949d5bac9b211f8d6",
           "source": "lib4sbom/normalizer.py"
+        }
+      ],
+      "available": true
+    },
+    "stage.run": {
+      "artifacts": [
+        {
+          "destination": "core/stage_runner.py",
+          "sha256": "96f3c7ed731cb526c199814d0360f31d5a1986c4ad54604d57df4a8e7457b7f1",
+          "source": "core/stage_runner.py"
+        },
+        {
+          "destination": "services/run_registry.py",
+          "sha256": "2ab1e07929384765221b0698a287cb2cc28962a03a94f7a2f6cac266d73c2237",
+          "source": "fixops-enterprise/src/services/run_registry.py"
+        },
+        {
+          "destination": "services/id_allocator.py",
+          "sha256": "cb9a07e3645117ea63b9270fd1e3940dc85831831fd248bcdbf12c50047c1544",
+          "source": "fixops-enterprise/src/services/id_allocator.py"
+        },
+        {
+          "destination": "services/signing.py",
+          "sha256": "c1757fe5d35a5a88ca7befce9d7898528b75d457909fb2441bd8e03a48b97adf",
+          "source": "fixops-enterprise/src/services/signing.py"
+        },
+        {
+          "destination": "config/settings.py",
+          "sha256": "36f7b83e285dbf0687408b2773607307eb2a1eafd05be78597c25c9d99f66f96",
+          "source": "fixops-enterprise/src/config/settings.py"
+        },
+        {
+          "destination": "core/configuration.py",
+          "sha256": "da82ffc598f1145adccb9c706b5f4a2fe72c676cc576d0584961e15c19c72b6b",
+          "source": "core/configuration.py"
         }
       ],
       "available": true

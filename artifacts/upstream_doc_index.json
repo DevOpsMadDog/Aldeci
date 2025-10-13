@@ -1,0 +1,2542 @@
+{
+  "documents": [
+    "README.md",
+    "readme_updated.md"
+  ],
+  "features": {
+    "cosign": {
+      "candidate_files": [],
+      "candidate_symbols": [],
+      "keyword": "cosign",
+      "mentions": [
+        {
+          "context": "- **Security-as-code provenance & trust** \u2013 SLSA v1 attestations, provenance graph relationships, reproducible build attestations, and cosign signing keep releases anchored to verifiable supply-chain evidence (`services/provenance`, `services/graph`, `services/repro`, `scripts/signing`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 79
+        },
+        {
+          "context": "\u2502   \u251c\u2500\u2500 Cosign signing & provenance (`scripts/signing/*`, `services/provenance`)",
+          "file": "README.md",
+          "line": 207
+        },
+        {
+          "context": "- **Provenance & signing** \u2013 `docs/PROVENANCE.md`, `docs/SIGNING.md`, and `docs/CI-SECRETS.md` cover SLSA attestations, cosign signing flows, required secrets, and verification guidance.",
+          "file": "README.md",
+          "line": 443
+        },
+        {
+          "context": "- GitHub Actions workflows emit attestations and cosign signatures on tagged releases; docs explain schema and verification flows.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:docs/PROVENANCE.md\u2020L1-L180\u3011\u3010F:docs/SIGNING.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 396
+        },
+        {
+          "context": "SLSA -->|sign| Cosign[\"scripts/signing/sign-artifact.sh\"]",
+          "file": "readme_updated.md",
+          "line": 403
+        },
+        {
+          "context": "Cosign --> Bundle[\".sig / bundle\"]",
+          "file": "readme_updated.md",
+          "line": 404
+        },
+        {
+          "context": "SLSA -->|sign| Cosign[scripts/signing/sign-artifact.sh]",
+          "file": "readme_updated.md",
+          "line": 444
+        },
+        {
+          "context": "Cosign --> Bundle[.sig / bundle]",
+          "file": "readme_updated.md",
+          "line": 445
+        },
+        {
+          "context": "- **Why**: Guarantee build traceability using SLSA v1 attestations and cosign signatures for all release artefacts.",
+          "file": "readme_updated.md",
+          "line": 449
+        },
+        {
+          "context": "- **What ships**: `services/provenance/attestation.py` models SLSA statements and validation; CLI `cli/fixops-provenance` provides `attest` and `verify`; GitHub Actions workflows emit attestations and cosign signatures on tagged releases; docs explain schema and verification flows.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:docs/PROVENANCE.md\u2020L1-L180\u3011\u3010F:docs/SIGNING.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 450
+        },
+        {
+          "context": "- **How it works**: Artefact digests are computed via SHA-256, builder/source metadata embedded, and materials recorded before JSON is emitted and optionally signed with cosign helper scripts.\u3010F:services/provenance/attestation.py\u2020L40-L220\u3011\u3010F:scripts/signing/sign-artifact.sh\u2020L1-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 451
+        },
+        {
+          "context": "| `COSIGN_PRIVATE_KEY` (secret) | Detached signature via cosign script | `dist/fixops.tar.gz.sig` |",
+          "file": "readme_updated.md",
+          "line": 457
+        },
+        {
+          "context": "| `COSIGN_PRIVATE_KEY` (secret) | Detached signature via cosign script | `dist/fixops.tar.gz.sig` |",
+          "file": "readme_updated.md",
+          "line": 471
+        },
+        {
+          "context": "| Staged artefacts + cosign key | Manifest hashed & signed | `evidence/bundles/<release>.zip` |",
+          "file": "readme_updated.md",
+          "line": 598
+        },
+        {
+          "context": "- **How it works**: CLI runs staged jobs, validates thresholds (coverage, risk ceilings), signs manifest entries with cosign (via GH secrets in CI), then archives SBOM/risk/provenance/repro artefacts for auditors and attaches them to releases.\u3010F:cli/fixops_ci.py\u2020L120-L300\u3011\u3010F:evidence/packager.py\u2020L140-L320\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 758
+        },
+        {
+          "context": "| Staged artefacts + cosign key | Manifest hashed & signed | `evidence/bundles/<release>.zip` |",
+          "file": "readme_updated.md",
+          "line": 765
+        },
+        {
+          "context": "| `release-sign.yml` | Release publishing | Builds artefacts, signs them with cosign, verifies bundles, uploads signatures and evidence.\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011 |",
+          "file": "readme_updated.md",
+          "line": 941
+        }
+      ]
+    },
+    "epss": {
+      "candidate_files": [],
+      "candidate_symbols": [
+        "core/exploit_signals.py.load_latest_epss_feed",
+        "tests/test_feeds_enrichment.py.test_enrich_findings_populates_epss_and_kev",
+        "tests/test_processing_layer_fallbacks.py.test_markov_builder_fallback_uses_epss_and_kev_bias"
+      ],
+      "keyword": "EPSS",
+      "mentions": [
+        {
+          "context": "| Operate | `simulations/demo_pack/ops-telemetry.json` | `python -m apps.fixops_cli stage-run --stage operate --input simulations/demo_pack/ops-telemetry.json --app life-claims-portal` | `_process_operate` blends telemetry with KEV/EPSS feeds to compute pressure. |",
+          "file": "README.md",
+          "line": 67
+        },
+        {
+          "context": "- **Risk-first posture** \u2013 Normalised SBOMs, EPSS/KEV feed joins, FixOpsRisk scoring, and anomaly detection correlate exploit probability, exposure, and downgrade drift before pull requests merge (`lib4sbom/normalizer.py`, `risk/scoring.py`, `risk/feeds`, `services/graph/graph.py`).",
+          "file": "README.md",
+          "line": 80
+        },
+        {
+          "context": "| Exploit signals | CVE feeds, EPSS/KEV overlays | `modules.exploit_signals.enabled` | Exploitability scores, refresh SLAs",
+          "file": "README.md",
+          "line": 234
+        },
+        {
+          "context": "| `/inputs/cve` | `POST` | Upload CVE or KEV advisories. | Accepts JSON, gzip, or zip archives; exploit refresh annotates staleness and EPSS scores. |",
+          "file": "README.md",
+          "line": 362
+        },
+        {
+          "context": "| Exploit signals | Merges EPSS, KEV, and overlay refresh schedules to score exploitability. | `modules.exploit_signals.enabled`",
+          "file": "README.md",
+          "line": 395
+        },
+        {
+          "context": "- **Risk scoring & exposure** \u2013 `docs/RISK-SCORING.md` documents EPSS/KEV ingestion, FixOpsRisk weighting, CLI usage, and API endpoints for the risk pipeline.",
+          "file": "README.md",
+          "line": 442
+        },
+        {
+          "context": "| Risk scoring (FixOpsRisk) | Prioritise remediation via EPSS/KEV, quantify release posture. | `fixops-risk score --sbom \u2026` | `GET /api/v1/risk/component/{id}`<br>`GET /api/v1/risk/cve/{id}` | CLI is ideal for pipeline gating and artefact generation; API powers portals and integrations that need on-demand lookups. | `risk/feeds/*`, `risk/scoring.py`, `docs/RISK-SCORING.md` |",
+          "file": "readme_updated.md",
+          "line": 47
+        },
+        {
+          "context": "- **Why it matters**: Reduces audit prep to minutes, proves build provenance, prioritises remediation with EPSS/KEV intel, and demonstrates continuous controls across CI/CD.",
+          "file": "readme_updated.md",
+          "line": 62
+        },
+        {
+          "context": "- Risk-first guardrails enriched with EPSS/KEV feeds, version lag heuristics, and exposure flags.",
+          "file": "readme_updated.md",
+          "line": 68
+        },
+        {
+          "context": "- Risk-first guardrails enriched with EPSS/KEV feeds, version lag heuristics, and exposure flags.",
+          "file": "readme_updated.md",
+          "line": 78
+        },
+        {
+          "context": "| `risk/` | Feed updaters (EPSS, CISA KEV) and FixOpsRisk scoring engine mapping SBOM components to composite risk.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011 |",
+          "file": "readme_updated.md",
+          "line": 92
+        },
+        {
+          "context": "| FixOpsRisk scoring | `risk/scoring.py`, `risk/feeds/*`, `backend/api/risk` | Blend EPSS, KEV, version lag, and exposure context to prioritise remediation. | Normalised SBOM + feeds | `artifacts/risk.json` | `qa.yml` | `cli/fixops-risk score`, `/risk/*` |",
+          "file": "readme_updated.md",
+          "line": 252
+        },
+        {
+          "context": "Prioritise remediation by blending exploit probability (EPSS), KEV status, version lag, and exposure hints into a composite score.",
+          "file": "readme_updated.md",
+          "line": 356
+        },
+        {
+          "context": "- Feed updaters populate `data/feeds/epss.json` and `data/feeds/kev.json` from upstream sources.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 359
+        },
+        {
+          "context": "EPSS[\"data/feeds/epss.json\"] --> Joiner",
+          "file": "readme_updated.md",
+          "line": 367
+        },
+        {
+          "context": "- **CI/CD**: `qa.yml` runs unit tests; evidence bundler captures JSON; dashboard visualises EPSS/KEV tables.\u3010F:tests/test_risk_scoring.py\u2020L1-L200\u3011\u3010F:evidence/packager.py\u2020L180-L260\u3011\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 380
+        },
+        {
+          "context": "| `data/feeds/epss.json` | EPSS updater fetches CSV \u2192 cached JSON with score percentile | Feed timestamp in risk payload |",
+          "file": "readme_updated.md",
+          "line": 385
+        },
+        {
+          "context": "EPSS[data/feeds/epss.json] --> Joiner",
+          "file": "readme_updated.md",
+          "line": 417
+        },
+        {
+          "context": "- **Why**: Prioritise remediation by blending exploit probability (EPSS), KEV status, version lag, and exposure hints.",
+          "file": "readme_updated.md",
+          "line": 423
+        },
+        {
+          "context": "- **What ships**: Feed updaters populate `data/feeds/epss.json` and `data/feeds/kev.json`; the scoring engine merges feeds with the normalised SBOM and produces `artifacts/risk.json`; CLI `cli/fixops-risk score` automates the join; API routers expose `/risk/component/{id}` and `/risk/cve/{id}` for UI consumption.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011\u3010F:cli/fixops_risk.py\u2020L1-L200\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 424
+        },
+        {
+          "context": "- **How it works**: The FixOpsRisk formula weights EPSS scores, KEV presence, semantic version lag, and exposure flags into a composite score with per-component and per-CVE breakdowns.\u3010F:risk/scoring.py\u2020L120-L320\u3011",
+          "file": "readme_updated.md",
+          "line": 425
+        },
+        {
+          "context": "| `data/feeds/epss.json` | EPSS updater fetches CSV \u2192 cached JSON with score percentile | Feed timestamp in risk payload |",
+          "file": "readme_updated.md",
+          "line": 430
+        },
+        {
+          "context": "O2[operate/inputs/epss.json]",
+          "file": "readme_updated.md",
+          "line": 621
+        },
+        {
+          "context": "| `operate` | `simulations/ssdlc/operate/inputs/kev.json`, `simulations/ssdlc/operate/inputs/epss.json` | `exploitability.json` | KEV/EPSS fusion that flags urgent operational response priorities.\u3010F:simulations/ssdlc/run.py\u2020L207-L231\u3011 |",
+          "file": "readme_updated.md",
+          "line": 645
+        },
+        {
+          "context": "- Dashboard UI under `ui/dashboard/` visualises SBOM quality, EPSS/KEV tables, provenance, and repro status.\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011\u3010F:ui/dashboard/index.html\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 839
+        }
+      ]
+    },
+    "evidence": {
+      "candidate_files": [
+        "core/evidence.py",
+        "tests/test_evidence.py",
+        "tests/test_evidence_bundle.py",
+        "tests/test_evidence_export.py",
+        "tests/test_evidence_retrieval_fastpath.py"
+      ],
+      "candidate_symbols": [
+        "core/cli.py._copy_evidence",
+        "core/cli.py._handle_get_evidence",
+        "core/evidence.py.EvidenceHub",
+        "core/evidence.py._atomic_write",
+        "core/feature_matrix.py._evidence_metrics",
+        "core/overlay_runtime.py._normalise_evidence_limits",
+        "tests/test_cli_commands.py.test_get_evidence_command_copies_bundle",
+        "tests/test_enterprise_paths.py.test_evidence_encrypted_when_overlay_requests_it",
+        "tests/test_evidence.py.test_evidence_hub_persists_manifest_and_checksum",
+        "tests/test_evidence_bundle.py._write_json",
+        "tests/test_evidence_bundle.py.test_collect_files_handles_nested_directories",
+        "tests/test_evidence_bundle.py.test_create_bundle",
+        "tests/test_evidence_bundle.py.test_evaluate_policy_warn_and_fail",
+        "tests/test_evidence_bundle.py.test_fixops_ci_evidence_bundle",
+        "tests/test_evidence_bundle.py.test_load_policy_merges_overrides",
+        "tests/test_evidence_export.py.test_evidence_export_creates_signed_bundle",
+        "tests/test_evidence_retrieval_fastpath.py._FakeResult",
+        "tests/test_evidence_retrieval_fastpath.py._FakeSession",
+        "tests/test_evidence_retrieval_fastpath.py.test_evidence_retrieval_validates_integrity",
+        "tests/test_http_metrics.py.test_evidence_requests_are_classified_correctly"
+      ],
+      "keyword": "evidence",
+      "mentions": [
+        {
+          "context": "# FixOps Contextual Risk & Evidence Platform",
+          "file": "README.md",
+          "line": 1
+        },
+        {
+          "context": "FixOps turns raw security artefacts into contextual risk, compliance, and automation outputs in minutes. A lightweight FastAPI service and a parity CLI accept push-style uploads, hydrate an overlay-driven pipeline, and emit guardrail verdicts, context summaries, evidence bundles, pricing signals, and automation manifests that match demo or enterprise guardrails without code changes.",
+          "file": "README.md",
+          "line": 3
+        },
+        {
+          "context": "Enterprise mode applies the hardened profile from `config/fixops.overlay.yml`, demonstrating how additional guardrails, automation destinations, and evidence retention settings change the output without touching code. Evidence bundles, cache directories, and automation payloads are created under the allow-listed paths declared in the overlay.",
+          "file": "README.md",
+          "line": 41
+        },
+        {
+          "context": "| Deploy | `simulations/demo_pack/tfplan.json` | `python -m apps.fixops_cli stage-run --stage deploy --input simulations/demo_pack/tfplan.json --app life-claims-portal` | `_process_deploy` accepts Terraform or Kubernetes manifests and extracts guardrail evidence. |",
+          "file": "README.md",
+          "line": 66
+        },
+        {
+          "context": "| Decision | (auto-discovers prior outputs) | `python -m apps.fixops_cli stage-run --stage decision --app life-claims-portal` | `_process_decision` synthesises stage outputs, bundles evidence, and emits explainable verdicts. |",
+          "file": "README.md",
+          "line": 68
+        },
+        {
+          "context": "- **Push ingestion + parity CLI** \u2013 Upload design CSV, SBOM, SARIF, and CVE/KEV data through FastAPI endpoints or run the same flow locally via `python -m core.cli`, with API-key enforcement, MIME validation, byte limits, and evidence export controls (`apps/api/app.py`, `core/cli.py`).",
+          "file": "README.md",
+          "line": 75
+        },
+        {
+          "context": "- **Security-as-code provenance & trust** \u2013 SLSA v1 attestations, provenance graph relationships, reproducible build attestations, and cosign signing keep releases anchored to verifiable supply-chain evidence (`services/provenance`, `services/graph`, `services/repro`, `scripts/signing`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 79
+        },
+        {
+          "context": "- **Evidence & automation built-in** \u2013 Compliance packs, policy automation (Jira/Confluence/Slack), onboarding guidance, feedback capture, and evidence bundling persist auditable manifests inside overlay-allowlisted directories (`core/compliance.py`, `core/policy.py`, `core/evidence.py`, `core/feedback.py`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 81
+        },
+        {
+          "context": "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   uploads    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   overlay + artefacts   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   probabilistic + LLM intelligence   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510   evidence + automations   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510",
+          "file": "README.md",
+          "line": 86
+        },
+        {
+          "context": "Graph + risk engine, evidence hub, pricing, knowledge graph, feedback, docs",
+          "file": "README.md",
+          "line": 93
+        },
+        {
+          "context": "\u2502 CLI runner \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6\u2502 FastAPI ingestion \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6\u2502 Storage + evidence    \u2502",
+          "file": "README.md",
+          "line": 105
+        },
+        {
+          "context": "The overlay registry feeds both the CLI and FastAPI surfaces with runtime configuration. Artefacts ingested through the API are cached under `data/uploads`, normalised, and handed to modular pipeline stages that emit automation payloads, evidence bundles, and ROI telemetry to downstream destinations.",
+          "file": "README.md",
+          "line": 124
+        },
+        {
+          "context": "Module registry -> Evidence hub: build encrypted bundle",
+          "file": "README.md",
+          "line": 137
+        },
+        {
+          "context": "The UML block highlights the primary classes composing FixOps: configuration loaders, the ingestion facade, the orchestrator, the modular execution surface, and evidence management.",
+          "file": "README.md",
+          "line": 189
+        },
+        {
+          "context": "\u251c\u2500\u2500 Evidence & automation",
+          "file": "README.md",
+          "line": 205
+        },
+        {
+          "context": "\u2502   \u251c\u2500\u2500 Evidence bundling (`evidence/packager.py`)",
+          "file": "README.md",
+          "line": 206
+        },
+        {
+          "context": "| Compliance packs | Overlay compliance packs, evidence hub config | `modules.compliance.enabled` | SOC2/ISO bundles, attestations | Provides audit-ready evidence per run. |",
+          "file": "README.md",
+          "line": 226
+        },
+        {
+          "context": "| Evidence hub | Any uploaded artefact | `modules.evidence.enabled` | Compressed, optionally encrypted bundles | Centralises artefacts for hand-off without manual effort. |",
+          "file": "README.md",
+          "line": 228
+        },
+        {
+          "context": "| Enterprise onboarding | CLI | `python -m core.cli run --overlay config/fixops.overlay.yml --enable compliance --enable policy_automation --evidence-dir out/evidence` | Enterprise overlay, connector secrets | Proves compliance and automation readiness for procurement teams. |",
+          "file": "README.md",
+          "line": 246
+        },
+        {
+          "context": "- **Pipeline orchestrator (`apps/api/pipeline.py`)** \u2013 Normalises severities, builds the design \u2194 SBOM \u2194 findings \u2194 CVE crosswalk, evaluates guardrails and contextual modules, executes automation connectors, and emits the module matrix alongside summaries, evidence bundles, pricing, and sanitized overlay metadata.",
+          "file": "README.md",
+          "line": 254
+        },
+        {
+          "context": "4. **Persist outputs** \u2013 Artefact archives capture raw and normalised inputs, evidence hub writes compressed/encrypted bundles, automation connectors dispatch tickets/messages with manifests, exploit feeds refresh against allowlisted directories, and pricing summaries expose plan/limit data. Enhanced responses also persist consensus telemetry, MITRE mapping, and knowledge graph payloads for replay.",
+          "file": "README.md",
+          "line": 261
+        },
+        {
+          "context": "3. **Overlay pipeline regression** \u2013 `python -m core.cli run --overlay config/fixops.overlay.yml --design simulations/demo_pack/design-input.json --sbom simulations/demo_pack/sbom.json --sarif simulations/demo_pack/scanner.sarif --cve demo/fixtures/sample.cve.json --pretty --output out/pipeline-enterprise.json` should emit the full module matrix, evidence bundle path, and pricing posture for enterprise demos.",
+          "file": "README.md",
+          "line": 267
+        },
+        {
+          "context": "4. Use `python -m core.cli demo --mode demo|enterprise` or `make demo` / `make demo-enterprise` to produce canonical pipeline JSON and evidence bundles without wiring external systems.",
+          "file": "README.md",
+          "line": 279
+        },
+        {
+          "context": "- Optional: `cryptography` if enabling evidence bundle encryption (`limits.evidence.encrypt: true`)",
+          "file": "README.md",
+          "line": 290
+        },
+        {
+          "context": "# Demo profile (non-encrypted evidence bundle)",
+          "file": "README.md",
+          "line": 330
+        },
+        {
+          "context": "response (if `--output` is supplied), and drop evidence bundles inside the",
+          "file": "README.md",
+          "line": 338
+        },
+        {
+          "context": "--evidence-dir out/evidence --output out/pipeline-enterprise.json",
+          "file": "README.md",
+          "line": 348
+        },
+        {
+          "context": "Use `python -m core.cli show-overlay --overlay config/fixops.overlay.yml` to inspect sanitized overlay metadata or `python -m core.cli run --offline` to disable automatic exploit feed refresh during air-gapped runs. `python -m core.cli copy-evidence --run out/pipeline-enterprise.json --target ./hand-off` copies bundle archives into hand-off directories for audits.",
+          "file": "README.md",
+          "line": 351
+        },
+        {
+          "context": "| `/pipeline/run` | `POST`/`GET` | Execute pipeline using cached artefacts. | Returns guardrails, context summaries, SSDLC/IaC/AI/exploit/probabilistic insights, automation manifests, pricing telemetry, module matrix, sanitized overlay, and evidence bundle paths. |",
+          "file": "README.md",
+          "line": 364
+        },
+        {
+          "context": "| `/api/v1/enhanced/analysis` | `POST` | Retrieve standardised multi-LLM schema for CI/CD gating. | Streams consensus verdict, model rationales, evidence, SSVC label, and timing metadata for automated pipelines. |",
+          "file": "README.md",
+          "line": 368
+        },
+        {
+          "context": "| Compliance packs | Generates SOC 2 / ISO evidence bundles per run. | `modules.compliance.enabled`",
+          "file": "README.md",
+          "line": 387
+        },
+        {
+          "context": "| Evidence hub | Compresses artefacts, redacts secrets, persists manifests. | `modules.evidence.enabled`",
+          "file": "README.md",
+          "line": 400
+        },
+        {
+          "context": "- Evidence bundles automatically embed ROI, tenant, and performance sections when the corresponding modules are enabled, giving CISOs auditable proof of value per run.",
+          "file": "README.md",
+          "line": 405
+        },
+        {
+          "context": "- **Scenario replay** \u2013 `python -m simulations.cve_scenario.runner --mode {demo,enterprise}` still mirrors production flows (context, automation, evidence) against CVE-2021-44228, now capturing ROI and performance outputs alongside severity shifts.",
+          "file": "README.md",
+          "line": 415
+        },
+        {
+          "context": "- **Modes** \u2013 Profiles labelled `demo` and `enterprise` adjust required artefacts, Jira/Confluence/Slack enforcement, evidence maturity, automation aggressiveness, pricing plans, and module enablement.",
+          "file": "README.md",
+          "line": 426
+        },
+        {
+          "context": "- **CVE contextual re-scoring** \u2013 `python -m simulations.cve_scenario.runner --mode demo` (or `enterprise`) replays CVE-2021-44228 (Log4Shell) with overlay-governed context, producing severity shifts, evidence bundles, guardrail outcomes, and pricing summaries (`simulations/cve_scenario/runner.py`).",
+          "file": "README.md",
+          "line": 432
+        },
+        {
+          "context": "- **Evidence bundles & policy** \u2013 `docs/EVIDENCE-BUNDLES.md` covers policy-driven packaging, manifest signing, API endpoints, and CLI automation.",
+          "file": "README.md",
+          "line": 446
+        },
+        {
+          "context": "- [Evidence bundles & CI agent](#evidence-bundles--ci-agent)",
+          "file": "readme_updated.md",
+          "line": 26
+        },
+        {
+          "context": "| Evidence bundles & policy agent | Package SBOM, risk, provenance, and repro artefacts into signed bundles. | `fixops-ci evidence bundle --release \u2026` | `GET /api/v1/evidence/{release}` | Prefer CLI to generate bundles inside release pipelines; API exposes ready-made bundles to auditors. | `evidence/packager.py`, `cli/fixops_ci.py`, `docs/EVIDENCE-BUNDLES.md` |",
+          "file": "readme_updated.md",
+          "line": 51
+        },
+        {
+          "context": "- **What you can do quickly**: Normalise SBOMs, score risk, issue SLSA attestations, verify reproducible builds, assemble signed evidence bundles, and visualise posture via dashboards.",
+          "file": "readme_updated.md",
+          "line": 61
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, observability, and audit automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 65
+        },
+        {
+          "context": "- Signed provenance, reproducible build attestations, and policy-driven evidence bundles for downstream verification.",
+          "file": "readme_updated.md",
+          "line": 69
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, and audit-ready automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 75
+        },
+        {
+          "context": "- Evidence bundles and observability that compress compliance reviews from days to minutes.",
+          "file": "readme_updated.md",
+          "line": 81
+        },
+        {
+          "context": "| `apps/api/app.py` | FastAPI application wiring provenance, risk, graph, and evidence routers with telemetry hooks.\u3010F:apps/api/app.py\u2020L1-L172\u3011 |",
+          "file": "readme_updated.md",
+          "line": 88
+        },
+        {
+          "context": "| `backend/api/*` | Modular API routers exposing provenance, risk, graph, and evidence JSON responses.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011 |",
+          "file": "readme_updated.md",
+          "line": 89
+        },
+        {
+          "context": "| `lib4sbom/normalizer.py` | Normalises CycloneDX/SPDX inputs, deduplicates components, and emits coverage metrics consumed by downstream risk and evidence stages.\u3010F:lib4sbom/normalizer.py\u2020L1-L330\u3011 |",
+          "file": "readme_updated.md",
+          "line": 91
+        },
+        {
+          "context": "| `evidence/packager.py` | Evidence bundle assembler that signs manifest metadata and zips SBOM, risk, provenance, and repro results.\u3010F:evidence/packager.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 96
+        },
+        {
+          "context": "subgraph Evidence[\"Evidence Services\"]",
+          "file": "readme_updated.md",
+          "line": 160
+        },
+        {
+          "context": "D1[\"Evidence Packager<br/>evidence/packager.py\"]",
+          "file": "readme_updated.md",
+          "line": 161
+        },
+        {
+          "context": "subgraph Evidence[Evidence Services]",
+          "file": "readme_updated.md",
+          "line": 184
+        },
+        {
+          "context": "D1[Evidence Packager\\nevidence/packager.py]",
+          "file": "readme_updated.md",
+          "line": 185
+        },
+        {
+          "context": "D1 -->|signed MANIFEST| Evidence",
+          "file": "readme_updated.md",
+          "line": 215
+        },
+        {
+          "context": "\u2502 CLI runner \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6\u2502 FastAPI ingestion \u2502\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u25b6\u2502 Storage + evidence    \u2502",
+          "file": "readme_updated.md",
+          "line": 228
+        },
+        {
+          "context": "| SBOM normalisation & quality | `lib4sbom/normalizer.py`, `cli/fixops-sbom`, `reports/sbom_quality_report.html` | Standardise multi-generator SBOMs so risk, evidence, and audits consume deterministic data. | CycloneDX/SPDX files | `artifacts/sbom/normalized.json`, HTML report | `qa.yml` | `cli/fixops-sbom normalize`, `/sbom/quality` (HTML via evidence) |",
+          "file": "readme_updated.md",
+          "line": 251
+        },
+        {
+          "context": "| Evidence bundles | `evidence/packager.py`, `cli/fixops-ci`, `config/policy.yml` | Bundle signed proof (SBOM, risk, provenance, repro) for auditors. | Normalised artefacts, policies | Signed `evidence/*.zip` with `MANIFEST.yaml` | `release-sign.yml` | `cli/fixops-ci evidence bundle`, `/evidence/{release}` |",
+          "file": "readme_updated.md",
+          "line": 256
+        },
+        {
+          "context": "participant Evidence as Evidence Packager",
+          "file": "readme_updated.md",
+          "line": 271
+        },
+        {
+          "context": "Dev->>Evidence: fixops-ci evidence bundle",
+          "file": "readme_updated.md",
+          "line": 284
+        },
+        {
+          "context": "Evidence-->>Dev: evidence/*.zip + signed MANIFEST.yaml",
+          "file": "readme_updated.md",
+          "line": 285
+        },
+        {
+          "context": "Evidence->>Obs: Emit verification metrics",
+          "file": "readme_updated.md",
+          "line": 286
+        },
+        {
+          "context": "Harmonise heterogeneous SBOMs for deterministic downstream risk, evidence, and compliance pipelines.",
+          "file": "readme_updated.md",
+          "line": 295
+        },
+        {
+          "context": "P3 --> Evidence[\"evidence/packager.py\"]",
+          "file": "readme_updated.md",
+          "line": 309
+        },
+        {
+          "context": "P3 --> Evidence[evidence/packager.py]",
+          "file": "readme_updated.md",
+          "line": 327
+        },
+        {
+          "context": "- **Why**: Harmonise heterogeneous SBOMs for deterministic downstream risk, evidence, and compliance pipelines.",
+          "file": "readme_updated.md",
+          "line": 329
+        },
+        {
+          "context": "- **CI/CD & compliance**: The QA workflow runs SBOM unit tests; evidence bundles embed the normalised output and HTML to satisfy audit requirements.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:evidence/packager.py\u2020L120-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 332
+        },
+        {
+          "context": "- **API**: HTML report surfaced through evidence bundle downloads.",
+          "file": "readme_updated.md",
+          "line": 344
+        },
+        {
+          "context": "- **CI/CD**: `qa.yml` runs SBOM tests; `release-sign.yml` bundles outputs for releases.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:evidence/packager.py\u2020L120-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 345
+        },
+        {
+          "context": "- `risk/scoring.py` joins feeds with the normalised SBOM and emits FixOpsRisk metrics consumed by API, CLI, and evidence flows.\u3010F:risk/scoring.py\u2020L1-L360\u3011",
+          "file": "readme_updated.md",
+          "line": 360
+        },
+        {
+          "context": "RiskOut --> Evidence[\"evidence/packager.py\"]",
+          "file": "readme_updated.md",
+          "line": 371
+        },
+        {
+          "context": "- **CI/CD**: `qa.yml` runs unit tests; evidence bundler captures JSON; dashboard visualises EPSS/KEV tables.\u3010F:tests/test_risk_scoring.py\u2020L1-L200\u3011\u3010F:evidence/packager.py\u2020L180-L260\u3011\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 380
+        },
+        {
+          "context": "Bundle --> Evidence[\"evidence/packager.py\"]",
+          "file": "readme_updated.md",
+          "line": 406
+        },
+        {
+          "context": "RiskOut --> Evidence",
+          "file": "readme_updated.md",
+          "line": 421
+        },
+        {
+          "context": "- **CI/CD & compliance**: Risk scoring runs inside QA tests and surfaces in evidence bundles and dashboard telemetry for release approval workflows.\u3010F:tests/test_risk_scoring.py\u2020L1-L200\u3011\u3010F:evidence/packager.py\u2020L180-L260\u3011\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 426
+        },
+        {
+          "context": "Bundle --> Evidence",
+          "file": "readme_updated.md",
+          "line": 447
+        },
+        {
+          "context": "- **CI/CD & compliance**: `provenance.yml` attaches attestations to release artifacts, while `release-sign.yml` signs and verifies bundles; evidence bundles include attestation references; docs list required GitHub secrets for auditors.\u3010F:.github/workflows/provenance.yml\u2020L10-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L20-L200\u3011\u3010F:evidence/packager.py\u2020L200-L280\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 452
+        },
+        {
+          "context": "- **CI/CD**: QA tests assert lineage + KEV behaviours; evidence bundles embed query snapshots; telemetry traces ingestion success.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 512
+        },
+        {
+          "context": "Att --> Evidence[\"evidence/packager.py\"]",
+          "file": "readme_updated.md",
+          "line": 538
+        },
+        {
+          "context": "### Evidence bundles & CI agent",
+          "file": "readme_updated.md",
+          "line": 556
+        },
+        {
+          "context": "Offer a single command to package SBOM, risk, provenance, and repro evidence, sign it, and hand it to auditors.",
+          "file": "readme_updated.md",
+          "line": 558
+        },
+        {
+          "context": "- `evidence/packager.py` assembles signed ZIP bundles with `MANIFEST.yaml`; API exposes `/evidence/{release}` for retrieval.\u3010F:evidence/packager.py\u2020L1-L320\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 562
+        },
+        {
+          "context": "- Docs outline auditor workflows and CI secrets required for signing.\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 563
+        },
+        {
+          "context": "subgraph Inputs[\"Evidence inputs\"]",
+          "file": "readme_updated.md",
+          "line": 568
+        },
+        {
+          "context": "CLI --> BundleZip[\"evidence/bundles/<release>.zip\"]",
+          "file": "readme_updated.md",
+          "line": 578
+        },
+        {
+          "context": "BundleZip --> APIEvidence[\"backend/api/evidence\"]",
+          "file": "readme_updated.md",
+          "line": 580
+        },
+        {
+          "context": "cli/fixops-ci evidence bundle --release v1.2.3",
+          "file": "readme_updated.md",
+          "line": 588
+        },
+        {
+          "context": "- **API**: `GET /evidence/{release}` streams signed bundle ZIP.\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 590
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` + `artifacts/risk.json` | Aggregated by `fixops-ci` | `evidence/workdir/<release>/` staging area |",
+          "file": "readme_updated.md",
+          "line": 597
+        },
+        {
+          "context": "| Staged artefacts + cosign key | Manifest hashed & signed | `evidence/bundles/<release>.zip` |",
+          "file": "readme_updated.md",
+          "line": 598
+        },
+        {
+          "context": "- `python -m apps.fixops_cli stage-run --stage <stage> --input <artefact> --app <name>` mirrors the API execution path, ensuring canonical artefacts land in `artefacts/<app>/<stage>/` for SSDLC evidence, signing, and transparency index capture.\u3010F:apps/fixops_cli/__main__.py\u2020L48-L118\u3011\u3010F:core/stage_runner.py\u2020L214-L413\u3011",
+          "file": "readme_updated.md",
+          "line": 648
+        },
+        {
+          "context": "- `--stage all` prints a JSON map of every generated file, which can be zipped into evidence bundles or imported into dashboards.\u3010F:simulations/ssdlc/run.py\u2020L234-L239\u3011\u3010F:tests/test_ssdlc_runner.py\u2020L45-L59\u3011",
+          "file": "readme_updated.md",
+          "line": 649
+        },
+        {
+          "context": "- Evidence bundles embed each stage artefact alongside provenance, risk, and repro proof, giving auditors lifecycle-to-release traceability.\u3010F:evidence/packager.py\u2020L180-L260\u3011",
+          "file": "readme_updated.md",
+          "line": 651
+        },
+        {
+          "context": "- **CI/CD & compliance**: QA tests assert lineage and KEV query behaviour; evidence bundles can embed graph query snapshots; telemetry spans trace ingestion success for drift investigations.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 699
+        },
+        {
+          "context": "Att --> Evidence",
+          "file": "readme_updated.md",
+          "line": 721
+        },
+        {
+          "context": "- **CI/CD & compliance**: QA suite includes passing/failing toy plans; evidence bundles and dashboards display repro status; telemetry records successes/failures for SRE review.\u3010F:services/repro/tests/test_verifier.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L240-L300\u3011\u3010F:ui/dashboard/script.js\u2020L120-L180\u3011\u3010F:telemetry/__init__.py\u2020L40-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 726
+        },
+        {
+          "context": "### Evidence bundles & CI agent",
+          "file": "readme_updated.md",
+          "line": 738
+        },
+        {
+          "context": "CLI --> BundleZip[evidence/bundles/<release>.zip]",
+          "file": "readme_updated.md",
+          "line": 752
+        },
+        {
+          "context": "BundleZip --> APIEvidence[backend/api/evidence]",
+          "file": "readme_updated.md",
+          "line": 754
+        },
+        {
+          "context": "- **Why**: Collapse compliance evidence collection into a single command that enforces policy thresholds and produces signed bundles.",
+          "file": "readme_updated.md",
+          "line": 756
+        },
+        {
+          "context": "- **What ships**: `cli/fixops-ci` aggregates SBOM normalisation, quality scoring, risk scoring, provenance, and reproducible build verification while applying `config/policy.yml`; `evidence/packager.py` assembles signed ZIP bundles with `MANIFEST.yaml`; API exposes `/evidence/{release}` for retrieval; docs guide policy authoring and auditor workflows.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011\u3010F:config/policy.yml\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L1-L320\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 757
+        },
+        {
+          "context": "- **How it works**: CLI runs staged jobs, validates thresholds (coverage, risk ceilings), signs manifest entries with cosign (via GH secrets in CI), then archives SBOM/risk/provenance/repro artefacts for auditors and attaches them to releases.\u3010F:cli/fixops_ci.py\u2020L120-L300\u3011\u3010F:evidence/packager.py\u2020L140-L320\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 758
+        },
+        {
+          "context": "- **CI/CD & compliance**: Evidence bundles are generated during release workflows and referenced in CHANGELOG; QA tests assert bundle integrity and policy evaluation to guarantee trust chains.\u3010F:.github/workflows/release-sign.yml\u2020L120-L200\u3011\u3010F:tests/test_evidence_bundle.py\u2020L1-L220\u3011\u3010F:CHANGELOG.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 759
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` + `artifacts/risk.json` | Aggregated by `fixops-ci` | `evidence/workdir/<release>/` staging area |",
+          "file": "readme_updated.md",
+          "line": 764
+        },
+        {
+          "context": "| Staged artefacts + cosign key | Manifest hashed & signed | `evidence/bundles/<release>.zip` |",
+          "file": "readme_updated.md",
+          "line": 765
+        },
+        {
+          "context": "cli/fixops-ci bundle --release v1.2.3 --output evidence/bundles/v1.2.3.zip",
+          "file": "readme_updated.md",
+          "line": 769
+        },
+        {
+          "context": "- Evidence bundles archive LLM rationales when policy requires.\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L120-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 824
+        },
+        {
+          "context": "- Release workflows attach provenance and evidence for auditors.\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 866
+        },
+        {
+          "context": "| Evidence manifest | Embedded signed artefact references | Audit-ready bundle |",
+          "file": "readme_updated.md",
+          "line": 878
+        },
+        {
+          "context": "- **CI/CD & compliance**: AI integrations remain optional (only activated when API keys exist) but still flow through policy enforcement and evidence bundling for regulated environments.\u3010F:docs/ARCH-INVENTORY.md\u2020L60-L120\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L120-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 897
+        },
+        {
+          "context": "- **How it works**: QA workflow runs formatters, linters, mypy, and coverage thresholds; branch protections rely on signed commits and Dependabot as outlined in security posture docs; release workflows attach provenance and evidence for auditors.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:docs/SECURITY-POSTURE.md\u2020L60-L160\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 914
+        },
+        {
+          "context": "- **CI/CD & compliance**: Playbooks provide step-by-step actions for each discipline, and evidence bundles plus provenance attestations are mandatory for release sign-off.\u3010F:docs/PLAYBOOK-AUDIT.md\u2020L1-L120\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 915
+        },
+        {
+          "context": "| `cli/fixops-ci` | `attest`, `bundle`, `evidence`, etc. | Aggregates SBOM, risk, provenance, and repro tasks with policy enforcement.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 924
+        },
+        {
+          "context": "| `GET /evidence/{release}` | Retrieve evidence bundle metadata for a release tag.\u3010F:backend/api/evidence/router.py\u2020L80-L140\u3011 | `backend/api/evidence/router.py` |",
+          "file": "readme_updated.md",
+          "line": 935
+        },
+        {
+          "context": "| `release-sign.yml` | Release publishing | Builds artefacts, signs them with cosign, verifies bundles, uploads signatures and evidence.\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011 |",
+          "file": "readme_updated.md",
+          "line": 941
+        },
+        {
+          "context": "cli/fixops-ci bundle --release v1.2.3 --output evidence/bundles/v1.2.3.zip",
+          "file": "readme_updated.md",
+          "line": 965
+        },
+        {
+          "context": "- Inspect `reports/sbom_quality_report.html`, `artifacts/risk.json`, provenance attestations, reproducible build outputs, and evidence bundles before releasing.",
+          "file": "readme_updated.md",
+          "line": 972
+        },
+        {
+          "context": "| Evidence bundle | `cli/fixops-ci bundle ...` | Policy enforcement, manifest signing, bundle assembly | `evidence/bundles/v1.2.3.zip` containing `MANIFEST.yaml.sig` |",
+          "file": "readme_updated.md",
+          "line": 981
+        },
+        {
+          "context": "- Evidence bundles (`docs/EVIDENCE-BUNDLES.md`)",
+          "file": "readme_updated.md",
+          "line": 992
+        }
+      ]
+    },
+    "graph": {
+      "candidate_files": [
+        "apps/api/knowledge_graph.py",
+        "scripts/graph_worker.py",
+        "tests/test_graph_worker.py",
+        "tests/test_knowledge_graph.py"
+      ],
+      "candidate_symbols": [
+        "apps/api/knowledge_graph.py.KnowledgeGraphService",
+        "scripts/deep_review.py.build_callgraph",
+        "scripts/deep_review.py.build_import_graph",
+        "scripts/deep_review.py.write_callgraph",
+        "scripts/deep_review.py.write_import_graph",
+        "scripts/generate_index.py.build_import_graph",
+        "scripts/graph_worker.py._optional_path",
+        "scripts/graph_worker.py.main",
+        "tests/test_enterprise_paths.py.test_pipeline_exposes_knowledge_graph",
+        "tests/test_graph_worker.py.test_graph_worker_main_single_cycle",
+        "tests/test_graph_worker.py.test_optional_path",
+        "tests/test_knowledge_graph.py.test_knowledge_graph_service_builds_snapshot",
+        "tests/test_new_backend_processing.py.test_knowledge_graph_processor_invokes_ctinexus"
+      ],
+      "keyword": "graph",
+      "mentions": [
+        {
+          "context": "- **Context-aware decisioning** \u2013 The orchestrator correlates design intent with bill-of-materials, findings, and advisories, then layers the context engine, guardrails, SSDLC scoring, IaC posture, exploit intelligence, AI agent detections, and knowledge graph analytics in a single pass (`apps/api/pipeline.py`, `new_apps/api/processing/knowledge_graph.py`).",
+          "file": "README.md",
+          "line": 76
+        },
+        {
+          "context": "- **Security-as-code provenance & trust** \u2013 SLSA v1 attestations, provenance graph relationships, reproducible build attestations, and cosign signing keep releases anchored to verifiable supply-chain evidence (`services/provenance`, `services/graph`, `services/repro`, `scripts/signing`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 79
+        },
+        {
+          "context": "- **Risk-first posture** \u2013 Normalised SBOMs, EPSS/KEV feed joins, FixOpsRisk scoring, and anomaly detection correlate exploit probability, exposure, and downgrade drift before pull requests merge (`lib4sbom/normalizer.py`, `risk/scoring.py`, `risk/feeds`, `services/graph/graph.py`).",
+          "file": "README.md",
+          "line": 80
+        },
+        {
+          "context": "Graph + risk engine, evidence hub, pricing, knowledge graph, feedback, docs",
+          "file": "README.md",
+          "line": 93
+        },
+        {
+          "context": "The enhanced decisioning layer augments the classic pipeline by invoking the multi-LLM ensemble, SentinelGPT explanations, and CTINexus-style knowledge graph analytics before returning consensus decisions and reasoning metadata for executive dashboards.",
+          "file": "README.md",
+          "line": 126
+        },
+        {
+          "context": "Enhanced decisioning -> Knowledge graph processor: map attack paths and entities",
+          "file": "README.md",
+          "line": 140
+        },
+        {
+          "context": "\u2502   \u2514\u2500\u2500 Provenance graph (`services/graph/graph.py`)",
+          "file": "README.md",
+          "line": 200
+        },
+        {
+          "context": "\u2502   \u2514\u2500\u2500 UI dashboards (`ui/dashboard`, `ui/graph-view`)",
+          "file": "README.md",
+          "line": 212
+        },
+        {
+          "context": "| Knowledge graph analytics | Normalised entities, relationships from scans | Enhanced decision engine | Graph metrics, attack path highlights | Surfaces CTINexus-style attack path intelligence using the bundled overlay graph. |",
+          "file": "README.md",
+          "line": 233
+        },
+        {
+          "context": "3. **Run the pipeline** \u2013 The orchestrator correlates artefacts, executes enabled modules (context engine, compliance packs, policy automation, SSDLC, IaC, AI agents, exploitability, probabilistic forecasts, ROI analytics, tenant lifecycle, performance simulation), invokes the enhanced decision engine for multi-LLM consensus, knowledge graph analytics, and SentinelGPT explanations, and tracks custom module outcomes.",
+          "file": "README.md",
+          "line": 260
+        },
+        {
+          "context": "4. **Persist outputs** \u2013 Artefact archives capture raw and normalised inputs, evidence hub writes compressed/encrypted bundles, automation connectors dispatch tickets/messages with manifests, exploit feeds refresh against allowlisted directories, and pricing summaries expose plan/limit data. Enhanced responses also persist consensus telemetry, MITRE mapping, and knowledge graph payloads for replay.",
+          "file": "README.md",
+          "line": 261
+        },
+        {
+          "context": "5. **Inspect results** \u2013 API/CLI responses include severity overviews, guardrail status, context summaries, compliance coverage, policy execution, SSDLC assessments, IaC posture, AI agent findings, exploitability insights, probabilistic forecasts, ROI dashboards, tenant lifecycle summaries, performance profiles, knowledge graph analytics, SentinelGPT narratives, multi-LLM disagreement matrices, module matrices, feedback endpoints, and sanitized overlay metadata.",
+          "file": "README.md",
+          "line": 270
+        },
+        {
+          "context": "| Knowledge graph analytics | Builds CTINexus graphs to expose attack paths and clustered risk. | Enhanced decision engine (`new_apps/api/processing/knowledge_graph.py`)",
+          "file": "README.md",
+          "line": 394
+        },
+        {
+          "context": "- **Provenance graph intelligence** \u2013 `docs/PROVENANCE-GRAPH.md` details graph ingestion sources, query surface, anomaly detection, and API integration.",
+          "file": "README.md",
+          "line": 444
+        },
+        {
+          "context": "- [Provenance graph service](#provenance-graph-service)",
+          "file": "readme_updated.md",
+          "line": 24
+        },
+        {
+          "context": "| Provenance graph analytics | Trace lineage, find KEV regressions, detect downgrades across releases. | `fixops-ci graph lineage --artifact \u2026` *(via CI agent)* | `GET /api/v1/graph/lineage`<br>`GET /api/v1/graph/kev`<br>`GET /api/v1/graph/anomalies` | Use API for interactive queries and UI dashboards; invoke CLI during automated compliance checks or scheduled reports. | `services/graph/graph.py`, `backend/api/graph/router.py`, `docs/PROVENANCE-GRAPH.md` |",
+          "file": "readme_updated.md",
+          "line": 49
+        },
+        {
+          "context": "- A provenance graph that connects commits, CI runs, artefacts, components, and CVEs across releases.",
+          "file": "readme_updated.md",
+          "line": 70
+        },
+        {
+          "context": "- A provenance graph that connects commits, CI runs, artefacts, components, and CVEs.",
+          "file": "readme_updated.md",
+          "line": 80
+        },
+        {
+          "context": "| `apps/api/app.py` | FastAPI application wiring provenance, risk, graph, and evidence routers with telemetry hooks.\u3010F:apps/api/app.py\u2020L1-L172\u3011 |",
+          "file": "readme_updated.md",
+          "line": 88
+        },
+        {
+          "context": "| `backend/api/*` | Modular API routers exposing provenance, risk, graph, and evidence JSON responses.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011 |",
+          "file": "readme_updated.md",
+          "line": 89
+        },
+        {
+          "context": "| `services/graph/` | SQLite-backed provenance graph builder plus query helpers for lineage, KEV regressions, and downgrade anomalies.\u3010F:services/graph/graph.py\u2020L1-L560\u3011 |",
+          "file": "readme_updated.md",
+          "line": 94
+        },
+        {
+          "context": "| `docker-compose.demo.yml` & `config/otel-collector-demo.yaml` | One-command demo stack bundling backend, graph worker, dashboard UI, and collector for investor/CISO walk-throughs.\u3010F:docker-compose.demo.yml\u2020L1-L80\u3011\u3010F:config/otel-collector-demo.yaml\u2020L1-L80\u3011 |",
+          "file": "readme_updated.md",
+          "line": 98
+        },
+        {
+          "context": "D2[\"Provenance Graph<br/>services/graph/graph.py\"]",
+          "file": "readme_updated.md",
+          "line": 162
+        },
+        {
+          "context": "D2[Provenance Graph\\nservices/graph/graph.py]",
+          "file": "readme_updated.md",
+          "line": 186
+        },
+        {
+          "context": "B2 -->|graph queries| D2",
+          "file": "readme_updated.md",
+          "line": 201
+        },
+        {
+          "context": "| Provenance graph | `services/graph/graph.py`, `backend/api/graph` | Answer lineage, KEV exposure, and downgrade anomaly questions quickly. | Git, attestations, SBOM, risk, releases | SQLite graph DB | `graph worker (scripts/graph_worker.py)` | `/graph/*` |",
+          "file": "readme_updated.md",
+          "line": 254
+        },
+        {
+          "context": "participant Graph as Provenance Graph",
+          "file": "readme_updated.md",
+          "line": 270
+        },
+        {
+          "context": "Prov->>Graph: Push commit/job/artifact nodes",
+          "file": "readme_updated.md",
+          "line": 281
+        },
+        {
+          "context": "Risk->>Graph: Push component + CVE scores",
+          "file": "readme_updated.md",
+          "line": 282
+        },
+        {
+          "context": "Graph-->>Dev: /graph/queries responses",
+          "file": "readme_updated.md",
+          "line": 283
+        },
+        {
+          "context": "### Provenance graph service",
+          "file": "readme_updated.md",
+          "line": 474
+        },
+        {
+          "context": "Provide a queryable knowledge graph linking commits, CI jobs, artefacts, SBOM components, and CVEs to speed investigations.",
+          "file": "readme_updated.md",
+          "line": 476
+        },
+        {
+          "context": "- `services/graph/graph.py` builds a SQLite database and NetworkX overlay from git metadata, attestations, SBOM components, and risk scores.\u3010F:services/graph/graph.py\u2020L1-L560\u3011",
+          "file": "readme_updated.md",
+          "line": 479
+        },
+        {
+          "context": "- FastAPI router `backend/api/graph` exposes lineage, KEV regression, and anomaly queries; docs describe schema and usage.\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 480
+        },
+        {
+          "context": "- Worker `scripts/graph_worker.py` orchestrates ingestion; tests validate graph building and query correctness.\u3010F:scripts/graph_worker.py\u2020L1-L160\u3011\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 481
+        },
+        {
+          "context": "subgraph GraphEngine[\"services/graph\"]",
+          "file": "readme_updated.md",
+          "line": 492
+        },
+        {
+          "context": "Queries --> API[\"backend/api/graph\"]",
+          "file": "readme_updated.md",
+          "line": 502
+        },
+        {
+          "context": "- **API**: `GET /graph/lineage?artifact=...`, `GET /graph/kev-components?n=3`, `GET /graph/anomalies` return JSON payloads with nodes/edges and anomaly explanations.\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 511
+        },
+        {
+          "context": "- **CI/CD**: QA tests assert lineage + KEV behaviours; evidence bundles embed query snapshots; telemetry traces ingestion success.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 512
+        },
+        {
+          "context": "| `git rev-list --max-count=50` | Commit metadata parsed into nodes | `graph.db` release lineage |",
+          "file": "readme_updated.md",
+          "line": 517
+        },
+        {
+          "context": "| `/graph/anomalies?limit=5` | Semantic diff vs previous release | API payload with downgraded versions |",
+          "file": "readme_updated.md",
+          "line": 519
+        },
+        {
+          "context": "### Provenance graph service",
+          "file": "readme_updated.md",
+          "line": 673
+        },
+        {
+          "context": "subgraph GraphEngine[services/graph]",
+          "file": "readme_updated.md",
+          "line": 683
+        },
+        {
+          "context": "Queries --> API[backend/api/graph]",
+          "file": "readme_updated.md",
+          "line": 693
+        },
+        {
+          "context": "- **Why**: Provide auditors and responders with a queryable knowledge graph linking commits, CI runs, artefacts, components, and CVEs.",
+          "file": "readme_updated.md",
+          "line": 696
+        },
+        {
+          "context": "- **What ships**: `services/graph/graph.py` builds a SQLite database and NetworkX overlay; ingestion stitches git metadata, SBOM components, risk scores, and attestation records; API endpoints expose lineage, KEV regressions, and downgrade anomaly queries; docs cover schema and usage.\u3010F:services/graph/graph.py\u2020L1-L560\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 697
+        },
+        {
+          "context": "- **How it works**: Loader tasks create nodes/edges per release, component, CVE, job, and artefact; query helpers compute backward lineage, filter KEV-tagged components over release windows, and detect semantic version downgrades via stored history.\u3010F:services/graph/graph.py\u2020L180-L480\u3011",
+          "file": "readme_updated.md",
+          "line": 698
+        },
+        {
+          "context": "- **CI/CD & compliance**: QA tests assert lineage and KEV query behaviour; evidence bundles can embed graph query snapshots; telemetry spans trace ingestion success for drift investigations.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 699
+        },
+        {
+          "context": "| `git rev-list --max-count=50` | Commit metadata parsed into nodes | `graph.db` release lineage |",
+          "file": "readme_updated.md",
+          "line": 703
+        },
+        {
+          "context": "| `/graph/anomalies?limit=5` | Semantic diff vs previous release | API payload with downgraded versions |",
+          "file": "readme_updated.md",
+          "line": 705
+        },
+        {
+          "context": "curl http://localhost:8000/graph/lineage?artifact=dist/fixops.tar.gz",
+          "file": "readme_updated.md",
+          "line": 709
+        },
+        {
+          "context": "- `docker-compose.demo.yml` orchestrates backend, graph worker, dashboard, and collector; docs include screenshots and tour script.\u3010F:docker-compose.demo.yml\u2020L1-L80\u3011\u3010F:docs/DEMO.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 840
+        },
+        {
+          "context": "- **What ships**: OpenTelemetry wiring with no-op fallbacks in `telemetry/`, dashboard UI under `ui/dashboard/`, docker-compose demo orchestrating backend, graph worker, and collector; docs include screenshots and tour script.\u3010F:telemetry/__init__.py\u2020L1-L160\u3011\u3010F:ui/dashboard/index.html\u2020L1-L160\u3011\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011\u3010F:docker-compose.demo.yml\u2020L1-L80\u3011\u3010F:docs/DEMO.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 902
+        },
+        {
+          "context": "| `GET /graph/lineage` | Resolve provenance lineage for an artefact path.\u3010F:backend/api/graph/router.py\u2020L80-L140\u3011 | `backend/api/graph/router.py` |",
+          "file": "readme_updated.md",
+          "line": 932
+        },
+        {
+          "context": "| `GET /graph/kev-components` | List components with KEV CVEs across recent releases.\u3010F:backend/api/graph/router.py\u2020L140-L180\u3011 | `backend/api/graph/router.py` |",
+          "file": "readme_updated.md",
+          "line": 933
+        },
+        {
+          "context": "| `GET /graph/anomalies` | Surface downgrade/version drift anomalies detected in the graph.\u3010F:backend/api/graph/router.py\u2020L180-L200\u3011 | `backend/api/graph/router.py` |",
+          "file": "readme_updated.md",
+          "line": 934
+        },
+        {
+          "context": "| Graph queries | `python -m scripts.graph_worker ...` + `curl /graph/...` | Lineage, KEV regression, anomaly detection | `/graph/kev-components?releases=3` returns CVE list |",
+          "file": "readme_updated.md",
+          "line": 983
+        }
+      ]
+    },
+    "kev": {
+      "candidate_files": [
+        "tests/test_policy_kevs.py"
+      ],
+      "candidate_symbols": [
+        "core/exploit_signals.py.load_latest_kev_feed",
+        "tests/test_feeds_enrichment.py.test_enrich_findings_populates_epss_and_kev",
+        "tests/test_policy_kevs.py._BaseSettings",
+        "tests/test_policy_kevs.py._execute_with_session",
+        "tests/test_policy_kevs.py.run_with_session",
+        "tests/test_policy_kevs.py.test_kevs_allow_with_active_waiver",
+        "tests/test_policy_kevs.py.test_kevs_block_without_waiver",
+        "tests/test_processing_layer_fallbacks.py.test_markov_builder_fallback_uses_epss_and_kev_bias"
+      ],
+      "keyword": "KEV",
+      "mentions": [
+        {
+          "context": "| Operate | `simulations/demo_pack/ops-telemetry.json` | `python -m apps.fixops_cli stage-run --stage operate --input simulations/demo_pack/ops-telemetry.json --app life-claims-portal` | `_process_operate` blends telemetry with KEV/EPSS feeds to compute pressure. |",
+          "file": "README.md",
+          "line": 67
+        },
+        {
+          "context": "- **Push ingestion + parity CLI** \u2013 Upload design CSV, SBOM, SARIF, and CVE/KEV data through FastAPI endpoints or run the same flow locally via `python -m core.cli`, with API-key enforcement, MIME validation, byte limits, and evidence export controls (`apps/api/app.py`, `core/cli.py`).",
+          "file": "README.md",
+          "line": 75
+        },
+        {
+          "context": "- **Risk-first posture** \u2013 Normalised SBOMs, EPSS/KEV feed joins, FixOpsRisk scoring, and anomaly detection correlate exploit probability, exposure, and downgrade drift before pull requests merge (`lib4sbom/normalizer.py`, `risk/scoring.py`, `risk/feeds`, `services/graph/graph.py`).",
+          "file": "README.md",
+          "line": 80
+        },
+        {
+          "context": "| Exploit signals | CVE feeds, EPSS/KEV overlays | `modules.exploit_signals.enabled` | Exploitability scores, refresh SLAs",
+          "file": "README.md",
+          "line": 234
+        },
+        {
+          "context": "| `/inputs/cve` | `POST` | Upload CVE or KEV advisories. | Accepts JSON, gzip, or zip archives; exploit refresh annotates staleness and EPSS scores. |",
+          "file": "README.md",
+          "line": 362
+        },
+        {
+          "context": "| Exploit signals | Merges EPSS, KEV, and overlay refresh schedules to score exploitability. | `modules.exploit_signals.enabled`",
+          "file": "README.md",
+          "line": 395
+        },
+        {
+          "context": "- **Risk scoring & exposure** \u2013 `docs/RISK-SCORING.md` documents EPSS/KEV ingestion, FixOpsRisk weighting, CLI usage, and API endpoints for the risk pipeline.",
+          "file": "README.md",
+          "line": 442
+        },
+        {
+          "context": "| Risk scoring (FixOpsRisk) | Prioritise remediation via EPSS/KEV, quantify release posture. | `fixops-risk score --sbom \u2026` | `GET /api/v1/risk/component/{id}`<br>`GET /api/v1/risk/cve/{id}` | CLI is ideal for pipeline gating and artefact generation; API powers portals and integrations that need on-demand lookups. | `risk/feeds/*`, `risk/scoring.py`, `docs/RISK-SCORING.md` |",
+          "file": "readme_updated.md",
+          "line": 47
+        },
+        {
+          "context": "| Provenance graph analytics | Trace lineage, find KEV regressions, detect downgrades across releases. | `fixops-ci graph lineage --artifact \u2026` *(via CI agent)* | `GET /api/v1/graph/lineage`<br>`GET /api/v1/graph/kev`<br>`GET /api/v1/graph/anomalies` | Use API for interactive queries and UI dashboards; invoke CLI during automated compliance checks or scheduled reports. | `services/graph/graph.py`, `backend/api/graph/router.py`, `docs/PROVENANCE-GRAPH.md` |",
+          "file": "readme_updated.md",
+          "line": 49
+        },
+        {
+          "context": "- **Why it matters**: Reduces audit prep to minutes, proves build provenance, prioritises remediation with EPSS/KEV intel, and demonstrates continuous controls across CI/CD.",
+          "file": "readme_updated.md",
+          "line": 62
+        },
+        {
+          "context": "- Risk-first guardrails enriched with EPSS/KEV feeds, version lag heuristics, and exposure flags.",
+          "file": "readme_updated.md",
+          "line": 68
+        },
+        {
+          "context": "- Risk-first guardrails enriched with EPSS/KEV feeds, version lag heuristics, and exposure flags.",
+          "file": "readme_updated.md",
+          "line": 78
+        },
+        {
+          "context": "| `risk/` | Feed updaters (EPSS, CISA KEV) and FixOpsRisk scoring engine mapping SBOM components to composite risk.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011 |",
+          "file": "readme_updated.md",
+          "line": 92
+        },
+        {
+          "context": "| `services/graph/` | SQLite-backed provenance graph builder plus query helpers for lineage, KEV regressions, and downgrade anomalies.\u3010F:services/graph/graph.py\u2020L1-L560\u3011 |",
+          "file": "readme_updated.md",
+          "line": 94
+        },
+        {
+          "context": "| FixOpsRisk scoring | `risk/scoring.py`, `risk/feeds/*`, `backend/api/risk` | Blend EPSS, KEV, version lag, and exposure context to prioritise remediation. | Normalised SBOM + feeds | `artifacts/risk.json` | `qa.yml` | `cli/fixops-risk score`, `/risk/*` |",
+          "file": "readme_updated.md",
+          "line": 252
+        },
+        {
+          "context": "| Provenance graph | `services/graph/graph.py`, `backend/api/graph` | Answer lineage, KEV exposure, and downgrade anomaly questions quickly. | Git, attestations, SBOM, risk, releases | SQLite graph DB | `graph worker (scripts/graph_worker.py)` | `/graph/*` |",
+          "file": "readme_updated.md",
+          "line": 254
+        },
+        {
+          "context": "Prioritise remediation by blending exploit probability (EPSS), KEV status, version lag, and exposure hints into a composite score.",
+          "file": "readme_updated.md",
+          "line": 356
+        },
+        {
+          "context": "- Feed updaters populate `data/feeds/epss.json` and `data/feeds/kev.json` from upstream sources.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 359
+        },
+        {
+          "context": "KEV[\"data/feeds/kev.json\"] --> Joiner",
+          "file": "readme_updated.md",
+          "line": 368
+        },
+        {
+          "context": "- **CI/CD**: `qa.yml` runs unit tests; evidence bundler captures JSON; dashboard visualises EPSS/KEV tables.\u3010F:tests/test_risk_scoring.py\u2020L1-L200\u3011\u3010F:evidence/packager.py\u2020L180-L260\u3011\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 380
+        },
+        {
+          "context": "| `data/feeds/kev.json` | CISA KEV importer marks exploited CVEs | `risk_summary.kev_present = true` |",
+          "file": "readme_updated.md",
+          "line": 386
+        },
+        {
+          "context": "KEV[data/feeds/kev.json] --> Joiner",
+          "file": "readme_updated.md",
+          "line": 418
+        },
+        {
+          "context": "- **Why**: Prioritise remediation by blending exploit probability (EPSS), KEV status, version lag, and exposure hints.",
+          "file": "readme_updated.md",
+          "line": 423
+        },
+        {
+          "context": "- **What ships**: Feed updaters populate `data/feeds/epss.json` and `data/feeds/kev.json`; the scoring engine merges feeds with the normalised SBOM and produces `artifacts/risk.json`; CLI `cli/fixops-risk score` automates the join; API routers expose `/risk/component/{id}` and `/risk/cve/{id}` for UI consumption.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011\u3010F:cli/fixops_risk.py\u2020L1-L200\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 424
+        },
+        {
+          "context": "- **How it works**: The FixOpsRisk formula weights EPSS scores, KEV presence, semantic version lag, and exposure flags into a composite score with per-component and per-CVE breakdowns.\u3010F:risk/scoring.py\u2020L120-L320\u3011",
+          "file": "readme_updated.md",
+          "line": 425
+        },
+        {
+          "context": "| `data/feeds/kev.json` | CISA KEV importer marks exploited CVEs | `risk_summary.kev_present = true` |",
+          "file": "readme_updated.md",
+          "line": 431
+        },
+        {
+          "context": "- FastAPI router `backend/api/graph` exposes lineage, KEV regression, and anomaly queries; docs describe schema and usage.\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 480
+        },
+        {
+          "context": "- **API**: `GET /graph/lineage?artifact=...`, `GET /graph/kev-components?n=3`, `GET /graph/anomalies` return JSON payloads with nodes/edges and anomaly explanations.\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 511
+        },
+        {
+          "context": "- **CI/CD**: QA tests assert lineage + KEV behaviours; evidence bundles embed query snapshots; telemetry traces ingestion success.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 512
+        },
+        {
+          "context": "| `artifacts/risk.json` | KEV flags mark high-risk components | Query result JSON with `kev_alerts` |",
+          "file": "readme_updated.md",
+          "line": 518
+        },
+        {
+          "context": "O1[operate/inputs/kev.json]",
+          "file": "readme_updated.md",
+          "line": 620
+        },
+        {
+          "context": "| `operate` | `simulations/ssdlc/operate/inputs/kev.json`, `simulations/ssdlc/operate/inputs/epss.json` | `exploitability.json` | KEV/EPSS fusion that flags urgent operational response priorities.\u3010F:simulations/ssdlc/run.py\u2020L207-L231\u3011 |",
+          "file": "readme_updated.md",
+          "line": 645
+        },
+        {
+          "context": "- **What ships**: `services/graph/graph.py` builds a SQLite database and NetworkX overlay; ingestion stitches git metadata, SBOM components, risk scores, and attestation records; API endpoints expose lineage, KEV regressions, and downgrade anomaly queries; docs cover schema and usage.\u3010F:services/graph/graph.py\u2020L1-L560\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 697
+        },
+        {
+          "context": "- **How it works**: Loader tasks create nodes/edges per release, component, CVE, job, and artefact; query helpers compute backward lineage, filter KEV-tagged components over release windows, and detect semantic version downgrades via stored history.\u3010F:services/graph/graph.py\u2020L180-L480\u3011",
+          "file": "readme_updated.md",
+          "line": 698
+        },
+        {
+          "context": "- **CI/CD & compliance**: QA tests assert lineage and KEV query behaviour; evidence bundles can embed graph query snapshots; telemetry spans trace ingestion success for drift investigations.\u3010F:services/graph/tests/test_graph.py\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L220-L280\u3011\u3010F:telemetry/__init__.py\u2020L80-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 699
+        },
+        {
+          "context": "| `artifacts/risk.json` | KEV flags mark high-risk components | Query result JSON with `kev_alerts` |",
+          "file": "readme_updated.md",
+          "line": 704
+        },
+        {
+          "context": "- Dashboard UI under `ui/dashboard/` visualises SBOM quality, EPSS/KEV tables, provenance, and repro status.\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011\u3010F:ui/dashboard/index.html\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 839
+        },
+        {
+          "context": "| `GET /graph/kev-components` | List components with KEV CVEs across recent releases.\u3010F:backend/api/graph/router.py\u2020L140-L180\u3011 | `backend/api/graph/router.py` |",
+          "file": "readme_updated.md",
+          "line": 933
+        },
+        {
+          "context": "| Graph queries | `python -m scripts.graph_worker ...` + `curl /graph/...` | Lineage, KEV regression, anomaly detection | `/graph/kev-components?releases=3` returns CVE list |",
+          "file": "readme_updated.md",
+          "line": 983
+        }
+      ]
+    },
+    "provenance": {
+      "candidate_files": [],
+      "candidate_symbols": [],
+      "keyword": "provenance",
+      "mentions": [
+        {
+          "context": "- **Security-as-code provenance & trust** \u2013 SLSA v1 attestations, provenance graph relationships, reproducible build attestations, and cosign signing keep releases anchored to verifiable supply-chain evidence (`services/provenance`, `services/graph`, `services/repro`, `scripts/signing`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 79
+        },
+        {
+          "context": "\u2502   \u2514\u2500\u2500 Provenance graph (`services/graph/graph.py`)",
+          "file": "README.md",
+          "line": 200
+        },
+        {
+          "context": "\u2502   \u251c\u2500\u2500 Cosign signing & provenance (`scripts/signing/*`, `services/provenance`)",
+          "file": "README.md",
+          "line": 207
+        },
+        {
+          "context": "- **Provenance & signing** \u2013 `docs/PROVENANCE.md`, `docs/SIGNING.md`, and `docs/CI-SECRETS.md` cover SLSA attestations, cosign signing flows, required secrets, and verification guidance.",
+          "file": "README.md",
+          "line": 443
+        },
+        {
+          "context": "- **Provenance graph intelligence** \u2013 `docs/PROVENANCE-GRAPH.md` details graph ingestion sources, query surface, anomaly detection, and API integration.",
+          "file": "README.md",
+          "line": 444
+        },
+        {
+          "context": "- [Provenance attestations & signing](#provenance-attestations--signing)",
+          "file": "readme_updated.md",
+          "line": 23
+        },
+        {
+          "context": "- [Provenance graph service](#provenance-graph-service)",
+          "file": "readme_updated.md",
+          "line": 24
+        },
+        {
+          "context": "| Provenance attestations & signing | Generate SLSA v1 provenance, verify releases before consumption. | `fixops-provenance attest --artifact \u2026`<br>`fixops-provenance verify --artifact \u2026` | `GET /api/v1/provenance/{artifact}` | Run CLI inside CI or local validation loops; surface API to external auditors who only need attestation JSON. | `services/provenance/attestation.py`, `docs/PROVENANCE.md`, `docs/SIGNING.md` |",
+          "file": "readme_updated.md",
+          "line": 48
+        },
+        {
+          "context": "| Provenance graph analytics | Trace lineage, find KEV regressions, detect downgrades across releases. | `fixops-ci graph lineage --artifact \u2026` *(via CI agent)* | `GET /api/v1/graph/lineage`<br>`GET /api/v1/graph/kev`<br>`GET /api/v1/graph/anomalies` | Use API for interactive queries and UI dashboards; invoke CLI during automated compliance checks or scheduled reports. | `services/graph/graph.py`, `backend/api/graph/router.py`, `docs/PROVENANCE-GRAPH.md` |",
+          "file": "readme_updated.md",
+          "line": 49
+        },
+        {
+          "context": "| Evidence bundles & policy agent | Package SBOM, risk, provenance, and repro artefacts into signed bundles. | `fixops-ci evidence bundle --release \u2026` | `GET /api/v1/evidence/{release}` | Prefer CLI to generate bundles inside release pipelines; API exposes ready-made bundles to auditors. | `evidence/packager.py`, `cli/fixops_ci.py`, `docs/EVIDENCE-BUNDLES.md` |",
+          "file": "readme_updated.md",
+          "line": 51
+        },
+        {
+          "context": "- **Who it serves**: Release managers, compliance teams, SOC analysts, and platform engineers needing verifiable supply-chain provenance.",
+          "file": "readme_updated.md",
+          "line": 60
+        },
+        {
+          "context": "- **Why it matters**: Reduces audit prep to minutes, proves build provenance, prioritises remediation with EPSS/KEV intel, and demonstrates continuous controls across CI/CD.",
+          "file": "readme_updated.md",
+          "line": 62
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, observability, and audit automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 65
+        },
+        {
+          "context": "- Signed provenance, reproducible build attestations, and policy-driven evidence bundles for downstream verification.",
+          "file": "readme_updated.md",
+          "line": 69
+        },
+        {
+          "context": "- A provenance graph that connects commits, CI runs, artefacts, components, and CVEs across releases.",
+          "file": "readme_updated.md",
+          "line": 70
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, and audit-ready automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 75
+        },
+        {
+          "context": "- Signed provenance and reproducible build attestations for downstream verification.",
+          "file": "readme_updated.md",
+          "line": 79
+        },
+        {
+          "context": "- A provenance graph that connects commits, CI runs, artefacts, components, and CVEs.",
+          "file": "readme_updated.md",
+          "line": 80
+        },
+        {
+          "context": "| `apps/api/app.py` | FastAPI application wiring provenance, risk, graph, and evidence routers with telemetry hooks.\u3010F:apps/api/app.py\u2020L1-L172\u3011 |",
+          "file": "readme_updated.md",
+          "line": 88
+        },
+        {
+          "context": "| `backend/api/*` | Modular API routers exposing provenance, risk, graph, and evidence JSON responses.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011 |",
+          "file": "readme_updated.md",
+          "line": 89
+        },
+        {
+          "context": "| `cli/` | Executable entrypoints (`fixops-sbom`, `fixops-risk`, `fixops-provenance`, `fixops-repro`, `fixops-ci`) mirroring the API capabilities for air-gapped or local workflows.\u3010F:cli/fixops_sbom.py\u2020L1-L200\u3011\u3010F:cli/fixops_risk.py\u2020L1-L200\u3011\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011\u3010F:cli/fixops_repro.py\u2020L1-L180\u3011\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 90
+        },
+        {
+          "context": "| `services/provenance/` | SLSA v1 attestation model, hashing utilities, and verification helpers shared by CLI, API, and CI workflows.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 93
+        },
+        {
+          "context": "| `services/graph/` | SQLite-backed provenance graph builder plus query helpers for lineage, KEV regressions, and downgrade anomalies.\u3010F:services/graph/graph.py\u2020L1-L560\u3011 |",
+          "file": "readme_updated.md",
+          "line": 94
+        },
+        {
+          "context": "| `evidence/packager.py` | Evidence bundle assembler that signs manifest metadata and zips SBOM, risk, provenance, and repro results.\u3010F:evidence/packager.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 96
+        },
+        {
+          "context": "| `.github/workflows/` | Release, provenance, reproducible build, signing, and QA pipelines producing signed, attestable artefacts.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:.github/workflows/repro-verify.yml\u2020L1-L120\u3011\u3010F:.github/workflows/qa.yml\u2020L1-L160\u3011 |",
+          "file": "readme_updated.md",
+          "line": 99
+        },
+        {
+          "context": "D2[\"Provenance Graph<br/>services/graph/graph.py\"]",
+          "file": "readme_updated.md",
+          "line": 162
+        },
+        {
+          "context": "D4[\"Provenance Attestations<br/>services/provenance/attestation.py\"]",
+          "file": "readme_updated.md",
+          "line": 164
+        },
+        {
+          "context": "D2[Provenance Graph\\nservices/graph/graph.py]",
+          "file": "readme_updated.md",
+          "line": 186
+        },
+        {
+          "context": "D4[Provenance Attestations\\nservices/provenance/attestation.py]",
+          "file": "readme_updated.md",
+          "line": 188
+        },
+        {
+          "context": "| Provenance attestations | `services/provenance/attestation.py`, `cli/fixops-provenance`, `.github/workflows/provenance.yml` | Provide verifiable SLSA v1 provenance for every release artefact. | Build metadata, materials | `artifacts/attestations/*.json` | `provenance.yml`, `release-sign.yml` | `cli/fixops-provenance attest/verify`, `/provenance/*` |",
+          "file": "readme_updated.md",
+          "line": 253
+        },
+        {
+          "context": "| Provenance graph | `services/graph/graph.py`, `backend/api/graph` | Answer lineage, KEV exposure, and downgrade anomaly questions quickly. | Git, attestations, SBOM, risk, releases | SQLite graph DB | `graph worker (scripts/graph_worker.py)` | `/graph/*` |",
+          "file": "readme_updated.md",
+          "line": 254
+        },
+        {
+          "context": "| Evidence bundles | `evidence/packager.py`, `cli/fixops-ci`, `config/policy.yml` | Bundle signed proof (SBOM, risk, provenance, repro) for auditors. | Normalised artefacts, policies | Signed `evidence/*.zip` with `MANIFEST.yaml` | `release-sign.yml` | `cli/fixops-ci evidence bundle`, `/evidence/{release}` |",
+          "file": "readme_updated.md",
+          "line": 256
+        },
+        {
+          "context": "| Multi-LLM consensus | `fixops-enterprise/llm/*` | Provide AI-assisted triage and policy recommendations with consensus voting. | Risk + provenance context | Recommendations, summarised alerts | Enterprise workflows | API/CLI plug-ins |",
+          "file": "readme_updated.md",
+          "line": 259
+        },
+        {
+          "context": "participant Prov as Provenance Service",
+          "file": "readme_updated.md",
+          "line": 268
+        },
+        {
+          "context": "participant Graph as Provenance Graph",
+          "file": "readme_updated.md",
+          "line": 270
+        },
+        {
+          "context": "Dev->>Prov: fixops-provenance attest",
+          "file": "readme_updated.md",
+          "line": 277
+        },
+        {
+          "context": "### Provenance attestations & signing",
+          "file": "readme_updated.md",
+          "line": 389
+        },
+        {
+          "context": "- `services/provenance/attestation.py` models SLSA statements and validation logic.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011",
+          "file": "readme_updated.md",
+          "line": 394
+        },
+        {
+          "context": "- `cli/fixops-provenance` provides `attest` and `verify` subcommands for local or CI workflows.\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 395
+        },
+        {
+          "context": "- GitHub Actions workflows emit attestations and cosign signatures on tagged releases; docs explain schema and verification flows.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:docs/PROVENANCE.md\u2020L1-L180\u3011\u3010F:docs/SIGNING.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 396
+        },
+        {
+          "context": "Artifact[\"Build artefact\"] -->|hash| Hasher[\"services/provenance/attestation.py\"]",
+          "file": "readme_updated.md",
+          "line": 401
+        },
+        {
+          "context": "SLSA --> APIProv[\"backend/api/provenance\"]",
+          "file": "readme_updated.md",
+          "line": 405
+        },
+        {
+          "context": "### Provenance attestations & signing",
+          "file": "readme_updated.md",
+          "line": 438
+        },
+        {
+          "context": "Artifact[Build artefact] -->|hash| Hasher[services/provenance/attestation.py]",
+          "file": "readme_updated.md",
+          "line": 442
+        },
+        {
+          "context": "SLSA --> APIProv[backend/api/provenance]",
+          "file": "readme_updated.md",
+          "line": 446
+        },
+        {
+          "context": "- **What ships**: `services/provenance/attestation.py` models SLSA statements and validation; CLI `cli/fixops-provenance` provides `attest` and `verify`; GitHub Actions workflows emit attestations and cosign signatures on tagged releases; docs explain schema and verification flows.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:docs/PROVENANCE.md\u2020L1-L180\u3011\u3010F:docs/SIGNING.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 450
+        },
+        {
+          "context": "- **How it works**: Artefact digests are computed via SHA-256, builder/source metadata embedded, and materials recorded before JSON is emitted and optionally signed with cosign helper scripts.\u3010F:services/provenance/attestation.py\u2020L40-L220\u3011\u3010F:scripts/signing/sign-artifact.sh\u2020L1-L140\u3011",
+          "file": "readme_updated.md",
+          "line": 451
+        },
+        {
+          "context": "- **CI/CD & compliance**: `provenance.yml` attaches attestations to release artifacts, while `release-sign.yml` signs and verifies bundles; evidence bundles include attestation references; docs list required GitHub secrets for auditors.\u3010F:.github/workflows/provenance.yml\u2020L10-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L20-L200\u3011\u3010F:evidence/packager.py\u2020L200-L280\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 452
+        },
+        {
+          "context": "cli/fixops-provenance attest --artifact dist/fixops.tar.gz --out artifacts/attestations/fixops.json",
+          "file": "readme_updated.md",
+          "line": 461
+        },
+        {
+          "context": "cli/fixops-provenance verify --artifact dist/fixops.tar.gz --attestation artifacts/attestations/fixops.json",
+          "file": "readme_updated.md",
+          "line": 462
+        },
+        {
+          "context": "- **API**: `GET /provenance/artifacts/{name}` returns SLSA statements.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 464
+        },
+        {
+          "context": "- **CI/CD**: `provenance.yml` attaches attestations; `release-sign.yml` signs and verifies bundles.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 465
+        },
+        {
+          "context": "### Provenance graph service",
+          "file": "readme_updated.md",
+          "line": 474
+        },
+        {
+          "context": "- FastAPI router `backend/api/graph` exposes lineage, KEV regression, and anomaly queries; docs describe schema and usage.\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 480
+        },
+        {
+          "context": "Offer a single command to package SBOM, risk, provenance, and repro evidence, sign it, and hand it to auditors.",
+          "file": "readme_updated.md",
+          "line": 558
+        },
+        {
+          "context": "- `cli/fixops-ci` aggregates SBOM normalisation, quality scoring, risk scoring, provenance, and reproducible build verification while applying `config/policy.yml` thresholds.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011\u3010F:config/policy.yml\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 561
+        },
+        {
+          "context": "- Evidence bundles embed each stage artefact alongside provenance, risk, and repro proof, giving auditors lifecycle-to-release traceability.\u3010F:evidence/packager.py\u2020L180-L260\u3011",
+          "file": "readme_updated.md",
+          "line": 651
+        },
+        {
+          "context": "### Provenance graph service",
+          "file": "readme_updated.md",
+          "line": 673
+        },
+        {
+          "context": "- **What ships**: `services/graph/graph.py` builds a SQLite database and NetworkX overlay; ingestion stitches git metadata, SBOM components, risk scores, and attestation records; API endpoints expose lineage, KEV regressions, and downgrade anomaly queries; docs cover schema and usage.\u3010F:services/graph/graph.py\u2020L1-L560\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 697
+        },
+        {
+          "context": "- **What ships**: `cli/fixops-ci` aggregates SBOM normalisation, quality scoring, risk scoring, provenance, and reproducible build verification while applying `config/policy.yml`; `evidence/packager.py` assembles signed ZIP bundles with `MANIFEST.yaml`; API exposes `/evidence/{release}` for retrieval; docs guide policy authoring and auditor workflows.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011\u3010F:config/policy.yml\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L1-L320\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 757
+        },
+        {
+          "context": "- **How it works**: CLI runs staged jobs, validates thresholds (coverage, risk ceilings), signs manifest entries with cosign (via GH secrets in CI), then archives SBOM/risk/provenance/repro artefacts for auditors and attaches them to releases.\u3010F:cli/fixops_ci.py\u2020L120-L300\u3011\u3010F:evidence/packager.py\u2020L140-L320\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 758
+        },
+        {
+          "context": "| Risk + provenance context | Prompt enrichment across providers | Consensus rationale |",
+          "file": "readme_updated.md",
+          "line": 829
+        },
+        {
+          "context": "Provide investors and CISOs with a one-command experience to view risk posture, provenance status, and reproducible build health.",
+          "file": "readme_updated.md",
+          "line": 835
+        },
+        {
+          "context": "- Dashboard UI under `ui/dashboard/` visualises SBOM quality, EPSS/KEV tables, provenance, and repro status.\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011\u3010F:ui/dashboard/index.html\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 839
+        },
+        {
+          "context": "- Dashboard polls API endpoints for SBOM quality, risk, provenance, and repro status visualisations.\u3010F:ui/dashboard/script.js\u2020L40-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 844
+        },
+        {
+          "context": "- Release workflows attach provenance and evidence for auditors.\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 866
+        },
+        {
+          "context": "- **Why**: Provide investors and CISOs with a single command to view risk posture, provenance status, and reproducible build health.",
+          "file": "readme_updated.md",
+          "line": 901
+        },
+        {
+          "context": "- **How it works**: When telemetry env vars are set, spans and metrics flow to the collector defined in `config/otel-collector-demo.yaml`; the dashboard polls API endpoints for SBOM quality, risk, provenance, and repro status visualisations.\u3010F:telemetry/__init__.py\u2020L40-L140\u3011\u3010F:config/otel-collector-demo.yaml\u2020L1-L80\u3011\u3010F:ui/dashboard/script.js\u2020L40-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 903
+        },
+        {
+          "context": "- **How it works**: QA workflow runs formatters, linters, mypy, and coverage thresholds; branch protections rely on signed commits and Dependabot as outlined in security posture docs; release workflows attach provenance and evidence for auditors.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:docs/SECURITY-POSTURE.md\u2020L60-L160\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 914
+        },
+        {
+          "context": "- **CI/CD & compliance**: Playbooks provide step-by-step actions for each discipline, and evidence bundles plus provenance attestations are mandatory for release sign-off.\u3010F:docs/PLAYBOOK-AUDIT.md\u2020L1-L120\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 915
+        },
+        {
+          "context": "| `cli/fixops-provenance` | `attest`, `verify` | Generates and validates SLSA v1 provenance statements.\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011 |",
+          "file": "readme_updated.md",
+          "line": 922
+        },
+        {
+          "context": "| `cli/fixops-ci` | `attest`, `bundle`, `evidence`, etc. | Aggregates SBOM, risk, provenance, and repro tasks with policy enforcement.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 924
+        },
+        {
+          "context": "| `GET /provenance/{artifact}` | Return stored SLSA attestation JSON for the requested artefact.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011 | `backend/api/provenance/router.py` |",
+          "file": "readme_updated.md",
+          "line": 929
+        },
+        {
+          "context": "| `GET /graph/lineage` | Resolve provenance lineage for an artefact path.\u3010F:backend/api/graph/router.py\u2020L80-L140\u3011 | `backend/api/graph/router.py` |",
+          "file": "readme_updated.md",
+          "line": 932
+        },
+        {
+          "context": "| `provenance.yml` | Tag pushes/releases | Generates and uploads SLSA v1 attestation JSON to release assets.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011 |",
+          "file": "readme_updated.md",
+          "line": 940
+        },
+        {
+          "context": "cli/fixops-provenance attest --artifact dist/fixops.tar.gz --out artifacts/attestations/fixops.json",
+          "file": "readme_updated.md",
+          "line": 963
+        },
+        {
+          "context": "- Inspect `reports/sbom_quality_report.html`, `artifacts/risk.json`, provenance attestations, reproducible build outputs, and evidence bundles before releasing.",
+          "file": "readme_updated.md",
+          "line": 972
+        },
+        {
+          "context": "| Provenance | `cli/fixops-provenance attest ... && cli/fixops-provenance verify ...` | SLSA v1 schema correctness, hash parity, verification | `verify` exit `0`, `materials[*].uri` populated |",
+          "file": "readme_updated.md",
+          "line": 980
+        },
+        {
+          "context": "- Provenance schema (`docs/PROVENANCE.md`)",
+          "file": "readme_updated.md",
+          "line": 989
+        }
+      ]
+    },
+    "sarif": {
+      "candidate_files": [],
+      "candidate_symbols": [
+        "apps/api/normalizers.py.NormalizedSARIF",
+        "apps/api/normalizers.py.SarifFinding",
+        "apps/api/normalizers.py._convert_snyk_payload_to_sarif",
+        "tests/test_new_backend_processing.py.test_sarif_analyzer_clusters_and_scores",
+        "tests/test_normalizers.py._build_sarif_document",
+        "tests/test_normalizers.py.test_load_sarif_converts_snyk_payload_without_converter",
+        "tests/test_normalizers.py.test_load_sarif_logs_actionable_error_without_converter",
+        "tests/test_normalizers.py.test_load_sarif_uses_embedded_payload_when_converter_missing"
+      ],
+      "keyword": "SARIF",
+      "mentions": [
+        {
+          "context": "The command seeds deterministic tokens, loads the curated design/SBOM/SARIF/CVE fixtures, and executes the same pipeline that powers the API. The JSON result is saved to `out/demo.json` and the console summary highlights severity, guardrail status, compliance frameworks, executed modules, and the active pricing tier.",
+          "file": "README.md",
+          "line": 33
+        },
+        {
+          "context": "| Test | `simulations/demo_pack/scanner.sarif` | `python -m apps.fixops_cli stage-run --stage test --input simulations/demo_pack/scanner.sarif --app life-claims-portal` | `_process_test` ingests SARIF, folds in coverage, and derives drift metrics. |",
+          "file": "README.md",
+          "line": 65
+        },
+        {
+          "context": "- **Push ingestion + parity CLI** \u2013 Upload design CSV, SBOM, SARIF, and CVE/KEV data through FastAPI endpoints or run the same flow locally via `python -m core.cli`, with API-key enforcement, MIME validation, byte limits, and evidence export controls (`apps/api/app.py`, `core/cli.py`).",
+          "file": "README.md",
+          "line": 75
+        },
+        {
+          "context": "Client/CLI -> FastAPI ingestion: POST /inputs/* (design, sbom, cve, sarif)",
+          "file": "README.md",
+          "line": 130
+        },
+        {
+          "context": "| Context engine | Design CSV, SBOM, CVE, SARIF | `modules.context_engine.enabled` | Enriched component scores, prioritised findings | Correlates business impact with exposure to cut remediation noise. |",
+          "file": "README.md",
+          "line": 222
+        },
+        {
+          "context": "| AI agent advisor | SBOM, SARIF, overlay AI toggles | `modules.ai_agents.enabled` | AI agent detection notes, control guidance",
+          "file": "README.md",
+          "line": 229
+        },
+        {
+          "context": "| Demo discovery | CLI | `python -m core.cli run --overlay config/demo.overlay.yml --design samples/design.csv --sbom samples/sbom.json --sarif samples/scan.sarif --cve samples/cve.json --output out/demo.json` | Demo overlay, curated artefacts | Fast investor narrative with contextual scoring and ROI headlines. |",
+          "file": "README.md",
+          "line": 244
+        },
+        {
+          "context": "- **Ingestion service (`apps/api/app.py`)** \u2013 Loads the overlay at startup, prepares allowlisted directories, enforces API tokens, validates MIME types, caps uploads, and accepts artefacts at `/inputs/design`, `/inputs/sbom`, `/inputs/cve`, and `/inputs/sarif` before orchestrating `/pipeline/run`.",
+          "file": "README.md",
+          "line": 253
+        },
+        {
+          "context": "2. **Upload artefacts** \u2013 Push CSV/SBOM/SARIF/CVE data (plain JSON or gzip/zip archives) through FastAPI or point the CLI at local files; the normaliser caches parsers to reuse tokens and reduce I/O (`apps/api/normalizers.py`).",
+          "file": "README.md",
+          "line": 259
+        },
+        {
+          "context": "3. **Overlay pipeline regression** \u2013 `python -m core.cli run --overlay config/fixops.overlay.yml --design simulations/demo_pack/design-input.json --sbom simulations/demo_pack/sbom.json --sarif simulations/demo_pack/scanner.sarif --cve demo/fixtures/sample.cve.json --pretty --output out/pipeline-enterprise.json` should emit the full module matrix, evidence bundle path, and pricing posture for enterprise demos.",
+          "file": "README.md",
+          "line": 267
+        },
+        {
+          "context": "curl -H \"X-API-Key: $FIXOPS_API_TOKEN\" -F \"file=@samples/scan.sarif;type=application/json\" http://127.0.0.1:8000/inputs/sarif",
+          "file": "README.md",
+          "line": 314
+        },
+        {
+          "context": "--sarif artefacts/scan.sarif --cve artefacts/cve.json \\",
+          "file": "README.md",
+          "line": 347
+        },
+        {
+          "context": "| `/inputs/sarif` | `POST` | Upload scanner findings (SARIF). | Accepts JSON, gzip, or zip archives; deduplicates rule IDs and severity labels before crosswalk building. |",
+          "file": "README.md",
+          "line": 363
+        },
+        {
+          "context": "- **CTEM & Vulnerability Ops** \u2013 `python -m core.cli run --enable exploit_signals --enable policy_automation --design ... --sbom ... --sarif ... --cve ...` contextualises findings, executes policy automations, and refreshes exploit intelligence.",
+          "file": "README.md",
+          "line": 374
+        },
+        {
+          "context": "- Deterministic artefact processing (SBOM, SARIF, CVE) with reproducible outputs.",
+          "file": "readme_updated.md",
+          "line": 67
+        },
+        {
+          "context": "- Deterministic artefact processing (SBOM, SARIF, CVE) with reproducible outputs.",
+          "file": "readme_updated.md",
+          "line": 77
+        },
+        {
+          "context": "These commands seed deterministic fixtures (design, SBOM, SARIF, CVE) and emit artefacts identical to the API surface, including compliance summaries and automation payload previews saved under `out/`.",
+          "file": "readme_updated.md",
+          "line": 130
+        },
+        {
+          "context": "Demonstrate secure software development lifecycle coverage with deterministic artefacts that auditors can diff across releases. The SSDLC evaluator transforms raw design, control, SBOM, SARIF, infrastructure-as-code, and exploit-signal inputs into stage-specific JSON payloads for downstream dashboards and the enterprise API.",
+          "file": "readme_updated.md",
+          "line": 602
+        },
+        {
+          "context": "T[test/inputs/scanner.sarif]",
+          "file": "readme_updated.md",
+          "line": 618
+        },
+        {
+          "context": "| `test` | `simulations/ssdlc/test/inputs/scanner.sarif` | `normalized_findings.json` | Tool list and severity histogram derived from SARIF scanners for QA sign-off.\u3010F:simulations/ssdlc/run.py\u2020L144-L174\u3011 |",
+          "file": "readme_updated.md",
+          "line": 643
+        }
+      ]
+    },
+    "sbom": {
+      "candidate_files": [
+        "tests/test_sbom_quality.py"
+      ],
+      "candidate_symbols": [
+        "apps/api/normalizers.py.NormalizedSBOM",
+        "apps/api/normalizers.py.SBOMComponent",
+        "apps/api/normalizers.py._resolve_sbom_parser_state",
+        "tests/test_pipeline_matching.py.test_provider_specific_sbom_parser_enables_pipeline",
+        "tests/test_sbom_quality.py._sample_sboms",
+        "tests/test_sbom_quality.py._write_sbom",
+        "tests/test_sbom_quality.py.test_build_and_write_quality_outputs",
+        "tests/test_sbom_quality.py.test_normalize_sboms_merges_components",
+        "tests/test_sbom_quality.py.test_quality_report_metrics",
+        "tests/test_sbom_quality.py.test_render_html_report",
+        "tests/test_sbom_quality.py.test_write_normalized_sbom"
+      ],
+      "keyword": "SBOM",
+      "mentions": [
+        {
+          "context": "The command seeds deterministic tokens, loads the curated design/SBOM/SARIF/CVE fixtures, and executes the same pipeline that powers the API. The JSON result is saved to `out/demo.json` and the console summary highlights severity, guardrail status, compliance frameworks, executed modules, and the active pricing tier.",
+          "file": "README.md",
+          "line": 33
+        },
+        {
+          "context": "| Build | `simulations/demo_pack/sbom.json` | `python -m apps.fixops_cli stage-run --stage build --input simulations/demo_pack/sbom.json --app life-claims-portal` | `_process_build` normalises with `apps.api.normalizers.InputNormalizer` and flags risky components. |",
+          "file": "README.md",
+          "line": 64
+        },
+        {
+          "context": "- **Push ingestion + parity CLI** \u2013 Upload design CSV, SBOM, SARIF, and CVE/KEV data through FastAPI endpoints or run the same flow locally via `python -m core.cli`, with API-key enforcement, MIME validation, byte limits, and evidence export controls (`apps/api/app.py`, `core/cli.py`).",
+          "file": "README.md",
+          "line": 75
+        },
+        {
+          "context": "Client/CLI -> FastAPI ingestion: POST /inputs/* (design, sbom, cve, sarif)",
+          "file": "README.md",
+          "line": 130
+        },
+        {
+          "context": "\u2502   \u251c\u2500\u2500 SBOM normaliser (`lib4sbom/normalizer.py`)",
+          "file": "README.md",
+          "line": 198
+        },
+        {
+          "context": "| Context engine | Design CSV, SBOM, CVE, SARIF | `modules.context_engine.enabled` | Enriched component scores, prioritised findings | Correlates business impact with exposure to cut remediation noise. |",
+          "file": "README.md",
+          "line": 222
+        },
+        {
+          "context": "| AI agent advisor | SBOM, SARIF, overlay AI toggles | `modules.ai_agents.enabled` | AI agent detection notes, control guidance",
+          "file": "README.md",
+          "line": 229
+        },
+        {
+          "context": "| Demo discovery | CLI | `python -m core.cli run --overlay config/demo.overlay.yml --design samples/design.csv --sbom samples/sbom.json --sarif samples/scan.sarif --cve samples/cve.json --output out/demo.json` | Demo overlay, curated artefacts | Fast investor narrative with contextual scoring and ROI headlines. |",
+          "file": "README.md",
+          "line": 244
+        },
+        {
+          "context": "- **Ingestion service (`apps/api/app.py`)** \u2013 Loads the overlay at startup, prepares allowlisted directories, enforces API tokens, validates MIME types, caps uploads, and accepts artefacts at `/inputs/design`, `/inputs/sbom`, `/inputs/cve`, and `/inputs/sarif` before orchestrating `/pipeline/run`.",
+          "file": "README.md",
+          "line": 253
+        },
+        {
+          "context": "- **Pipeline orchestrator (`apps/api/pipeline.py`)** \u2013 Normalises severities, builds the design \u2194 SBOM \u2194 findings \u2194 CVE crosswalk, evaluates guardrails and contextual modules, executes automation connectors, and emits the module matrix alongside summaries, evidence bundles, pricing, and sanitized overlay metadata.",
+          "file": "README.md",
+          "line": 254
+        },
+        {
+          "context": "2. **Upload artefacts** \u2013 Push CSV/SBOM/SARIF/CVE data (plain JSON or gzip/zip archives) through FastAPI or point the CLI at local files; the normaliser caches parsers to reuse tokens and reduce I/O (`apps/api/normalizers.py`).",
+          "file": "README.md",
+          "line": 259
+        },
+        {
+          "context": "3. **Overlay pipeline regression** \u2013 `python -m core.cli run --overlay config/fixops.overlay.yml --design simulations/demo_pack/design-input.json --sbom simulations/demo_pack/sbom.json --sarif simulations/demo_pack/scanner.sarif --cve demo/fixtures/sample.cve.json --pretty --output out/pipeline-enterprise.json` should emit the full module matrix, evidence bundle path, and pricing posture for enterprise demos.",
+          "file": "README.md",
+          "line": 267
+        },
+        {
+          "context": "curl -H \"X-API-Key: $FIXOPS_API_TOKEN\" -F \"file=@samples/sbom.json;type=application/json\" http://127.0.0.1:8000/inputs/sbom",
+          "file": "README.md",
+          "line": 312
+        },
+        {
+          "context": "--design artefacts/design.csv --sbom artefacts/sbom.json \\",
+          "file": "README.md",
+          "line": 346
+        },
+        {
+          "context": "| `/inputs/sbom` | `POST` | Upload SBOM JSON. | Accepts JSON, gzip, or zip archives; normalises component tokens and retains version metadata. |",
+          "file": "README.md",
+          "line": 361
+        },
+        {
+          "context": "- **CTEM & Vulnerability Ops** \u2013 `python -m core.cli run --enable exploit_signals --enable policy_automation --design ... --sbom ... --sarif ... --cve ...` contextualises findings, executes policy automations, and refreshes exploit intelligence.",
+          "file": "README.md",
+          "line": 374
+        },
+        {
+          "context": "- **SBOM normalisation & quality** \u2013 `docs/SBOM-QUALITY.md` explains deduplication logic, quality scoring metrics, CLI usage, and HTML reporting expectations.",
+          "file": "README.md",
+          "line": 441
+        },
+        {
+          "context": "- [SBOM normalisation & quality scoring](#sbom-normalisation--quality-scoring)",
+          "file": "readme_updated.md",
+          "line": 21
+        },
+        {
+          "context": "| SBOM normalisation & quality | Merge SBOMs from Syft/Trivy, produce deterministic quality metrics for audits. | `fixops-sbom normalize --in \u2026`<br>`fixops-sbom quality --in \u2026` | `GET /api/v1/sbom/quality` *(if published via backend)* | Use CLI for local/air-gapped triage and CI steps; expose API when dashboards or downstream services need JSON outputs. | `lib4sbom/normalizer.py`, `docs/SBOM-QUALITY.md` |",
+          "file": "readme_updated.md",
+          "line": 46
+        },
+        {
+          "context": "| Risk scoring (FixOpsRisk) | Prioritise remediation via EPSS/KEV, quantify release posture. | `fixops-risk score --sbom \u2026` | `GET /api/v1/risk/component/{id}`<br>`GET /api/v1/risk/cve/{id}` | CLI is ideal for pipeline gating and artefact generation; API powers portals and integrations that need on-demand lookups. | `risk/feeds/*`, `risk/scoring.py`, `docs/RISK-SCORING.md` |",
+          "file": "readme_updated.md",
+          "line": 47
+        },
+        {
+          "context": "| Evidence bundles & policy agent | Package SBOM, risk, provenance, and repro artefacts into signed bundles. | `fixops-ci evidence bundle --release \u2026` | `GET /api/v1/evidence/{release}` | Prefer CLI to generate bundles inside release pipelines; API exposes ready-made bundles to auditors. | `evidence/packager.py`, `cli/fixops_ci.py`, `docs/EVIDENCE-BUNDLES.md` |",
+          "file": "readme_updated.md",
+          "line": 51
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, observability, and audit automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 65
+        },
+        {
+          "context": "- Deterministic artefact processing (SBOM, SARIF, CVE) with reproducible outputs.",
+          "file": "readme_updated.md",
+          "line": 67
+        },
+        {
+          "context": "FixOps unifies SBOM intelligence, exploit scoring, provenance evidence, reproducible builds, and audit-ready automation into a single DevSecOps workflow. The platform ships both a FastAPI surface and parity CLIs that read overlay-driven configuration and deliver:",
+          "file": "readme_updated.md",
+          "line": 75
+        },
+        {
+          "context": "- Deterministic artefact processing (SBOM, SARIF, CVE) with reproducible outputs.",
+          "file": "readme_updated.md",
+          "line": 77
+        },
+        {
+          "context": "| `cli/` | Executable entrypoints (`fixops-sbom`, `fixops-risk`, `fixops-provenance`, `fixops-repro`, `fixops-ci`) mirroring the API capabilities for air-gapped or local workflows.\u3010F:cli/fixops_sbom.py\u2020L1-L200\u3011\u3010F:cli/fixops_risk.py\u2020L1-L200\u3011\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011\u3010F:cli/fixops_repro.py\u2020L1-L180\u3011\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 90
+        },
+        {
+          "context": "| `risk/` | Feed updaters (EPSS, CISA KEV) and FixOpsRisk scoring engine mapping SBOM components to composite risk.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011 |",
+          "file": "readme_updated.md",
+          "line": 92
+        },
+        {
+          "context": "| `evidence/packager.py` | Evidence bundle assembler that signs manifest metadata and zips SBOM, risk, provenance, and repro results.\u3010F:evidence/packager.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 96
+        },
+        {
+          "context": "These commands seed deterministic fixtures (design, SBOM, SARIF, CVE) and emit artefacts identical to the API surface, including compliance summaries and automation payload previews saved under `out/`.",
+          "file": "readme_updated.md",
+          "line": 130
+        },
+        {
+          "context": "python -m core.cli run --stage build --input path/to/sbom.json",
+          "file": "readme_updated.md",
+          "line": 133
+        },
+        {
+          "context": "B1 -->|sbom/risk| D2",
+          "file": "readme_updated.md",
+          "line": 198
+        },
+        {
+          "context": "| SBOM normalisation & quality | `lib4sbom/normalizer.py`, `cli/fixops-sbom`, `reports/sbom_quality_report.html` | Standardise multi-generator SBOMs so risk, evidence, and audits consume deterministic data. | CycloneDX/SPDX files | `artifacts/sbom/normalized.json`, HTML report | `qa.yml` | `cli/fixops-sbom normalize`, `/sbom/quality` (HTML via evidence) |",
+          "file": "readme_updated.md",
+          "line": 251
+        },
+        {
+          "context": "| FixOpsRisk scoring | `risk/scoring.py`, `risk/feeds/*`, `backend/api/risk` | Blend EPSS, KEV, version lag, and exposure context to prioritise remediation. | Normalised SBOM + feeds | `artifacts/risk.json` | `qa.yml` | `cli/fixops-risk score`, `/risk/*` |",
+          "file": "readme_updated.md",
+          "line": 252
+        },
+        {
+          "context": "| Provenance graph | `services/graph/graph.py`, `backend/api/graph` | Answer lineage, KEV exposure, and downgrade anomaly questions quickly. | Git, attestations, SBOM, risk, releases | SQLite graph DB | `graph worker (scripts/graph_worker.py)` | `/graph/*` |",
+          "file": "readme_updated.md",
+          "line": 254
+        },
+        {
+          "context": "| Evidence bundles | `evidence/packager.py`, `cli/fixops-ci`, `config/policy.yml` | Bundle signed proof (SBOM, risk, provenance, repro) for auditors. | Normalised artefacts, policies | Signed `evidence/*.zip` with `MANIFEST.yaml` | `release-sign.yml` | `cli/fixops-ci evidence bundle`, `/evidence/{release}` |",
+          "file": "readme_updated.md",
+          "line": 256
+        },
+        {
+          "context": "participant SBOM as SBOM Engine",
+          "file": "readme_updated.md",
+          "line": 266
+        },
+        {
+          "context": "Dev->>SBOM: Generate CycloneDX/SPDX",
+          "file": "readme_updated.md",
+          "line": 273
+        },
+        {
+          "context": "SBOM-->>Dev: artifacts/sbom/normalized.json",
+          "file": "readme_updated.md",
+          "line": 274
+        },
+        {
+          "context": "SBOM->>Risk: Normalised components",
+          "file": "readme_updated.md",
+          "line": 275
+        },
+        {
+          "context": "### SBOM normalisation & quality scoring",
+          "file": "readme_updated.md",
+          "line": 293
+        },
+        {
+          "context": "- `cli/fixops-sbom` exposes `normalize` and `quality` subcommands for CLI/CI usage.\u3010F:cli/fixops_sbom.py\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 299
+        },
+        {
+          "context": "P1 -->|dedupe + metrics| P2[\"Normalized JSON<br/>artifacts/sbom/normalized.json\"]",
+          "file": "readme_updated.md",
+          "line": 306
+        },
+        {
+          "context": "### SBOM normalisation & quality scoring",
+          "file": "readme_updated.md",
+          "line": 319
+        },
+        {
+          "context": "P1 -->|dedupe + metrics| P2[Normalized JSON\\nartifacts/sbom/normalized.json]",
+          "file": "readme_updated.md",
+          "line": 324
+        },
+        {
+          "context": "- **What ships**: `lib4sbom/normalizer.py` handles CycloneDX & SPDX ingestion, deduplication, and metric computation; `cli/fixops-sbom` exposes `normalize` and `quality` subcommands; HTML report renderer emits `reports/sbom_quality_report.html`; tests live in `tests/test_sbom_quality.py` for regression safety.\u3010F:lib4sbom/normalizer.py\u2020L1-L330\u3011\u3010F:cli/fixops_sbom.py\u2020L1-L200\u3011\u3010F:tests/test_sbom_quality.py\u2020L1-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 330
+        },
+        {
+          "context": "- **CI/CD & compliance**: The QA workflow runs SBOM unit tests; evidence bundles embed the normalised output and HTML to satisfy audit requirements.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:evidence/packager.py\u2020L120-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 332
+        },
+        {
+          "context": "| `fixtures/sbom/cyclonedx.json` | Parsed CycloneDX \u2192 component keyed by `(purl, version, hash)` | `artifacts/sbom/normalized.json` component entry with merged generators |",
+          "file": "readme_updated.md",
+          "line": 336
+        },
+        {
+          "context": "| `fixtures/sbom/spdx.json` | SPDX ingestion \u2192 normalised license IDs | `analysis/sbom_quality_report.json` coverage metrics |",
+          "file": "readme_updated.md",
+          "line": 337
+        },
+        {
+          "context": "cli/fixops-sbom normalize --in fixtures/sbom/cyclonedx.json fixtures/sbom/spdx.json --out artifacts/sbom/normalized.json",
+          "file": "readme_updated.md",
+          "line": 341
+        },
+        {
+          "context": "cli/fixops-sbom quality --in artifacts/sbom/normalized.json --html reports/sbom_quality_report.html",
+          "file": "readme_updated.md",
+          "line": 342
+        },
+        {
+          "context": "- **CI/CD**: `qa.yml` runs SBOM tests; `release-sign.yml` bundles outputs for releases.\u3010F:.github/workflows/qa.yml\u2020L30-L160\u3011\u3010F:evidence/packager.py\u2020L120-L220\u3011",
+          "file": "readme_updated.md",
+          "line": 345
+        },
+        {
+          "context": "| `fixtures/sbom/cyclonedx.json` | Parsed CycloneDX \u2192 component keyed by `(purl, version, hash)` | `artifacts/sbom/normalized.json` component entry with merged generators |",
+          "file": "readme_updated.md",
+          "line": 350
+        },
+        {
+          "context": "| `fixtures/sbom/spdx.json` | SPDX ingestion \u2192 normalised license IDs | `analysis/sbom_quality_report.json` coverage metrics |",
+          "file": "readme_updated.md",
+          "line": 351
+        },
+        {
+          "context": "- `risk/scoring.py` joins feeds with the normalised SBOM and emits FixOpsRisk metrics consumed by API, CLI, and evidence flows.\u3010F:risk/scoring.py\u2020L1-L360\u3011",
+          "file": "readme_updated.md",
+          "line": 360
+        },
+        {
+          "context": "SBOM[\"Normalized SBOM\"] -->|join| Joiner[\"risk/scoring.py\"]",
+          "file": "readme_updated.md",
+          "line": 366
+        },
+        {
+          "context": "cli/fixops-risk score --sbom artifacts/sbom/normalized.json --out artifacts/risk.json",
+          "file": "readme_updated.md",
+          "line": 377
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` | Component map merged with feed metrics | `artifacts/risk.json` per-component `fixops_risk` score |",
+          "file": "readme_updated.md",
+          "line": 387
+        },
+        {
+          "context": "SBOM[Normalized SBOM] -->|join| Joiner[risk/scoring.py]",
+          "file": "readme_updated.md",
+          "line": 416
+        },
+        {
+          "context": "- **What ships**: Feed updaters populate `data/feeds/epss.json` and `data/feeds/kev.json`; the scoring engine merges feeds with the normalised SBOM and produces `artifacts/risk.json`; CLI `cli/fixops-risk score` automates the join; API routers expose `/risk/component/{id}` and `/risk/cve/{id}` for UI consumption.\u3010F:risk/feeds/epss.py\u2020L1-L200\u3011\u3010F:risk/feeds/kev.py\u2020L1-L200\u3011\u3010F:risk/scoring.py\u2020L1-L360\u3011\u3010F:cli/fixops_risk.py\u2020L1-L200\u3011\u3010F:backend/api/risk/router.py\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 424
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` | Component map merged with feed metrics | `artifacts/risk.json` per-component `fixops_risk` score |",
+          "file": "readme_updated.md",
+          "line": 432
+        },
+        {
+          "context": "cli/fixops-risk score --sbom artifacts/sbom/normalized.json --out artifacts/risk.json",
+          "file": "readme_updated.md",
+          "line": 435
+        },
+        {
+          "context": "Provide a queryable knowledge graph linking commits, CI jobs, artefacts, SBOM components, and CVEs to speed investigations.",
+          "file": "readme_updated.md",
+          "line": 476
+        },
+        {
+          "context": "- `services/graph/graph.py` builds a SQLite database and NetworkX overlay from git metadata, attestations, SBOM components, and risk scores.\u3010F:services/graph/graph.py\u2020L1-L560\u3011",
+          "file": "readme_updated.md",
+          "line": 479
+        },
+        {
+          "context": "SBOMNodes[\"Normalized SBOM\"]",
+          "file": "readme_updated.md",
+          "line": 487
+        },
+        {
+          "context": "python -m scripts.graph_worker --sbom artifacts/sbom/normalized.json --risk artifacts/risk.json --attestations artifacts/attestations/",
+          "file": "readme_updated.md",
+          "line": 509
+        },
+        {
+          "context": "Offer a single command to package SBOM, risk, provenance, and repro evidence, sign it, and hand it to auditors.",
+          "file": "readme_updated.md",
+          "line": 558
+        },
+        {
+          "context": "- `cli/fixops-ci` aggregates SBOM normalisation, quality scoring, risk scoring, provenance, and reproducible build verification while applying `config/policy.yml` thresholds.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011\u3010F:config/policy.yml\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 561
+        },
+        {
+          "context": "SBOMIn[\"artifacts/sbom/normalized.json\"]",
+          "file": "readme_updated.md",
+          "line": 569
+        },
+        {
+          "context": "cli/fixops-ci sbom normalize --in fixtures/sbom/cyclonedx.json fixtures/sbom/spdx.json --out artifacts/sbom/normalized.json",
+          "file": "readme_updated.md",
+          "line": 586
+        },
+        {
+          "context": "cli/fixops-ci risk score --sbom artifacts/sbom/normalized.json --out artifacts/risk.json",
+          "file": "readme_updated.md",
+          "line": 587
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` + `artifacts/risk.json` | Aggregated by `fixops-ci` | `evidence/workdir/<release>/` staging area |",
+          "file": "readme_updated.md",
+          "line": 597
+        },
+        {
+          "context": "Demonstrate secure software development lifecycle coverage with deterministic artefacts that auditors can diff across releases. The SSDLC evaluator transforms raw design, control, SBOM, SARIF, infrastructure-as-code, and exploit-signal inputs into stage-specific JSON payloads for downstream dashboards and the enterprise API.",
+          "file": "readme_updated.md",
+          "line": 602
+        },
+        {
+          "context": "B[build/inputs/sbom.json]",
+          "file": "readme_updated.md",
+          "line": 617
+        },
+        {
+          "context": "| `build` | `simulations/ssdlc/build/inputs/sbom.json` | `component_index.json` | Component manifest aligned to SBOM entries for dependency governance.\u3010F:simulations/ssdlc/run.py\u2020L119-L141\u3011 |",
+          "file": "readme_updated.md",
+          "line": 642
+        },
+        {
+          "context": "SBOMNodes[Normalized SBOM]",
+          "file": "readme_updated.md",
+          "line": 678
+        },
+        {
+          "context": "- **What ships**: `services/graph/graph.py` builds a SQLite database and NetworkX overlay; ingestion stitches git metadata, SBOM components, risk scores, and attestation records; API endpoints expose lineage, KEV regressions, and downgrade anomaly queries; docs cover schema and usage.\u3010F:services/graph/graph.py\u2020L1-L560\u3011\u3010F:backend/api/graph/router.py\u2020L1-L200\u3011\u3010F:docs/PROVENANCE-GRAPH.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 697
+        },
+        {
+          "context": "python -m scripts.graph_worker --sbom artifacts/sbom/normalized.json --risk artifacts/risk.json --attestations artifacts/attestations/",
+          "file": "readme_updated.md",
+          "line": 708
+        },
+        {
+          "context": "SBOMIn[artifacts/sbom/normalized.json]",
+          "file": "readme_updated.md",
+          "line": 743
+        },
+        {
+          "context": "- **What ships**: `cli/fixops-ci` aggregates SBOM normalisation, quality scoring, risk scoring, provenance, and reproducible build verification while applying `config/policy.yml`; `evidence/packager.py` assembles signed ZIP bundles with `MANIFEST.yaml`; API exposes `/evidence/{release}` for retrieval; docs guide policy authoring and auditor workflows.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011\u3010F:config/policy.yml\u2020L1-L160\u3011\u3010F:evidence/packager.py\u2020L1-L320\u3011\u3010F:backend/api/evidence/router.py\u2020L1-L140\u3011\u3010F:docs/EVIDENCE-BUNDLES.md\u2020L1-L200\u3011",
+          "file": "readme_updated.md",
+          "line": 757
+        },
+        {
+          "context": "- **How it works**: CLI runs staged jobs, validates thresholds (coverage, risk ceilings), signs manifest entries with cosign (via GH secrets in CI), then archives SBOM/risk/provenance/repro artefacts for auditors and attaches them to releases.\u3010F:cli/fixops_ci.py\u2020L120-L300\u3011\u3010F:evidence/packager.py\u2020L140-L320\u3011\u3010F:docs/CI-SECRETS.md\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 758
+        },
+        {
+          "context": "| `artifacts/sbom/normalized.json` + `artifacts/risk.json` | Aggregated by `fixops-ci` | `evidence/workdir/<release>/` staging area |",
+          "file": "readme_updated.md",
+          "line": 764
+        },
+        {
+          "context": "cli/fixops-ci attest --policy config/policy.yml --sbom fixtures/sbom/demo.json --risk-out artifacts/risk.json",
+          "file": "readme_updated.md",
+          "line": 768
+        },
+        {
+          "context": "- Dashboard UI under `ui/dashboard/` visualises SBOM quality, EPSS/KEV tables, provenance, and repro status.\u3010F:ui/dashboard/script.js\u2020L1-L180\u3011\u3010F:ui/dashboard/index.html\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 839
+        },
+        {
+          "context": "- Dashboard polls API endpoints for SBOM quality, risk, provenance, and repro status visualisations.\u3010F:ui/dashboard/script.js\u2020L40-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 844
+        },
+        {
+          "context": "- **How it works**: When telemetry env vars are set, spans and metrics flow to the collector defined in `config/otel-collector-demo.yaml`; the dashboard polls API endpoints for SBOM quality, risk, provenance, and repro status visualisations.\u3010F:telemetry/__init__.py\u2020L40-L140\u3011\u3010F:config/otel-collector-demo.yaml\u2020L1-L80\u3011\u3010F:ui/dashboard/script.js\u2020L40-L180\u3011",
+          "file": "readme_updated.md",
+          "line": 903
+        },
+        {
+          "context": "| `cli/fixops-sbom` | `normalize`, `quality` | Normalises SBOMs and generates HTML/JSON quality artefacts.\u3010F:cli/fixops_sbom.py\u2020L1-L200\u3011 |",
+          "file": "readme_updated.md",
+          "line": 920
+        },
+        {
+          "context": "| `cli/fixops-ci` | `attest`, `bundle`, `evidence`, etc. | Aggregates SBOM, risk, provenance, and repro tasks with policy enforcement.\u3010F:cli/fixops_ci.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 924
+        },
+        {
+          "context": "cli/fixops-sbom normalize --in fixtures/sbom/demo.json --out artifacts/sbom/normalized.json",
+          "file": "readme_updated.md",
+          "line": 960
+        },
+        {
+          "context": "cli/fixops-sbom quality --in artifacts/sbom/normalized.json --html reports/sbom_quality_report.html",
+          "file": "readme_updated.md",
+          "line": 961
+        },
+        {
+          "context": "cli/fixops-risk score --sbom artifacts/sbom/normalized.json --out artifacts/risk.json",
+          "file": "readme_updated.md",
+          "line": 962
+        },
+        {
+          "context": "| SBOM quality | `cli/fixops-sbom normalize ... && cli/fixops-sbom quality ...` | Normalisation, dedupe, metric computation, HTML reporting | `reports/sbom_quality_report.html` (gauge \u2265 0.85 coverage) |",
+          "file": "readme_updated.md",
+          "line": 978
+        },
+        {
+          "context": "- SBOM quality guide (`docs/SBOM-QUALITY.md`)",
+          "file": "readme_updated.md",
+          "line": 991
+        }
+      ]
+    },
+    "slsa": {
+      "candidate_files": [],
+      "candidate_symbols": [],
+      "keyword": "SLSA",
+      "mentions": [
+        {
+          "context": "- **Security-as-code provenance & trust** \u2013 SLSA v1 attestations, provenance graph relationships, reproducible build attestations, and cosign signing keep releases anchored to verifiable supply-chain evidence (`services/provenance`, `services/graph`, `services/repro`, `scripts/signing`, `evidence/packager.py`).",
+          "file": "README.md",
+          "line": 79
+        },
+        {
+          "context": "- **Provenance & signing** \u2013 `docs/PROVENANCE.md`, `docs/SIGNING.md`, and `docs/CI-SECRETS.md` cover SLSA attestations, cosign signing flows, required secrets, and verification guidance.",
+          "file": "README.md",
+          "line": 443
+        },
+        {
+          "context": "| Provenance attestations & signing | Generate SLSA v1 provenance, verify releases before consumption. | `fixops-provenance attest --artifact \u2026`<br>`fixops-provenance verify --artifact \u2026` | `GET /api/v1/provenance/{artifact}` | Run CLI inside CI or local validation loops; surface API to external auditors who only need attestation JSON. | `services/provenance/attestation.py`, `docs/PROVENANCE.md`, `docs/SIGNING.md` |",
+          "file": "readme_updated.md",
+          "line": 48
+        },
+        {
+          "context": "- **What you can do quickly**: Normalise SBOMs, score risk, issue SLSA attestations, verify reproducible builds, assemble signed evidence bundles, and visualise posture via dashboards.",
+          "file": "readme_updated.md",
+          "line": 61
+        },
+        {
+          "context": "| `services/provenance/` | SLSA v1 attestation model, hashing utilities, and verification helpers shared by CLI, API, and CI workflows.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011 |",
+          "file": "readme_updated.md",
+          "line": 93
+        },
+        {
+          "context": "D4 -->|SLSA statements| D1",
+          "file": "readme_updated.md",
+          "line": 209
+        },
+        {
+          "context": "D4 -->|SLSA statements| D1",
+          "file": "readme_updated.md",
+          "line": 213
+        },
+        {
+          "context": "| Provenance attestations | `services/provenance/attestation.py`, `cli/fixops-provenance`, `.github/workflows/provenance.yml` | Provide verifiable SLSA v1 provenance for every release artefact. | Build metadata, materials | `artifacts/attestations/*.json` | `provenance.yml`, `release-sign.yml` | `cli/fixops-provenance attest/verify`, `/provenance/*` |",
+          "file": "readme_updated.md",
+          "line": 253
+        },
+        {
+          "context": "- `services/provenance/attestation.py` models SLSA statements and validation logic.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011",
+          "file": "readme_updated.md",
+          "line": 394
+        },
+        {
+          "context": "Hasher --> SLSA[\"SLSA Statement\"]",
+          "file": "readme_updated.md",
+          "line": 402
+        },
+        {
+          "context": "SLSA -->|sign| Cosign[\"scripts/signing/sign-artifact.sh\"]",
+          "file": "readme_updated.md",
+          "line": 403
+        },
+        {
+          "context": "SLSA --> APIProv[\"backend/api/provenance\"]",
+          "file": "readme_updated.md",
+          "line": 405
+        },
+        {
+          "context": "Hasher --> SLSA[SLSA Statement]",
+          "file": "readme_updated.md",
+          "line": 443
+        },
+        {
+          "context": "SLSA -->|sign| Cosign[scripts/signing/sign-artifact.sh]",
+          "file": "readme_updated.md",
+          "line": 444
+        },
+        {
+          "context": "SLSA --> APIProv[backend/api/provenance]",
+          "file": "readme_updated.md",
+          "line": 446
+        },
+        {
+          "context": "- **Why**: Guarantee build traceability using SLSA v1 attestations and cosign signatures for all release artefacts.",
+          "file": "readme_updated.md",
+          "line": 449
+        },
+        {
+          "context": "- **What ships**: `services/provenance/attestation.py` models SLSA statements and validation; CLI `cli/fixops-provenance` provides `attest` and `verify`; GitHub Actions workflows emit attestations and cosign signatures on tagged releases; docs explain schema and verification flows.\u3010F:services/provenance/attestation.py\u2020L1-L320\u3011\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011\u3010F:.github/workflows/release-sign.yml\u2020L1-L200\u3011\u3010F:docs/PROVENANCE.md\u2020L1-L180\u3011\u3010F:docs/SIGNING.md\u2020L1-L160\u3011",
+          "file": "readme_updated.md",
+          "line": 450
+        },
+        {
+          "context": "| `dist/fixops.tar.gz` | SHA-256 digest + metadata capture | `artifacts/attestations/fixops.json` SLSA predicate |",
+          "file": "readme_updated.md",
+          "line": 456
+        },
+        {
+          "context": "- **API**: `GET /provenance/artifacts/{name}` returns SLSA statements.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011",
+          "file": "readme_updated.md",
+          "line": 464
+        },
+        {
+          "context": "| `dist/fixops.tar.gz` | SHA-256 digest + metadata capture | `artifacts/attestations/fixops.json` SLSA predicate |",
+          "file": "readme_updated.md",
+          "line": 470
+        },
+        {
+          "context": "- **Why**: Demonstrate that released binaries can be rebuilt deterministically from source for SLSA Level 3+ assurances.",
+          "file": "readme_updated.md",
+          "line": 723
+        },
+        {
+          "context": "| `cli/fixops-provenance` | `attest`, `verify` | Generates and validates SLSA v1 provenance statements.\u3010F:cli/fixops_provenance.py\u2020L1-L220\u3011 |",
+          "file": "readme_updated.md",
+          "line": 922
+        },
+        {
+          "context": "| `GET /provenance/{artifact}` | Return stored SLSA attestation JSON for the requested artefact.\u3010F:backend/api/provenance/router.py\u2020L1-L120\u3011 | `backend/api/provenance/router.py` |",
+          "file": "readme_updated.md",
+          "line": 929
+        },
+        {
+          "context": "| `provenance.yml` | Tag pushes/releases | Generates and uploads SLSA v1 attestation JSON to release assets.\u3010F:.github/workflows/provenance.yml\u2020L1-L120\u3011 |",
+          "file": "readme_updated.md",
+          "line": 940
+        },
+        {
+          "context": "| Provenance | `cli/fixops-provenance attest ... && cli/fixops-provenance verify ...` | SLSA v1 schema correctness, hash parity, verification | `verify` exit `0`, `materials[*].uri` populated |",
+          "file": "readme_updated.md",
+          "line": 980
+        }
+      ]
+    },
+    "ssvc": {
+      "candidate_files": [],
+      "candidate_symbols": [
+        "tests/test_business_context.py.test_load_business_context_ssvc_yaml",
+        "tests/test_design_context_injector.py.test_calculate_priors_matches_ssvc_outcomes"
+      ],
+      "keyword": "SSVC",
+      "mentions": [
+        {
+          "context": "| Requirements | `simulations/demo_pack/requirements-input.csv` | `python -m apps.fixops_cli stage-run --stage requirements --input simulations/demo_pack/requirements-input.csv --app life-claims-portal` | `_process_requirements` parses CSV/JSON, mints `Requirement_ID`, and applies SSVC anchoring. |",
+          "file": "README.md",
+          "line": 62
+        },
+        {
+          "context": "| `/api/v1/enhanced/analysis` | `POST` | Retrieve standardised multi-LLM schema for CI/CD gating. | Streams consensus verdict, model rationales, evidence, SSVC label, and timing metadata for automated pipelines. |",
+          "file": "README.md",
+          "line": 368
+        }
+      ]
+    }
+  },
+  "keywords": [
+    "SBOM",
+    "SARIF",
+    "EPSS",
+    "KEV",
+    "SLSA",
+    "cosign",
+    "SSVC",
+    "provenance",
+    "evidence",
+    "graph"
+  ]
+}

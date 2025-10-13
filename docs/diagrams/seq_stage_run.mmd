@@ -1,9 +1,44 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI stage run
-    Local-->>CLI: exit 12
-    CLI->>API: POST /v1/stage/run
-    API-->>CLI: 501 GAP
-    Note over CLI,API: Upstream stage runner not available in reuse bundle.
+    participant L368468 as apps.runtime.local_handlers.handle_stage_run
+    participant S464453 as core.stage_runner.StageRunner.run_stage
+    participant S92334 as services.run_registry.RunRegistry.ensure_run
+    participant S226562 as services.id_allocator.ensure_ids
+    participant S563919 as services.signing.sign_manifest
+    participant S868356 as services.signing.verify_manifest
+    participant I20527 as config/settings.py
+    CLI->>Local: aldecI stage run --stage <requirements|design|build|test|deploy|operate|decision>
+    Local->>L368468: execute
+    L368468-->>Local: results
+    Local->>S464453: call
+    S464453-->>Local: result
+    Local->>S92334: call
+    S92334-->>Local: result
+    Local->>S226562: call
+    S226562-->>Local: result
+    Local->>S563919: call
+    S563919-->>Local: result
+    Local->>S868356: call
+    S868356-->>Local: result
+    Local->>I20527: invoke
+    I20527-->>Local: ack
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.stage_run
+    SDK->>API: POST /v1/stage/run
+    API->>S464453: call
+    S464453-->>API: result
+    API->>S92334: call
+    S92334-->>API: result
+    API->>S226562: call
+    S226562-->>API: result
+    API->>S563919: call
+    S563919-->>API: result
+    API->>S868356: call
+    S868356-->>API: result
+    API->>I20527: invoke
+    I20527-->>API: ack
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

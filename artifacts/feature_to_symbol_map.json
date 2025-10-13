@@ -1,0 +1,115 @@
+{
+  "cosign": {
+    "files": [],
+    "symbols": []
+  },
+  "epss": {
+    "files": [],
+    "symbols": [
+      "core/exploit_signals.py.load_latest_epss_feed",
+      "tests/test_feeds_enrichment.py.test_enrich_findings_populates_epss_and_kev",
+      "tests/test_processing_layer_fallbacks.py.test_markov_builder_fallback_uses_epss_and_kev_bias"
+    ]
+  },
+  "evidence": {
+    "files": [
+      "core/evidence.py",
+      "tests/test_evidence.py",
+      "tests/test_evidence_bundle.py",
+      "tests/test_evidence_export.py",
+      "tests/test_evidence_retrieval_fastpath.py"
+    ],
+    "symbols": [
+      "core/cli.py._copy_evidence",
+      "core/cli.py._handle_get_evidence",
+      "core/evidence.py.EvidenceHub",
+      "core/evidence.py._atomic_write",
+      "core/feature_matrix.py._evidence_metrics",
+      "core/overlay_runtime.py._normalise_evidence_limits",
+      "tests/test_cli_commands.py.test_get_evidence_command_copies_bundle",
+      "tests/test_enterprise_paths.py.test_evidence_encrypted_when_overlay_requests_it",
+      "tests/test_evidence.py.test_evidence_hub_persists_manifest_and_checksum",
+      "tests/test_evidence_bundle.py._write_json"
+    ]
+  },
+  "graph": {
+    "files": [
+      "apps/api/knowledge_graph.py",
+      "scripts/graph_worker.py",
+      "tests/test_graph_worker.py",
+      "tests/test_knowledge_graph.py"
+    ],
+    "symbols": [
+      "apps/api/knowledge_graph.py.KnowledgeGraphService",
+      "scripts/deep_review.py.build_callgraph",
+      "scripts/deep_review.py.build_import_graph",
+      "scripts/deep_review.py.write_callgraph",
+      "scripts/deep_review.py.write_import_graph",
+      "scripts/generate_index.py.build_import_graph",
+      "scripts/graph_worker.py._optional_path",
+      "scripts/graph_worker.py.main",
+      "tests/test_enterprise_paths.py.test_pipeline_exposes_knowledge_graph",
+      "tests/test_graph_worker.py.test_graph_worker_main_single_cycle"
+    ]
+  },
+  "kev": {
+    "files": [
+      "tests/test_policy_kevs.py"
+    ],
+    "symbols": [
+      "core/exploit_signals.py.load_latest_kev_feed",
+      "tests/test_feeds_enrichment.py.test_enrich_findings_populates_epss_and_kev",
+      "tests/test_policy_kevs.py._BaseSettings",
+      "tests/test_policy_kevs.py._execute_with_session",
+      "tests/test_policy_kevs.py.run_with_session",
+      "tests/test_policy_kevs.py.test_kevs_allow_with_active_waiver",
+      "tests/test_policy_kevs.py.test_kevs_block_without_waiver",
+      "tests/test_processing_layer_fallbacks.py.test_markov_builder_fallback_uses_epss_and_kev_bias"
+    ]
+  },
+  "provenance": {
+    "files": [],
+    "symbols": []
+  },
+  "sarif": {
+    "files": [],
+    "symbols": [
+      "apps/api/normalizers.py.NormalizedSARIF",
+      "apps/api/normalizers.py.SarifFinding",
+      "apps/api/normalizers.py._convert_snyk_payload_to_sarif",
+      "tests/test_new_backend_processing.py.test_sarif_analyzer_clusters_and_scores",
+      "tests/test_normalizers.py._build_sarif_document",
+      "tests/test_normalizers.py.test_load_sarif_converts_snyk_payload_without_converter",
+      "tests/test_normalizers.py.test_load_sarif_logs_actionable_error_without_converter",
+      "tests/test_normalizers.py.test_load_sarif_uses_embedded_payload_when_converter_missing"
+    ]
+  },
+  "sbom": {
+    "files": [
+      "tests/test_sbom_quality.py"
+    ],
+    "symbols": [
+      "apps/api/normalizers.py.NormalizedSBOM",
+      "apps/api/normalizers.py.SBOMComponent",
+      "apps/api/normalizers.py._resolve_sbom_parser_state",
+      "tests/test_pipeline_matching.py.test_provider_specific_sbom_parser_enables_pipeline",
+      "tests/test_sbom_quality.py._sample_sboms",
+      "tests/test_sbom_quality.py._write_sbom",
+      "tests/test_sbom_quality.py.test_build_and_write_quality_outputs",
+      "tests/test_sbom_quality.py.test_normalize_sboms_merges_components",
+      "tests/test_sbom_quality.py.test_quality_report_metrics",
+      "tests/test_sbom_quality.py.test_render_html_report"
+    ]
+  },
+  "slsa": {
+    "files": [],
+    "symbols": []
+  },
+  "ssvc": {
+    "files": [],
+    "symbols": [
+      "tests/test_business_context.py.test_load_business_context_ssvc_yaml",
+      "tests/test_design_context_injector.py.test_calculate_priors_matches_ssvc_outcomes"
+    ]
+  }
+}

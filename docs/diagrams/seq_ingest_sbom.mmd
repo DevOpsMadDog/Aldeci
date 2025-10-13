@@ -1,11 +1,19 @@
 sequenceDiagram
     participant CLI
     participant Local
+    participant SDK
     participant API
-    CLI->>Local: aldecI ingest sbom
-    Local->>API: POST /v1/ingest/sbom
-    participant S937330 as services.normalize.normalizers.InputNormalizer.load_sbom
-    API->>S937330: call
-    S937330-->>API: result
-    API-->>Local: response
-    Local-->>CLI: materialise outputs
+    participant L290151 as apps.runtime.local_handlers.handle_ingest_sbom
+    participant S357773 as services.normalize.normalizers.InputNormalizer.load_sbom
+    CLI->>Local: aldecI ingest sbom --in <sbom.json> --out artifacts/sbom/normalized.json
+    Local->>L290151: execute
+    L290151-->>Local: results
+    Local->>S357773: call
+    S357773-->>Local: result
+    Local-->>CLI: outputs
+    CLI->>SDK: sdk.python.fixops_client.FixopsClient.ingest_sbom
+    SDK->>API: POST /v1/ingest/sbom
+    API->>S357773: call
+    S357773-->>API: result
+    API-->>SDK: response
+    SDK-->>CLI: parsed response

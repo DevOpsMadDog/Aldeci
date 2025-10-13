@@ -94,6 +94,37 @@ CAPABILITY_MAP: Dict[str, CapabilityConfig] = {
     ),
     "graph.kev_in_last": CapabilityConfig(alias_of="graph.lineage"),
     "graph.anomalies": CapabilityConfig(alias_of="graph.lineage"),
+    "stage.run": CapabilityConfig(
+        selectors=[
+            Selector("core/stage_runner.py", "core/stage_runner.py"),
+            Selector(
+                "fixops-enterprise/src/services/run_registry.py",
+                "services/run_registry.py",
+            ),
+            Selector(
+                "fixops-enterprise/src/services/id_allocator.py",
+                "services/id_allocator.py",
+            ),
+            Selector(
+                "fixops-enterprise/src/services/signing.py",
+                "services/signing.py",
+            ),
+            Selector(
+                "fixops-enterprise/src/config/settings.py",
+                "config/settings.py",
+            ),
+            Selector("core/configuration.py", "core/configuration.py"),
+        ]
+    ),
+    "gate.check": CapabilityConfig(alias_of="evidence.bundle"),
+    "persona.explain": CapabilityConfig(
+        selectors=[
+            Selector(
+                "WIP/code/enterprise_legacy/src/services/explainability.py",
+                "services/explainability.py",
+            ),
+        ]
+    ),
 }
 
 

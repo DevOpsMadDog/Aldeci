@@ -21,8 +21,12 @@ dependencies = [
   "rich",
   "pytest",
   "radon",
+  "requests",
+  "structlog",
+  "cryptography",
   "PyYAML",
-  "typer"
+  "typer",
+  "lib4sbom"
 ]
 
 [tool.setuptools]
