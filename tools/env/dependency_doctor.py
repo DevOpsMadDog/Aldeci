@@ -15,7 +15,13 @@ try:  # Python >= 3.11
 except ModuleNotFoundError:  # pragma: no cover - Python 3.10 fallback
     import tomli as tomllib  # type: ignore[no-redef]
 
-from packaging.specifiers import SpecifierSet
+try:
+    from packaging.specifiers import SpecifierSet
+except ModuleNotFoundError:  # pragma: no cover - bootstrap packaging for dependency doctor
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "packaging==25.0"]
+    )
+    from packaging.specifiers import SpecifierSet
 
 
 ROOT = Path(__file__).resolve().parents[2]
