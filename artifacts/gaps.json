@@ -1,4 +1,32 @@
 {
-  "gaps": [],
+  "gaps": [
+    {
+      "capability": "risk.join_feeds",
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "risk",
+        "join_feeds"
+      ],
+      "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+    },
+    {
+      "capability": "graph.ingest",
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "graph",
+        "ingest"
+      ],
+      "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+    },
+    {
+      "capability": "normalize.noise",
+      "reason": "no mapping configured",
+      "suggested_search_terms": [
+        "normalize",
+        "noise"
+      ],
+      "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
+    }
+  ],
   "upstream_sha": "4ffd8dd1f6186ca5fb082e4d674e5e7f01f5db78"
 }
