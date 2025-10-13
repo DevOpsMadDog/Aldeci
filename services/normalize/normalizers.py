@@ -666,11 +666,135 @@ class InputNormalizer:
         except json.JSONDecodeError:
             return None
 
-        for parser in (self._parse_github_dependency_snapshot, self._parse_syft_json):
+        for parser in (
+            self._parse_cyclonedx_json,
+            self._parse_github_dependency_snapshot,
+            self._parse_syft_json,
+        ):
             result = parser(document)
             if result is not None:
                 return result
         return None
+
+    def _parse_cyclonedx_json(self, document: dict[str, Any]) -> NormalizedSBOM | None:
+        bom_format = document.get("bomFormat")
+        spec_version = document.get("specVersion")
+
+        if isinstance(bom_format, str):
+            normalized_bom_format = bom_format.strip().lower()
+        else:
+            normalized_bom_format = ""
+
+        if normalized_bom_format not in {"cyclonedx", "application/cyclonedx+json"}:
+            return None
+
+        components_payload = document.get("components")
+        if isinstance(components_payload, list):
+            component_entries: Iterable[Any] = components_payload
+        else:
+            component_entries = []
+
+        components: list[SBOMComponent] = []
+        for entry in component_entries:
+            if not isinstance(entry, dict):
+                continue
+
+            name = entry.get("name")
+            if not isinstance(name, str) or not name.strip():
+                continue
+
+            version = entry.get("version")
+            if isinstance(version, str):
+                version_value = version.strip() or None
+            elif version is None:
+                version_value = None
+            else:
+                version_value = str(version)
+
+            purl_candidate = entry.get("purl") or entry.get("packageUrl")
+            purl_value = None
+            if isinstance(purl_candidate, str) and purl_candidate.strip():
+                purl_value = purl_candidate.strip()
+
+            licenses_value = entry.get("licenses")
+            licenses: list[str] = []
+            if isinstance(licenses_value, list):
+                for item in licenses_value:
+                    if isinstance(item, str):
+                        candidate = item.strip()
+                        if candidate:
+                            licenses.append(candidate)
+                    elif isinstance(item, dict):
+                        license_obj = item.get("license")
+                        if isinstance(license_obj, dict):
+                            identifier = license_obj.get("id") or license_obj.get("name")
+                            if isinstance(identifier, str) and identifier.strip():
+                                licenses.append(identifier.strip())
+                        else:
+                            identifier = item.get("id") or item.get("name")
+                            if isinstance(identifier, str) and identifier.strip():
+                                licenses.append(identifier.strip())
+            elif isinstance(licenses_value, dict):
+                identifier = licenses_value.get("id") or licenses_value.get("name")
+                if isinstance(identifier, str) and identifier.strip():
+                    licenses.append(identifier.strip())
+
+            supplier_value = entry.get("supplier")
+            supplier: str | None
+            if isinstance(supplier_value, dict):
+                supplier = supplier_value.get("name")
+                if not isinstance(supplier, str) or not supplier.strip():
+                    org = supplier_value.get("organization") or supplier_value.get("organisations")
+                    if isinstance(org, dict):
+                        org_name = org.get("name")
+                        supplier = org_name if isinstance(org_name, str) else None
+            elif isinstance(supplier_value, str):
+                supplier = supplier_value.strip() or None
+            else:
+                supplier = None
+
+            if isinstance(supplier, str):
+                supplier = supplier.strip() or None
+
+            components.append(
+                SBOMComponent(
+                    name=name.strip(),
+                    version=version_value,
+                    purl=purl_value,
+                    licenses=licenses,
+                    supplier=supplier,
+                    raw=entry,
+                )
+            )
+
+        metadata = {
+            "component_count": len(components),
+            "spec_version": spec_version,
+            "bom_format": bom_format,
+            "parser": "cyclonedx-json",
+        }
+
+        relationships = document.get("dependencies")
+        if not isinstance(relationships, list):
+            relationships = []
+
+        services = document.get("services")
+        if not isinstance(services, list):
+            services = []
+
+        vulnerabilities = document.get("vulnerabilities")
+        if not isinstance(vulnerabilities, list):
+            vulnerabilities = []
+
+        return NormalizedSBOM(
+            format="cyclonedx",
+            document=document,
+            components=components,
+            relationships=list(relationships),
+            services=list(services),
+            vulnerabilities=list(vulnerabilities),
+            metadata=metadata,
+        )
 
     def _parse_github_dependency_snapshot(
         self, document: dict[str, Any]
