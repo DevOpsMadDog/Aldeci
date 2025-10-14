@@ -1,0 +1,44 @@
+id: operate_0070
+stage: operate
+description: 'Operate scenario #70 covering kev topology'
+tags:
+- kev:true
+- policy:fail_on_kev
+- stage:operate
+inputs:
+  sbom:
+    source: samples/fixops_import/example.sbom.json
+    format: sbom
+commands:
+- name: ingest sbom
+  args:
+  - --in
+  - samples/fixops_import/example.sbom.json
+  - --out
+  - artifacts/e2e/operate_0070/normalized_sbom.json
+- name: risk score
+  args:
+  - --sbom
+  - artifacts/e2e/operate_0070/normalized_sbom.json
+  - --epss
+  - samples/fixops_import/example.epss.csv
+  - --kev
+  - samples/fixops_import/example.kev.json
+  - --out
+  - artifacts/e2e/operate_0070/risk.json
+- name: gate
+  args:
+  - --policy
+  - samples/fixops_import/example.policy.json
+  - --risk-report
+  - artifacts/e2e/operate_0070/risk.json
+  - --provenance-dir
+  - samples/fixops_import/provenance
+  - --repro-attestation
+  - samples/fixops_import/example.repro_attestation.json
+expected:
+  exit_code: 0
+invariants:
+- kev_policy
+skip_if_gap:
+- risk score
