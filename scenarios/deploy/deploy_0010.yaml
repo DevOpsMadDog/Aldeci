@@ -1,0 +1,75 @@
+id: deploy_0010
+stage: deploy
+description: 'Deploy scenario #10 covering linear topology'
+tags:
+- epss:critical
+- stage:deploy
+- topology:linear
+inputs:
+  sbom:
+    source: samples/fixops_import/example.sbom.json
+    format: sbom
+  sarif:
+    source: samples/fixops_import/example.sarif.json
+    format: sarif
+commands:
+- name: ingest sbom
+  args:
+  - --in
+  - samples/fixops_import/example.sbom.json
+  - --out
+  - artifacts/e2e/deploy_0010/normalized_sbom.json
+- name: risk score
+  args:
+  - --sbom
+  - artifacts/e2e/deploy_0010/normalized_sbom.json
+  - --epss
+  - samples/fixops_import/example.epss.csv
+  - --kev
+  - samples/fixops_import/example.kev.json
+  - --out
+  - artifacts/e2e/deploy_0010/risk.json
+- name: graph lineage
+  args:
+  - --artifact
+  - deploy_0010-artifact
+  - --normalized-sbom
+  - artifacts/e2e/deploy_0010/normalized_sbom.json
+  - --risk-report
+  - artifacts/e2e/deploy_0010/risk.json
+- name: evidence bundle
+  args:
+  - --release
+  - deploy_0010
+  - --normalized-sbom
+  - artifacts/e2e/deploy_0010/normalized_sbom.json
+  - --sbom-quality-json
+  - samples/fixops_import/example.sbom_quality.json
+  - --sbom-quality-html
+  - samples/fixops_import/example.sbom_quality.html
+  - --risk-report
+  - artifacts/e2e/deploy_0010/risk.json
+  - --repro-attestation
+  - samples/fixops_import/example.repro_attestation.json
+  - --provenance-dir
+  - samples/fixops_import/provenance
+  - --out
+  - artifacts/e2e/deploy_0010/evidence.zip
+- name: gate
+  args:
+  - --policy
+  - samples/fixops_import/example.policy.json
+  - --risk-report
+  - artifacts/e2e/deploy_0010/risk.json
+  - --provenance-dir
+  - samples/fixops_import/provenance
+  - --repro-attestation
+  - samples/fixops_import/example.repro_attestation.json
+expected:
+  exit_code: 0
+invariants:
+- kev_policy
+- epss_monotonic
+- idempotence
+- manifest_integrity
+skip_if_gap: []

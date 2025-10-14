@@ -9,6 +9,8 @@ from typing import Dict, Iterable, List, Sequence, Tuple
 
 ROOT = Path(__file__).resolve().parents[2]
 INDEX_PATH = ROOT / "artifacts" / "upstream_symbol_index.json"
+PATCH_DIR = ROOT / "patches" / "fixops"
+MAX_PATCH_LINES = 50
 HOT_PATHS = [
     ROOT / "services",
     ROOT / "infra" / "feeds",
@@ -16,6 +18,8 @@ HOT_PATHS = [
 ]
 STUB_MARKERS = ["raise NotImplementedError", "# stub", "TODO stub"]
 SKIP_PREFIXES = {".git", ".upstream", "artifacts", "reports", "__pycache__", ".venv"}
+PATCH_HEADER_PREFIX = "# Patch for "
+PATCH_SHA_PREFIX = "# Source-SHA:"
 
 
 def iter_python_files(base_paths: Sequence[Path]) -> Iterable[Path]:
@@ -39,6 +43,26 @@ def extract_top_level_symbols(tree: ast.AST) -> Tuple[List[str], List[str]]:
         elif isinstance(node, ast.AsyncFunctionDef):
             functions.append(node.name)
     return classes, functions
+
+
+def iter_patch_files() -> Iterable[Path]:
+    if not PATCH_DIR.exists():
+        return []
+    return sorted(path for path in PATCH_DIR.rglob("*.patch") if path.is_file())
+
+
+def validate_patch_structure(patch: Path) -> Tuple[bool, str]:
+    lines = patch.read_text(encoding="utf-8").splitlines()
+    if not lines:
+        return False, "Patch file is empty"
+    if not any(line.startswith(PATCH_HEADER_PREFIX) for line in lines[:3]):
+        return False, "Missing patch header"
+    if not any(line.startswith(PATCH_SHA_PREFIX) for line in lines[:5]):
+        return False, "Missing upstream SHA reference"
+    change_lines = sum(1 for line in lines if line.startswith("+") or line.startswith("-"))
+    if change_lines > MAX_PATCH_LINES:
+        return False, f"Patch exceeds line limit ({change_lines} > {MAX_PATCH_LINES})"
+    return True, "ok"
 
 
 def check_stub_markers() -> List[str]:
@@ -94,6 +118,16 @@ def main() -> int:
         for path in stub_offenders:
             print(f"Stub marker found in hot path: {path}", file=sys.stderr)
         raise SystemExit("reuse-check failed: stub markers detected")
+
+    patch_errors: List[str] = []
+    for patch in iter_patch_files():
+        ok, detail = validate_patch_structure(patch)
+        if not ok:
+            patch_errors.append(f"{patch.relative_to(ROOT)}: {detail}")
+    if patch_errors:
+        for error in patch_errors:
+            print(error, file=sys.stderr)
+        raise SystemExit("reuse-check failed: invalid patch overlay")
 
     upstream_symbols = load_symbol_index()
     local_symbols = project_symbols()
