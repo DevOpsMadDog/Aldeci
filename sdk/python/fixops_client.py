@@ -109,6 +109,22 @@ class FixopsClient:
         response = self._request("POST", "/v1/risk/score", json_payload=self._dump(request))
         return self._load(schemas.RiskScoreResponse, response)
 
+    def decision_fuse(
+        self, request: schemas.DecisionFuseRequest
+    ) -> schemas.DecisionFuseResponse:
+        response = self._request(
+            "POST", "/v1/decision/fuse", json_payload=self._dump(request)
+        )
+        return self._load(schemas.DecisionFuseResponse, response)
+
+    def decision_propagate(
+        self, request: schemas.DecisionPropagateRequest
+    ) -> schemas.DecisionPropagateResponse:
+        response = self._request(
+            "POST", "/v1/decision/propagate", json_payload=self._dump(request)
+        )
+        return self._load(schemas.DecisionPropagateResponse, response)
+
     def provenance_attest(
         self, request: schemas.ProvenanceAttestRequest
     ) -> schemas.ProvenanceAttestResponse:
@@ -156,6 +172,14 @@ class FixopsClient:
     ) -> schemas.PersonaExplainResponse:
         response = self._request("POST", "/v1/persona/explain", json_payload=self._dump(request))
         return self._load(schemas.PersonaExplainResponse, response)
+
+    def persona_explain_ext(
+        self, request: schemas.PersonaExplainExtRequest
+    ) -> schemas.PersonaExplainExtResponse:
+        response = self._request(
+            "POST", "/v1/persona/explain_ext", json_payload=self._dump(request)
+        )
+        return self._load(schemas.PersonaExplainExtResponse, response)
 
 
 __all__ = ["FixopsClient", "FixopsAPIError"]

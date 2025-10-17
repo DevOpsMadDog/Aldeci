@@ -4,6 +4,7 @@ from __future__ import annotations
 from fastapi import FastAPI
 
 from apps.api import (
+    v1_decision,
     v1_evidence,
     v1_gate,
     v1_graph,
@@ -25,6 +26,7 @@ def create_app() -> FastAPI:
     app.include_router(v1_evidence.router)
     app.include_router(v1_gate.router)
     app.include_router(v1_persona.router)
+    app.include_router(v1_decision.router)
     return app
 
 

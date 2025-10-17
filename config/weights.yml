@@ -1,0 +1,10 @@
+# Override weights for services.score_ext.bayes.bayes_fuse when needed.
+# Values fall back to module defaults when omitted.
+# Example:
+# bayes_fuse:
+#   bias: -1.0
+#   cvss: 3.0
+#   epss: 3.5
+#   kev: 1.5
+#   version_lag: 1.2
+#   exposure: 1.0

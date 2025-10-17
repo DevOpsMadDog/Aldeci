@@ -1,0 +1,13 @@
+# Default policy overlay consumed by gate checks.
+use_extended_risk: false
+risk:
+  max_risk_score:
+    warn_above: 70.0
+    fail_above: 85.0
+risk_ext:
+  max_component_probability:
+    warn_above: 0.4
+    fail_above: 0.6
+  average_component_probability:
+    warn_above: 0.25
+    fail_above: 0.4

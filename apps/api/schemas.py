@@ -63,6 +63,35 @@ class RiskScoreResponse(BaseModel):
     report: Dict[str, Any]
 
 
+class DecisionFuseRequest(BaseModel):
+    normalized_sbom: Mapping[str, Any]
+    risk_report: Mapping[str, Any]
+    overlay: str
+
+
+class DecisionFuseResponse(BaseModel):
+    risk_ext: Dict[str, Any]
+
+
+class DecisionPropagateRequest(BaseModel):
+    graph: Mapping[str, Any]
+    risk_ext: Mapping[str, Any]
+    entry_nodes: List[str] | None = Field(
+        default=None,
+        description="Optional entry nodes to seed the propagation.",
+    )
+    top_k_paths: int = Field(
+        default=5,
+        ge=1,
+        description="Number of highest scoring paths to include.",
+    )
+    overlay: str
+
+
+class DecisionPropagateResponse(BaseModel):
+    risk_markov: Dict[str, Any]
+
+
 class BinaryDocument(BaseModel):
     name: str
     content: str = Field(..., description="Base64 encoded bytes.")
@@ -199,8 +228,28 @@ class PersonaExplainResponse(BaseModel):
     context: Dict[str, Any]
 
 
+class PersonaExplainExtRequest(BaseModel):
+    role: str
+    risk_ext: Mapping[str, Any]
+    overlay: str
+
+
+class PersonaExplainExtResponse(BaseModel):
+    persona: str
+    narrative: str
+    rationale: List[str]
+    actions: List[str]
+    highlights: List[str]
+    meta: Dict[str, Any]
+    generated_at: str | None = None
+
+
 __all__ = [
     "BinaryDocument",
+    "DecisionFuseRequest",
+    "DecisionFuseResponse",
+    "DecisionPropagateRequest",
+    "DecisionPropagateResponse",
     "EvidenceBundleRequest",
     "EvidenceBundleResponse",
     "GateCheckRequest",
@@ -213,6 +262,8 @@ __all__ = [
     "GraphLineageResponse",
     "PersonaExplainRequest",
     "PersonaExplainResponse",
+    "PersonaExplainExtRequest",
+    "PersonaExplainExtResponse",
     "ProvenanceAttestRequest",
     "ProvenanceAttestResponse",
     "ProvenanceVerifyRequest",

@@ -7,17 +7,23 @@ import sys
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any, Callable, Iterable, List, Optional, cast
+from typing import Any, Callable, Iterable, List, Mapping, Optional, cast
 
 import typer
 import yaml
 
 from apps.api.schemas import (
+    DecisionFuseRequest,
+    DecisionFuseResponse,
+    DecisionPropagateRequest,
+    DecisionPropagateResponse,
     EvidenceBundleRequest,
     GateCheckRequest,
     GraphAnomaliesRequest,
     GraphKevRequest,
     GraphLineageRequest,
+    PersonaExplainExtRequest,
+    PersonaExplainExtResponse,
     PersonaExplainRequest,
     ProvenanceAttestRequest,
     ProvenanceVerifyRequest,
@@ -37,6 +43,7 @@ prov_app = typer.Typer(help="Provenance utilities")
 graph_app = typer.Typer(help="Graph analytics")
 risk_app = typer.Typer(help="Risk scoring")
 evidence_app = typer.Typer(help="Evidence packaging")
+decision_app = typer.Typer(help="Decision science extensions")
 persona_app = typer.Typer(help="Persona narratives")
 app.add_typer(stage_app, name="stage")
 app.add_typer(ingest_app, name="ingest")
@@ -44,6 +51,7 @@ app.add_typer(prov_app, name="prov")
 app.add_typer(graph_app, name="graph")
 app.add_typer(risk_app, name="risk")
 app.add_typer(evidence_app, name="evidence")
+app.add_typer(decision_app, name="decision")
 app.add_typer(persona_app, name="persona")
 
 
@@ -428,6 +436,7 @@ def _build_gate_metrics(
     risk_report: Path | None,
     provenance_dir: Path | None,
     repro_attestation: Path | None,
+    risk_ext: Path | None,
 ) -> dict[str, Any]:
     metrics: dict[str, Any] = {}
     if metrics_path is not None and metrics_path.exists():
@@ -445,6 +454,26 @@ def _build_gate_metrics(
                     risk_metrics[key] = float(value)
             if risk_metrics:
                 metrics.setdefault("risk", {}).update(risk_metrics)
+    if risk_ext is not None and risk_ext.exists():
+        risk_ext_payload = _read_json(risk_ext) or {}
+        payload = (
+            risk_ext_payload.get("risk_ext")
+            if isinstance(risk_ext_payload, Mapping)
+            else {}
+        )
+        summary = payload.get("summary") if isinstance(payload, Mapping) else {}
+        if isinstance(summary, Mapping):
+            ext_metrics: dict[str, Any] = {}
+            for key in (
+                "component_count",
+                "max_component_probability",
+                "average_component_probability",
+            ):
+                value = summary.get(key)
+                if isinstance(value, (int, float)):
+                    ext_metrics[key] = float(value)
+            if ext_metrics:
+                metrics.setdefault("risk_ext", {}).update(ext_metrics)
     if provenance_dir is not None and provenance_dir.exists():
         provenance_files = _collect_files(provenance_dir)
         metrics.setdefault("provenance", {})["count"] = len(provenance_files)
@@ -710,6 +739,13 @@ def gate_check(
         dir_okay=False,
         exists=True,
     ),
+    risk_ext: Path | None = typer.Option(
+        None,
+        "--risk-ext",
+        help="Optional extended risk JSON used when policy enables Bayesian evaluation.",
+        dir_okay=False,
+        exists=True,
+    ),
     provenance_dir: Path | None = typer.Option(
         None,
         "--provenance-dir",
@@ -726,8 +762,13 @@ def gate_check(
     ),
 ) -> None:
     ctx = cast(CLIContext, typer_ctx.obj)
-    policy_payload = _read_json(policy)
-    metrics = _build_gate_metrics(metrics_path, risk_report, provenance_dir, repro_attestation)
+    try:
+        policy_payload = _read_json(policy)
+    except json.JSONDecodeError:
+        policy_payload = yaml.safe_load(policy.read_text(encoding="utf-8"))
+    metrics = _build_gate_metrics(
+        metrics_path, risk_report, provenance_dir, repro_attestation, risk_ext
+    )
     request = GateCheckRequest(
         policy=policy_payload,
         metrics=metrics or None,
@@ -744,13 +785,119 @@ def gate_check(
     _echo_json(response)
 
 
+@decision_app.command("fuse")
+def decision_fuse(
+    typer_ctx: typer.Context,
+    sbom: Path = typer.Option(
+        ..., "--sbom", help="Normalized SBOM JSON", exists=True, dir_okay=False
+    ),
+    risk: Path = typer.Option(
+        ..., "--risk", help="Baseline risk report JSON", exists=True, dir_okay=False
+    ),
+    out: Path = typer.Option(
+        Path("artifacts/risk_ext.json"),
+        "--out",
+        help="Destination for the extended risk payload.",
+        dir_okay=False,
+    ),
+) -> None:
+    ctx = cast(CLIContext, typer_ctx.obj)
+    request = DecisionFuseRequest(
+        normalized_sbom=_read_json(sbom),
+        risk_report=_read_json(risk),
+        overlay=ctx.overlay.value,
+    )
+    response: DecisionFuseResponse = _dispatch(
+        ctx,
+        "decision.fuse",
+        request,
+        local_handlers.handle_decision_fuse,
+        lambda client, req: client.decision_fuse(req),
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(response.risk_ext, indent=2, sort_keys=True), encoding="utf-8")
+    typer.echo(f"Extended risk written to {out}")
+
+
+@decision_app.command("propagate")
+def decision_propagate(
+    typer_ctx: typer.Context,
+    graph: Path = typer.Option(
+        ..., "--graph", help="Dependency graph JSON", exists=True, dir_okay=False
+    ),
+    risk_ext: Path = typer.Option(
+        ..., "--risk-ext", help="Extended risk JSON", exists=True, dir_okay=False
+    ),
+    out: Path = typer.Option(
+        Path("artifacts/risk_markov.json"),
+        "--out",
+        help="Destination for propagated Markov risk.",
+        dir_okay=False,
+    ),
+    entry: List[str] = typer.Option(
+        None,
+        "--entry",
+        help="Optional entry node overrides (may be provided multiple times).",
+    ),
+) -> None:
+    ctx = cast(CLIContext, typer_ctx.obj)
+    request = DecisionPropagateRequest(
+        graph=_read_json(graph),
+        risk_ext=_read_json(risk_ext),
+        entry_nodes=entry or None,
+        overlay=ctx.overlay.value,
+    )
+    response: DecisionPropagateResponse = _dispatch(
+        ctx,
+        "decision.propagate",
+        request,
+        local_handlers.handle_decision_propagate,
+        lambda client, req: client.decision_propagate(req),
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(
+        json.dumps(response.risk_markov, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    typer.echo(f"Markov propagation written to {out}")
+
+
 @persona_app.command("explain")
 def persona_explain(
     typer_ctx: typer.Context,
     role: str = typer.Option(..., help="Persona role"),
-    risk: Path = typer.Option(..., help="Risk report JSON", exists=True, dir_okay=False),
+    risk: Path = typer.Option(
+        None, "--risk", help="Baseline risk report JSON", exists=True, dir_okay=False
+    ),
+    risk_ext: Path = typer.Option(
+        None,
+        "--risk-ext",
+        help="Extended risk JSON (activates decision science narratives).",
+        exists=True,
+        dir_okay=False,
+    ),
 ) -> None:
     ctx = cast(CLIContext, typer_ctx.obj)
+    if risk_ext is not None:
+        request = PersonaExplainExtRequest(
+            role=role,
+            risk_ext=_read_json(risk_ext),
+            overlay=ctx.overlay.value,
+        )
+        response: PersonaExplainExtResponse = _dispatch(
+            ctx,
+            "persona.explain_ext",
+            request,
+            local_handlers.handle_persona_explain_ext,
+            lambda client, req: client.persona_explain_ext(req),
+        )
+        typer.echo(f"[{response.persona}] {response.narrative}")
+        if response.highlights:
+            for item in response.highlights:
+                typer.echo(f"- {item}")
+        _echo_json({"rationale": response.rationale, "actions": response.actions, "meta": response.meta})
+        return
+    if risk is None:
+        raise typer.BadParameter("Either --risk or --risk-ext must be provided")
     request = PersonaExplainRequest(
         role=role,
         risk_report=_read_json(risk),

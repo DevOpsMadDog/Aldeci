@@ -103,13 +103,42 @@ def evaluate_policy(policy: Mapping[str, Any], *, metrics: Mapping[str, Any]) ->
 
     risk_metrics = metrics.get("risk", {}) if isinstance(metrics.get("risk"), Mapping) else {}
     risk_policy = policy.get("risk", {}) if isinstance(policy.get("risk"), Mapping) else {}
-    max_risk = risk_metrics.get("max_risk_score")
-    if max_risk is not None:
-        status = _evaluate_rules(float(max_risk), risk_policy.get("max_risk_score", {}))
-        evaluations["checks"]["risk_max_risk_score"] = {
-            "value": float(max_risk),
-            "status": status,
-        }
+    risk_ext_metrics = (
+        metrics.get("risk_ext", {}) if isinstance(metrics.get("risk_ext"), Mapping) else {}
+    )
+    risk_ext_policy = (
+        policy.get("risk_ext", {}) if isinstance(policy.get("risk_ext"), Mapping) else {}
+    )
+    use_extended = bool(policy.get("use_extended_risk"))
+    if use_extended and risk_ext_metrics:
+        max_probability = risk_ext_metrics.get("max_component_probability")
+        if max_probability is not None:
+            status = _evaluate_rules(
+                float(max_probability),
+                risk_ext_policy.get("max_component_probability", {}),
+            )
+            evaluations["checks"]["risk_ext_max_component_probability"] = {
+                "value": float(max_probability),
+                "status": status,
+            }
+        avg_probability = risk_ext_metrics.get("average_component_probability")
+        if avg_probability is not None:
+            status = _evaluate_rules(
+                float(avg_probability),
+                risk_ext_policy.get("average_component_probability", {}),
+            )
+            evaluations["checks"]["risk_ext_average_component_probability"] = {
+                "value": float(avg_probability),
+                "status": status,
+            }
+    else:
+        max_risk = risk_metrics.get("max_risk_score")
+        if max_risk is not None:
+            status = _evaluate_rules(float(max_risk), risk_policy.get("max_risk_score", {}))
+            evaluations["checks"]["risk_max_risk_score"] = {
+                "value": float(max_risk),
+                "status": status,
+            }
 
     repro_match = metrics.get("repro", {}).get("match") if isinstance(metrics.get("repro"), Mapping) else None
     repro_policy = policy.get("repro", {}) if isinstance(policy.get("repro"), Mapping) else {}
