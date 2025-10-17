@@ -15,7 +15,7 @@ following inputs per vulnerability:
 | CVSS base score | `min(cvss, 10) / 10` | 2.75 |
 | EPSS probability | as-is | 3.25 |
 | KEV flag | 0 or 1 | 1.35 |
-| Version lag | min(lag_days / 180, 1) | 1.10 |
+| Version lag | clamped to [0, 1] | 1.10 |
 | Exposure flags | min(unique_flags / 3, 1) | 0.90 |
 | Bias | constant | -1.20 |
 
