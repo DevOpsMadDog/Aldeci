@@ -171,7 +171,7 @@ def compute_bayesian_extension(
     for component in risk_report.get("components", []):
         if not isinstance(component, Mapping):
             continue
-        source_component = normalized_index.get(component.get("id"))
+        source_component = normalized_index.get(_component_key(component))
         components.append(_merge_component(component, source_component))
 
     component_probabilities = [
