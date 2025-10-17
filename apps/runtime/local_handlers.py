@@ -13,6 +13,10 @@ from typing import Any, Dict, Iterable, List, Mapping
 import yaml
 
 from apps.api.schemas import (
+    DecisionFuseRequest,
+    DecisionFuseResponse,
+    DecisionPropagateRequest,
+    DecisionPropagateResponse,
     EvidenceBundleRequest,
     EvidenceBundleResponse,
     GateCheckRequest,
@@ -23,6 +27,8 @@ from apps.api.schemas import (
     GraphKevResponse,
     GraphLineageRequest,
     GraphLineageResponse,
+    PersonaExplainExtRequest,
+    PersonaExplainExtResponse,
     PersonaExplainRequest,
     PersonaExplainResponse,
     ProvenanceAttestRequest,
@@ -58,6 +64,8 @@ from services.signing import sign_manifest, verify_manifest
 from apps.api.normalizers import InputNormalizer
 from infra.feeds.epss import load_epss_scores
 from infra.feeds.kev import load_kev_catalog
+from services.score_ext import compute_bayesian_extension, propagate_risk_markov
+from infra.llm_router_ext import explain_risk_ext
 
 
 def _require_available(capability: str) -> Mapping[str, object]:
@@ -212,6 +220,27 @@ def handle_risk_score(request: RiskScoreRequest) -> RiskScoreResponse:
         kev_entries,
     )
     return RiskScoreResponse(report=report)
+
+
+def handle_decision_fuse(request: DecisionFuseRequest) -> DecisionFuseResponse:
+    _require_available("decision.fuse")
+    result = compute_bayesian_extension(request.normalized_sbom, request.risk_report)
+    risk_ext = result.get("risk_ext") if isinstance(result, Mapping) else result
+    return DecisionFuseResponse(risk_ext=risk_ext or {})
+
+
+def handle_decision_propagate(
+    request: DecisionPropagateRequest,
+) -> DecisionPropagateResponse:
+    _require_available("decision.propagate")
+    result = propagate_risk_markov(
+        request.graph,
+        request.risk_ext,
+        entry_nodes=request.entry_nodes or (),
+        top_k_paths=request.top_k_paths,
+    )
+    risk_markov = result.get("risk_markov") if isinstance(result, Mapping) else result
+    return DecisionPropagateResponse(risk_markov=risk_markov or {})
 
 
 def handle_provenance_attest(
@@ -501,6 +530,22 @@ def handle_persona_explain(request: PersonaExplainRequest) -> PersonaExplainResp
     )
 
 
+def handle_persona_explain_ext(
+    request: PersonaExplainExtRequest,
+) -> PersonaExplainExtResponse:
+    _require_available("persona.explain_ext")
+    explanation = explain_risk_ext(request.risk_ext, request.role)
+    return PersonaExplainExtResponse(
+        persona=str(explanation.get("persona", request.role)).lower(),
+        narrative=str(explanation.get("narrative", "")),
+        rationale=list(explanation.get("rationale", [])),
+        actions=list(explanation.get("actions", [])),
+        highlights=list(explanation.get("highlights", [])),
+        meta=_normalise_mapping(explanation.get("meta")),
+        generated_at=str(explanation.get("generated_at")),
+    )
+
+
 __all__ = [
     "handle_evidence_bundle",
     "handle_gate_check",
@@ -509,7 +554,10 @@ __all__ = [
     "handle_graph_lineage",
     "handle_ingest_sarif",
     "handle_ingest_sbom",
+    "handle_decision_fuse",
+    "handle_decision_propagate",
     "handle_persona_explain",
+    "handle_persona_explain_ext",
     "handle_provenance_attest",
     "handle_provenance_verify",
     "handle_risk_score",

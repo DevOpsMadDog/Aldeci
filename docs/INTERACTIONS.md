@@ -123,6 +123,21 @@ CLI `aldecI ingest sbom --in <sbom.json> --out artifacts/sbom/normalized.json` -
 
 CLI `aldecI persona explain --role <role> --risk artifacts/risk.json` -> Local backend `apps.runtime.local_handlers.handle_persona_explain` -> SDK `sdk.python.fixops_client.FixopsClient.persona_explain` -> FastAPI `apps.api.v1_persona.explain` -> Service `services.explainability.ExplainabilityService.prime_baseline` -> Service `services.explainability.ExplainabilityService.explain` -> Service `services.explainability.ExplainabilityService.generate_narrative`
 
+## persona.explain_ext
+
+**Availability:** ✅ Available
+
+**What it does:** Produce persona-aware narratives for the Bayesian overlay with deterministic fallbacks when no LLM key is present.
+
+**Overlays:** demo, enterprise
+**Outputs:** artifacts/persona/<role>-ext.json
+**CLI Sample:** `aldecI persona explain --role <role> --risk-ext artifacts/risk_ext.json --backend local --overlay demo`
+**HTTP Sample:** `curl -sS -X POST http://127.0.0.1:8000/v1/persona/explain_ext -H 'Content-Type: application/json' -d @payload.json`
+
+**Function call chain:**
+
+CLI `aldecI persona explain --role <role> --risk-ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_persona_explain_ext` -> SDK `sdk.python.fixops_client.FixopsClient.persona_explain_ext` -> FastAPI `apps.api.v1_persona.explain_ext` -> Infra `infra.llm_router_ext.barron_adapter.explain_risk_ext`
+
 ## provenance.attest
 
 **Availability:** ✅ Available
@@ -167,6 +182,36 @@ CLI `aldecI prov verify --artifact <path> --attestation <attestation.json>` -> L
 **Function call chain:**
 
 CLI `aldecI risk score --sbom artifacts/sbom/normalized.json --epss feeds/epss.csv --kev feeds/kev.json --out artifacts/risk.json` -> Local backend `apps.runtime.local_handlers.handle_risk_score` -> SDK `sdk.python.fixops_client.FixopsClient.risk_score` -> FastAPI `apps.api.v1_risk.score` -> Service `services.risk.scoring.compute_risk_profile` -> Service `services.risk.scoring.write_risk_report` -> Infra `infra.feeds.epss.load_epss_scores` -> Infra `infra.feeds.kev.load_kev_catalog`
+
+## decision.fuse
+
+**Availability:** ✅ Available
+
+**What it does:** Compose Bayesian probabilities on top of the baseline risk report without modifying core scoring.
+
+**Overlays:** demo, enterprise
+**Outputs:** artifacts/risk_ext.json
+**CLI Sample:** `aldecI decision fuse --sbom artifacts/sbom/normalized.json --risk artifacts/risk.json --out artifacts/risk_ext.json --backend local --overlay demo`
+**HTTP Sample:** `curl -sS -X POST http://127.0.0.1:8000/v1/decision/fuse -H 'Content-Type: application/json' -d @payload.json`
+
+**Function call chain:**
+
+CLI `aldecI decision fuse --sbom artifacts/sbom/normalized.json --risk artifacts/risk.json` -> Local backend `apps.runtime.local_handlers.handle_decision_fuse` -> SDK `sdk.python.fixops_client.FixopsClient.decision_fuse` -> FastAPI `apps.api.v1_decision.fuse` -> Service `services.score_ext.fuse.compute_bayesian_extension` -> Service `services.score_ext.bayes.bayes_fuse`
+
+## decision.propagate
+
+**Availability:** ✅ Available
+
+**What it does:** Propagate Bayesian risk through dependency graphs using a Markov steady-state model.
+
+**Overlays:** demo, enterprise
+**Outputs:** artifacts/risk_markov.json
+**CLI Sample:** `aldecI decision propagate --graph artifacts/graph/lineage.json --risk-ext artifacts/risk_ext.json --out artifacts/risk_markov.json --backend local --overlay demo`
+**HTTP Sample:** `curl -sS -X POST http://127.0.0.1:8000/v1/decision/propagate -H 'Content-Type: application/json' -d @payload.json`
+
+**Function call chain:**
+
+CLI `aldecI decision propagate --graph artifacts/graph/lineage.json --risk-ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_decision_propagate` -> SDK `sdk.python.fixops_client.FixopsClient.decision_propagate` -> FastAPI `apps.api.v1_decision.propagate` -> Service `services.score_ext.markov.propagate_risk_markov`
 
 ## stage.run
 

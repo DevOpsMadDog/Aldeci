@@ -133,6 +133,45 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "outputs": ["artifacts/risk.json"],
         "description": "Fuse EPSS, KEV, exposure, and version lag data into risk scores.",
     },
+    "decision.fuse": {
+        **_availability_entry(
+            "decision.fuse", default_reason="Decision extension unavailable upstream"
+        ),
+        "available": True,
+        "cli": {
+            "command": "decision fuse",
+            "syntax": "aldecI decision fuse --sbom artifacts/sbom/normalized.json --risk artifacts/risk.json --out artifacts/risk_ext.json",
+        },
+        "api": {"method": "POST", "route": "/v1/decision/fuse"},
+        "domain": [],
+        "services": [
+            "services.score_ext.fuse.compute_bayesian_extension",
+            "services.score_ext.bayes.bayes_fuse",
+        ],
+        "infra": ["config/weights.yml"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/risk_ext.json"],
+        "description": "Compose Bayesian risk overlays without modifying baseline scoring.",
+    },
+    "decision.propagate": {
+        **_availability_entry(
+            "decision.propagate", default_reason="Markov propagation unavailable upstream"
+        ),
+        "available": True,
+        "cli": {
+            "command": "decision propagate",
+            "syntax": "aldecI decision propagate --graph artifacts/graph/lineage.json --risk_ext artifacts/risk_ext.json --out artifacts/risk_markov.json",
+        },
+        "api": {"method": "POST", "route": "/v1/decision/propagate"},
+        "domain": [],
+        "services": [
+            "services.score_ext.markov.propagate_risk_markov",
+        ],
+        "infra": ["services.score_ext.bayes"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/risk_markov.json"],
+        "description": "Propagate Bayesian component risk over dependency graphs via Markov steady-state analysis.",
+    },
     "provenance.attest": {
         **_availability_entry("provenance.attest"),
         "cli": {
@@ -270,6 +309,26 @@ EXECUTION_REGISTRY: Dict[str, Dict[str, Any]] = {
         "overlays": ["demo", "enterprise"],
         "outputs": ["artifacts/persona/<role>.md"],
         "description": "Generate risk narratives tailored for specific personas.",
+    },
+    "persona.explain_ext": {
+        **_availability_entry(
+            "persona.explain_ext",
+            default_reason="Extended persona explanations unavailable upstream",
+        ),
+        "available": True,
+        "cli": {
+            "command": "persona explain",
+            "syntax": "aldecI persona explain --role <role> --risk_ext artifacts/risk_ext.json",
+        },
+        "api": {"method": "POST", "route": "/v1/persona/explain_ext"},
+        "domain": [],
+        "services": [
+            "infra.llm_router_ext.barron_adapter.explain_risk_ext",
+        ],
+        "infra": ["infra/llm_router_ext/barron_adapter.py"],
+        "overlays": ["demo", "enterprise"],
+        "outputs": ["artifacts/persona/<role>-ext.json"],
+        "description": "Produce persona-aware narratives for Bayesian extensions with deterministic fallbacks.",
     },
 }
 
