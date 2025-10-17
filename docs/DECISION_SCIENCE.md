@@ -57,6 +57,6 @@ baseline `max_risk_score`. Thresholds for the extended metrics can be set under
 
 - `aldecI decision fuse` / `POST /v1/decision/fuse`
 - `aldecI decision propagate` / `POST /v1/decision/propagate`
-- `aldecI persona explain --risk_ext …` / `POST /v1/persona/explain_ext`
+- `aldecI persona explain --risk-ext …` / `POST /v1/persona/explain_ext`
 
 The baseline behaviour is unchanged; the extensions compose on demand.
