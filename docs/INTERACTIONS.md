@@ -131,12 +131,12 @@ CLI `aldecI persona explain --role <role> --risk artifacts/risk.json` -> Local b
 
 **Overlays:** demo, enterprise
 **Outputs:** artifacts/persona/<role>-ext.json
-**CLI Sample:** `aldecI persona explain --role <role> --risk_ext artifacts/risk_ext.json --backend local --overlay demo`
+**CLI Sample:** `aldecI persona explain --role <role> --risk-ext artifacts/risk_ext.json --backend local --overlay demo`
 **HTTP Sample:** `curl -sS -X POST http://127.0.0.1:8000/v1/persona/explain_ext -H 'Content-Type: application/json' -d @payload.json`
 
 **Function call chain:**
 
-CLI `aldecI persona explain --role <role> --risk_ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_persona_explain_ext` -> SDK `sdk.python.fixops_client.FixopsClient.persona_explain_ext` -> FastAPI `apps.api.v1_persona.explain_ext` -> Infra `infra.llm_router_ext.barron_adapter.explain_risk_ext`
+CLI `aldecI persona explain --role <role> --risk-ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_persona_explain_ext` -> SDK `sdk.python.fixops_client.FixopsClient.persona_explain_ext` -> FastAPI `apps.api.v1_persona.explain_ext` -> Infra `infra.llm_router_ext.barron_adapter.explain_risk_ext`
 
 ## provenance.attest
 
@@ -206,12 +206,12 @@ CLI `aldecI decision fuse --sbom artifacts/sbom/normalized.json --risk artifacts
 
 **Overlays:** demo, enterprise
 **Outputs:** artifacts/risk_markov.json
-**CLI Sample:** `aldecI decision propagate --graph artifacts/graph/lineage.json --risk_ext artifacts/risk_ext.json --out artifacts/risk_markov.json --backend local --overlay demo`
+**CLI Sample:** `aldecI decision propagate --graph artifacts/graph/lineage.json --risk-ext artifacts/risk_ext.json --out artifacts/risk_markov.json --backend local --overlay demo`
 **HTTP Sample:** `curl -sS -X POST http://127.0.0.1:8000/v1/decision/propagate -H 'Content-Type: application/json' -d @payload.json`
 
 **Function call chain:**
 
-CLI `aldecI decision propagate --graph artifacts/graph/lineage.json --risk_ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_decision_propagate` -> SDK `sdk.python.fixops_client.FixopsClient.decision_propagate` -> FastAPI `apps.api.v1_decision.propagate` -> Service `services.score_ext.markov.propagate_risk_markov`
+CLI `aldecI decision propagate --graph artifacts/graph/lineage.json --risk-ext artifacts/risk_ext.json` -> Local backend `apps.runtime.local_handlers.handle_decision_propagate` -> SDK `sdk.python.fixops_client.FixopsClient.decision_propagate` -> FastAPI `apps.api.v1_decision.propagate` -> Service `services.score_ext.markov.propagate_risk_markov`
 
 ## stage.run
 
