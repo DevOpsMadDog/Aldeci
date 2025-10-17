@@ -36,12 +36,12 @@ def _entry_nodes(components: ComponentScores) -> set[str]:
         exposure_flags = component.get("exposure_flags") if isinstance(component, Mapping) else None
         flags = set(str(flag).lower() for flag in exposure_flags or [])
         if "internet" in flags or "public" in flags:
-        entries.add(str(component.get("id") or component.get("slug") or key))
+            entries.add(str(component.get("id") or component.get("slug") or key))
             continue
         if isinstance(bayesian, Mapping):
             probability = bayesian.get("component_probability")
             if isinstance(probability, (int, float)) and probability >= 0.4:
-                entries.add(str(component.get("slug") or key))
+                entries.add(str(component.get("id") or component.get("slug") or key))
     return entries
 
 
