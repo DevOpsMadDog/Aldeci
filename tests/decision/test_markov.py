@@ -74,4 +74,4 @@ def test_markov_auto_entry_uses_exposure() -> None:
         entry_nodes=None,
         top_k_paths=1,
     )
-    assert "pkg-a" in result["risk_markov"]["entry_nodes"]
+    assert "pkg:A" in result["risk_markov"]["entry_nodes"]
